@@ -18,9 +18,9 @@ public class UserRegistrationDTO {
     @NotEmpty(message="Password is required")
     @Size(min = 6, message = "Password must be at least 6 characters long")
     private String password;
-    private Set<Role> roles;
+    private Set<Integer> roles;
 
-    public UserRegistrationDTO(String name, String username, String email, String password, Set<Role> roles) {
+    public UserRegistrationDTO(String name, String username, String email, String password, Set<Integer> roles) {
         this.name = name;
         this.username = username;
         this.email = email;
@@ -60,11 +60,11 @@ public class UserRegistrationDTO {
         this.password = password;
     }
 
-    public Set<Role> getRoles() {
+    public Set<Integer> getRoles() {
         return roles;
     }
 
-    public void setRoles(Set<Role> roles) {
+    public void setRoles(Set<Integer> roles) {
         this.roles = roles;
     }
 }

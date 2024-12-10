@@ -1,6 +1,7 @@
 package com.nat.CineBuddy.services;
 
 import com.nat.CineBuddy.dto.UserRegistrationDTO;
+import com.nat.CineBuddy.models.Role;
 import com.nat.CineBuddy.models.User;
 import com.nat.CineBuddy.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +9,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class UserServiceImpl implements UserService{
@@ -57,13 +60,21 @@ public class UserServiceImpl implements UserService{
         user.setUsername(userRegistrationDTO.getUsername());
         user.setEmail(userRegistrationDTO.getEmail());
         user.setPassword(this.passwordEncoder.encode(userRegistrationDTO.getPassword()));
+
+        Set<Role> roles = new HashSet<>();
         if(userRegistrationDTO.getRoles() == null){
-            userRegistrationDTO.setRoles(Collections.singleton(roleService.findByName("ROLE_USER")));
+            roles.add(roleService.findByName("ROLE_USER"));
         }
-        if(userRegistrationDTO.getRoles().isEmpty()){
-            user.setRoles(Collections.singleton(roleService.findByName("ROLE_USER")));
+        else if(userRegistrationDTO.getRoles().isEmpty()){
+            roles.add(roleService.findByName("ROLE_USER"));
         }
-        System.out.println(user.getRoles());
+        else{
+            for (Integer roleId : userRegistrationDTO.getRoles()) {
+                Role role = roleService.getRoleById(roleId);
+                roles.add(role);
+            }
+        }
+        user.setRoles(roles);
         userRepository.save(user);
         return true;
     }

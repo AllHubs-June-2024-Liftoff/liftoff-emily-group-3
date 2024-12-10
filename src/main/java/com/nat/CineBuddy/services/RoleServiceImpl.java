@@ -5,6 +5,8 @@ import com.nat.CineBuddy.repositories.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 
 @Service
 public class RoleServiceImpl implements RoleService{
@@ -20,6 +22,12 @@ public class RoleServiceImpl implements RoleService{
     @Override
     public Role findByName(String name) {
         return roleRepository.findByName(name);
+    }
+
+    @Override
+    public Role getRoleById(Integer id){
+        Optional<Role> optionalRole = roleRepository.findById(id);
+        return optionalRole.orElseGet(Role::new);
     }
 
     @Override
