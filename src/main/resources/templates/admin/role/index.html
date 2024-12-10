@@ -1,0 +1,70 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head th:replace="~{fragments :: head}"></head>
+<body>
+<header th:replace="~{fragments :: page-nav}"></header>
+
+    <p th:unless="${roles} and ${roles.size()}" class="">No Roles!</p>
+    <div class="d-flex justify-content-end">
+        <p th:text="|Role Count: ${roles.size()}|" class="px-2 my-0 align-self-center"></p>
+        <div id="addRole" class="p-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-plus-fill" viewBox="0 0 16 16">
+                <path d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
+                <path fill-rule="evenodd" d="M13.5 5a.5.5 0 0 1 .5.5V7h1.5a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0V8h-1.5a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5"/>
+            </svg>
+        </div>
+    </div>
+    <div class="d-flex justify-content-center w-100 px-2">
+        <table id="roleTable" class="display compact striped +" style="width:100%">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+            </tr>
+            </thead>
+            <tbody>
+            <th:block th:each="role : ${roles}">
+                <tr name="roleRow" th:data-user="${role.getId()}">
+                    <td th:text="${role.getId()}"></td>
+                    <td th:text="${role.getName()}"></td>
+                </tr>
+            </th:block>
+            </tbody>
+        </table>
+    </div>
+
+</body>
+<script src="https://cdn.datatables.net/2.0.0/js/dataTables.min.js" crossorigin="anonymous"></script>
+<link href="https://cdn.datatables.net/2.0.0/css/dataTables.dataTables.min.css" rel="stylesheet" crossorigin="anonymous">
+<script>
+    window.addEventListener("load", function() {
+        let table = new DataTable('#roleTable');
+        document.querySelectorAll('[name="roleRow"]').forEach(row => {
+            row.addEventListener("click",(event)=>{
+                let selectedRole = event.target.closest('tr');
+                console.log(selectedRole);
+            });
+        });
+    });
+</script>
+<style>
+    #addRole{
+        height: 2rem !important;
+        width: 2rem !important;
+        padding-left: 0.5rem !important;
+        padding-right: 0.5rem !important;
+        display: flex !important;
+        align-items: center !important;
+    }
+    #addRole:hover{
+        cursor:pointer !important;
+        border:2px solid black !important;
+        border-radius: 0.25rem !important;
+        svg{
+            transform: scale(1.5);
+        }
+    }
+    #roleTable_wrapper{
+        width:100%;
+    }
+</style>
+</html>
