@@ -51,4 +51,37 @@ public class AdminUserController {
             return "admin/user/create";
         }
     }
+
+    @GetMapping("users/update/{id}")
+    public String editForm(@PathVariable("id") Integer userId, Model model){
+        model.addAttribute("user", userService.findById(userId));
+        model.addAttribute("roles",roleService.getAllRoles());
+        return "admin/user/update";
+    }
+
+    @PostMapping("users/update/{id}")
+    public String updateUser(@ModelAttribute @Valid User user, @PathVariable("id") Integer userId, Errors errors, Model model){
+        if(!errors.hasErrors()){
+            boolean success = userService.updateUser(user, userId);
+            if(success){
+                model.addAttribute("users", userService.getAllUsers());
+                return "admin/user/index";
+            }
+            else{
+                model.addAttribute("user", user);
+                model.addAttribute("roles", roleService.getAllRoles());
+                return "admin/user/update";
+            }
+        }
+        else{
+            return "admin/user/update";
+        }
+    }
+
+    @GetMapping("users/delete/{id}")
+    public String deleteUser(@PathVariable("id") Integer userId, Model model){
+        userService.deleteUserById(userId);
+        model.addAttribute("users", userService.getAllUsers());
+        return "admin/user/index";
+    }
 }

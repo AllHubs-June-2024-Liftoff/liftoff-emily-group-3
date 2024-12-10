@@ -9,6 +9,8 @@ public interface UserService {
 
     void save(User user);
 
+    User findById(Integer id);
+
     Optional<User> findByUsername(String username);
 
     Iterable<User> getAllUsers();
@@ -18,4 +20,6 @@ public interface UserService {
     void refreshUsers();
 
     boolean registerUser(UserRegistrationDTO userRegistrationDTO);
+
+    boolean updateUser(User user, Integer userId);
 }

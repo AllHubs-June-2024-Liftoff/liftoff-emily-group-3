@@ -25,8 +25,16 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public void save(User user) {
-        user.setPassword(user.getPassword());
+        user.setPassword(this.passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
+    }
+
+    @Override
+    public User findById(Integer id){
+        Optional<User> optionalUser = userRepository.findById(id);
+        User user = optionalUser.orElseGet(User::new);
+        user.setPassword("");
+        return user;
     }
 
     @Override
@@ -77,5 +85,25 @@ public class UserServiceImpl implements UserService{
         user.setRoles(roles);
         userRepository.save(user);
         return true;
+    }
+
+    @Override
+    public boolean updateUser(User user, Integer userId) {
+        Optional<User> optionalUser = userRepository.findById(userId);
+        if(optionalUser.isPresent()){
+            User storedUser = optionalUser.get();
+            storedUser.setName(user.getName());
+            storedUser.setUsername(user.getUsername());
+            storedUser.setEmail(user.getEmail());
+            if(user.getPassword() != null && user.getPassword().isEmpty()){
+                storedUser.setPassword(this.passwordEncoder.encode(user.getPassword()));
+            }
+            storedUser.setRoles(user.getRoles());
+            userRepository.save(storedUser);
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 }
