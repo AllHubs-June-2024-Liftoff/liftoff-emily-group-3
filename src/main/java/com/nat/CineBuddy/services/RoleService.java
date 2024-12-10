@@ -2,10 +2,11 @@ package com.nat.CineBuddy.services;
 
 import com.nat.CineBuddy.models.Role;
 
-import java.util.Optional;
-
 public interface RoleService {
-    void save(Role role);
+
+    boolean createRole(Role role);
+
+    boolean updateRole(Role role, Integer roleId);
 
     Role findByName(String name);
 
@@ -15,5 +16,4 @@ public interface RoleService {
 
     void deleteRoleById(Integer id);
 
-    void refreshRoles();
 }

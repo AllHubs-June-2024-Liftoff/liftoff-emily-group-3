@@ -23,11 +23,6 @@ public class UserServiceImpl implements UserService{
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @Override
-    public void save(User user) {
-        user.setPassword(this.passwordEncoder.encode(user.getPassword()));
-        userRepository.save(user);
-    }
 
     @Override
     public User findById(Integer id){
@@ -50,11 +45,6 @@ public class UserServiceImpl implements UserService{
     @Override
     public void deleteUserById(Integer id){
         userRepository.deleteById(id);
-    }
-
-    @Override
-    public void refreshUsers(){
-        userRepository.findAll();
     }
 
     @Override

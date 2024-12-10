@@ -7,8 +7,6 @@ import java.util.Optional;
 
 public interface UserService {
 
-    void save(User user);
-
     User findById(Integer id);
 
     Optional<User> findByUsername(String username);
@@ -16,8 +14,6 @@ public interface UserService {
     Iterable<User> getAllUsers();
 
     void deleteUserById(Integer id);
-
-    void refreshUsers();
 
     boolean registerUser(UserRegistrationDTO userRegistrationDTO);
 
