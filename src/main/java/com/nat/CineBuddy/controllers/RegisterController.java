@@ -22,7 +22,7 @@ public class RegisterController {
 
     @GetMapping
     public String registerForm(Model model){
-        model.addAttribute("user",new User());
+        model.addAttribute("user",new UserRegistrationDTO());
         model.addAttribute("roles", roleService.getAllRoles());
         return "register";
     }
@@ -36,7 +36,7 @@ public class RegisterController {
                 return "login";
             }
             else{
-                model.addAttribute("user",new User());
+                model.addAttribute("user",new UserRegistrationDTO());
                 model.addAttribute("roles", roleService.getAllRoles());
                 return "register";
             }

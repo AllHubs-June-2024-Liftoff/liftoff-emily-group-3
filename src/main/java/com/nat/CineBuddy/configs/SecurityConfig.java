@@ -25,6 +25,7 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests((authorize) -> authorize
                         .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/profile/**").fullyAuthenticated()
                         .requestMatchers("/img/**", "/css/**").permitAll()
                         .anyRequest().permitAll()
                 ).formLogin(

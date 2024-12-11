@@ -2,33 +2,35 @@
 <head th:replace="~{fragments :: head}"></head>
 <body>
 <header th:replace="~{fragments :: page-nav}"></header>
-<h1>Register as a user!</h1>
+<div class="container body-content pt-1">
+    <h1>Register as a user!</h1>
 
-<form method="post" style="max-width:600px;">
-    <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
-    <div class="form-group">
-        <label th:for="name">Name</label>
-        <input class="form-control" th:field="${user.name}" />
-        <span th:errors="${user.name}" class="error"></span>
-    </div>
-    <div class="form-group">
-        <label th:for="name">Username</label>
-        <input class="form-control" th:field="${user.username}" />
-        <span th:errors="${user.username}" class="error"></span>
-    </div>
-    <div class="form-group">
-        <label th:for="name">Email</label>
-        <input class="form-control" th:field="${user.email}" />
-        <span th:errors="${user.email}" class="error"></span>
-    </div>
-    <div class="form-group">
-        <label th:for="name">Password</label>
-        <input class="form-control" th:field="${user.password}" />
-        <span th:errors="${user.password}" class="error"></span>
-    </div>
+    <form method="post" style="max-width:600px;">
+        <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
+        <div class="form-group">
+            <label th:for="name">Name</label>
+            <input class="form-control" th:field="${user.name}" />
+            <span th:errors="${user.name}" class="error"></span>
+        </div>
+        <div class="form-group">
+            <label th:for="name">Username</label>
+            <input class="form-control" th:field="${user.username}" />
+            <span th:errors="${user.username}" class="error"></span>
+        </div>
+        <div class="form-group">
+            <label th:for="name">Email</label>
+            <input class="form-control" th:field="${user.email}" />
+            <span th:errors="${user.email}" class="error"></span>
+        </div>
+        <div class="form-group">
+            <label th:for="name">Password</label>
+            <input class="form-control" th:field="${user.password}" />
+            <span th:errors="${user.password}" class="error"></span>
+        </div>
 
-    <input type="submit" value="Register" />
-</form>
+        <input type="submit" value="Register" />
+    </form>
+</div>
 
 </body>
 </html>

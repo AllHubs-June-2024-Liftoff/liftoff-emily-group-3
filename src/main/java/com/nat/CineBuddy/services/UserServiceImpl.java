@@ -4,7 +4,10 @@ import com.nat.CineBuddy.dto.UserRegistrationDTO;
 import com.nat.CineBuddy.models.Role;
 import com.nat.CineBuddy.models.User;
 import com.nat.CineBuddy.repositories.UserRepository;
+import com.nat.CineBuddy.security.CBUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +23,8 @@ public class UserServiceImpl implements UserService{
     private UserRepository userRepository;
     @Autowired
     private RoleService roleService;
+    @Autowired
+    private ProfileService profileService;
     @Autowired
     private PasswordEncoder passwordEncoder;
 
@@ -54,7 +59,6 @@ public class UserServiceImpl implements UserService{
         }
 
         User user = new User();
-        user.setName(userRegistrationDTO.getName());
         user.setUsername(userRegistrationDTO.getUsername());
         user.setEmail(userRegistrationDTO.getEmail());
         user.setPassword(this.passwordEncoder.encode(userRegistrationDTO.getPassword()));
@@ -74,6 +78,8 @@ public class UserServiceImpl implements UserService{
         }
         user.setRoles(roles);
         userRepository.save(user);
+        User profileUser = userRepository.findByUsernameOrEmail(user.getUsername(), user.getUsername()).get();
+        profileService.createProfile(userRegistrationDTO.getName(),profileUser);
         return true;
     }
 
@@ -82,7 +88,6 @@ public class UserServiceImpl implements UserService{
         Optional<User> optionalUser = userRepository.findById(userId);
         if(optionalUser.isPresent()){
             User storedUser = optionalUser.get();
-            storedUser.setName(user.getName());
             storedUser.setUsername(user.getUsername());
             storedUser.setEmail(user.getEmail());
             if(user.getPassword() != null && user.getPassword().isEmpty()){
@@ -94,6 +99,17 @@ public class UserServiceImpl implements UserService{
         }
         else{
             return false;
+        }
+    }
+
+    /*Extra methods I'm trying to determine where I should place*/
+    public User getCurrentUser(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated()) {
+            CBUserDetails currentUser = (CBUserDetails) authentication.getPrincipal();
+            return userRepository.findByUsernameOrEmail(currentUser.getUsername(), currentUser.getUsername()).get();
+        } else {
+            return new User();
         }
     }
 }

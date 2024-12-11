@@ -20,6 +20,9 @@ public class UserRegistrationDTO {
     private String password;
     private Set<Integer> roles;
 
+    public UserRegistrationDTO() {
+    }
+
     public UserRegistrationDTO(String name, String username, String email, String password, Set<Integer> roles) {
         this.name = name;
         this.username = username;

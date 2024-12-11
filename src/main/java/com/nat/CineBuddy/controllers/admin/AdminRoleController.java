@@ -76,8 +76,11 @@ public class AdminRoleController {
 
     @GetMapping("roles/delete/{id}")
     public String deleteUser(@PathVariable("id") Integer roleId, Model model){
-        roleService.deleteRoleById(roleId);
         model.addAttribute("roles", roleService.getAllRoles());
+        boolean success = roleService.deleteRoleById(roleId);
+        if(!success){
+            model.addAttribute("error", "Deletion Error: Role not deleted.");
+        }
         return "admin/role/index";
     }
 

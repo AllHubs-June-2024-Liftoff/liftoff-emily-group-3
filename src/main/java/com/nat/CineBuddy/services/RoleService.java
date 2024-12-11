@@ -14,6 +14,6 @@ public interface RoleService {
 
     Iterable<Role> getAllRoles();
 
-    void deleteRoleById(Integer id);
+    boolean deleteRoleById(Integer id);
 
 }

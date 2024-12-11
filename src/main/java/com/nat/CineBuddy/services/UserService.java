@@ -18,4 +18,6 @@ public interface UserService {
     boolean registerUser(UserRegistrationDTO userRegistrationDTO);
 
     boolean updateUser(User user, Integer userId);
+
+    public User getCurrentUser();
 }

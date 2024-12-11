@@ -1,5 +1,6 @@
 package com.nat.CineBuddy.models;
 
+import java.util.List;
 import java.util.Set;
 
 import jakarta.persistence.*;
@@ -8,7 +9,6 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private String name;
     @Column(nullable = false, unique = true)
     private String username;
     @Column(nullable = false, unique = true)
@@ -17,15 +17,11 @@ public class User {
     private String password;
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<Role> roles;
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private Profile profile;
 
     public Integer getId() {
         return id;
-    }
-    public String getName() {
-        return name;
-    }
-    public void setName(String name) {
-        this.name = name;
     }
     public String getUsername() {
         return username;
@@ -52,15 +48,21 @@ public class User {
         this.roles = roles;
     }
 
+    public Profile getProfile() {
+        return profile;
+    }
+
+    public void setProfile(Profile profile) {
+        this.profile = profile;
+    }
+
     @Override
     public String toString() {
         return "User{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", username='" + username + '\'' +
+                "username='" + username + '\'' +
                 ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
                 ", roles=" + roles +
+                ", profile=" + profile +
                 '}';
     }
 }

@@ -19,7 +19,6 @@
             <thead>
                 <tr>
                     <th>ID</th>
-                    <th>Name</th>
                     <th>Username</th>
                     <th>Email</th>
                     <th>Edit/Delete</th>
@@ -29,7 +28,6 @@
             <th:block th:each="user : ${users}">
                 <tr name="userRow">
                     <td th:text="${user.getId()}"></td>
-                    <td th:text="${user.getName()}"></td>
                     <td th:text="${user.getUsername()}"></td>
                     <td th:text="${user.getEmail()}"></td>
                     <td>
@@ -48,20 +46,6 @@
             </th:block>
             </tbody>
         </table>
-    </div>
-
-    <div class="modal fade" id="userModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="user_edit_modalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content p-2">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="userModelTitle"></h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body" id="userModalBody">
-                    ...
-                </div>
-            </div>
-        </div>
     </div>
 </body>
     <script src="https://cdn.datatables.net/2.0.0/js/dataTables.min.js" crossorigin="anonymous"></script>
