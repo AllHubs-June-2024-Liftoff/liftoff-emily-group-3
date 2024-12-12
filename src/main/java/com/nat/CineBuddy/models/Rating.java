@@ -3,38 +3,24 @@ package com.nat.CineBuddy.models;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 @Entity
-public class Rating {
-    @Id
-    @GeneratedValue
-    private int id;
+public class Rating extends AbstractMovieEntity {
 
-    private String title; // Title of the movie being rated
-    private double percentage; // Rating percentage (e.g., 87.5 for 87.5%)
+    @NotBlank(message = "Rating cannot be empty")
+    @Size(max = 100, message = "Rating must be between 0 - 100")
+    public double rating;
 
-    // Getters and setters
-    public int getId() {
-        return id;
+    public Rating() {
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public double getRating() {
+        return rating;
     }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public double getPercentage() {
-        return percentage;
-    }
-
-    public void setPercentage(double percentage) {
-        this.percentage = percentage;
+    public void setRating (double rating) {
+        this.rating = rating;
     }
 }
