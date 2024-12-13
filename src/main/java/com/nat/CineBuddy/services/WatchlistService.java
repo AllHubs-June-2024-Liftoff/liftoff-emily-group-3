@@ -11,6 +11,7 @@ import java.util.List;
 Written by: Cody Adams
 This service class handles the business logic for Watchlist operations.
 It communicates with the WatchlistRepository to perform database interactions.
+Allows for CRUD functionality with .save , findByUserId, findById.orElse, and deleteById.
 */
 
 @Service
