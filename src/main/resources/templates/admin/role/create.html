@@ -1,0 +1,19 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org/" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head th:replace="~{fragments :: head}"></head>
+<body>
+<header th:replace="~{fragments :: page-nav}"></header>
+<h1>Create a role</h1>
+
+<form method="post" style="max-width:600px;">
+    <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
+    <div class="form-group">
+        <label th:for="name">Name</label>
+        <input class="form-control" th:field="${role.name}" />
+        <span th:errors="${role.name}" class="error"></span>
+    </div>
+
+    <input type="submit" value="Create" />
+</form>
+
+</body>
+</html>
