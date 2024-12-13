@@ -28,7 +28,7 @@
             <th:block th:each="user : ${users}">
                 <tr name="userRow">
                     <td th:text="${user.getId()}"></td>
-                    <td th:text="${user.getUsername()}"></td>
+                    <td><a th:text="${user.getUsername()}" th:href="'/profiles/'+${user.getUsername()}"></a></td>
                     <td th:text="${user.getEmail()}"></td>
                     <td>
                         <a th:href="'/admin/users/update/'+${user.getId()}">

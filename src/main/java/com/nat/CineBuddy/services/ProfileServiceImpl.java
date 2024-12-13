@@ -17,13 +17,12 @@ public class ProfileServiceImpl implements ProfileService{
     @Autowired
     private ProfileRepository profileRepository;
 
-    public boolean createProfile(String name, User user){
-        Optional<Profile> optionalProfile = profileRepository.findByName(name);
+    public boolean createProfile(User user){
+        Optional<Profile> optionalProfile = profileRepository.findByUser(user);
         if(optionalProfile.isPresent()){
             return false;
         }
         Profile profile = new Profile();
-        profile.setName(name);
         profile.setUser(user);
         profile.setPrivate(false);
         profileRepository.save(profile);
@@ -40,13 +39,8 @@ public class ProfileServiceImpl implements ProfileService{
         storedProfile.setBio(profile.getBio());
         storedProfile.setImage(profile.getImage());
         storedProfile.setPrivate(profile.isPrivate());
-        storedProfile.setFriends(profile.getFriends());
         profileRepository.save(storedProfile);
         return true;
-    }
-
-    public Profile findByName(String name){
-        return profileRepository.findByName(name).orElseGet(Profile::new);
     }
 
     public Profile getProfileById(Integer id){

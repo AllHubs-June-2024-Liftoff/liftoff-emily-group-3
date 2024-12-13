@@ -4,13 +4,19 @@ import java.util.List;
 import java.util.Set;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotEmpty;
+
 @Entity
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @Column(nullable = false, unique = true)
+    @NotEmpty(message="Username is required")
     private String username;
+    @NotEmpty(message="Email is required")
+    @Email(message="Invalid email address")
     @Column(nullable = false, unique = true)
     private String email;
     @Column(nullable = false)

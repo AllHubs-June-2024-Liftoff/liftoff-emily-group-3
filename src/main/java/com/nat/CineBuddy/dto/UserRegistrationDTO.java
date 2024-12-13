@@ -1,6 +1,5 @@
 package com.nat.CineBuddy.dto;
 
-import com.nat.CineBuddy.models.Role;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;

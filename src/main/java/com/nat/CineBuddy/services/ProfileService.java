@@ -6,11 +6,9 @@ import com.nat.CineBuddy.models.User;
 
 public interface ProfileService {
 
-    boolean createProfile(String name, User user);
+    boolean createProfile(User user);
 
     boolean updateProfile(Integer profileId, Profile profile);
-
-    Profile findByName(String name);
 
     Profile getProfileById(Integer id);
 

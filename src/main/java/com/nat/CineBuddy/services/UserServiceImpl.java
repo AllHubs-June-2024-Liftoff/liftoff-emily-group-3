@@ -11,10 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class UserServiceImpl implements UserService{
@@ -49,7 +46,14 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public void deleteUserById(Integer id){
-        userRepository.deleteById(id);
+        Optional<User> optionalUser = userRepository.findById(id);
+        if(optionalUser.isPresent()){
+            Set<Role> emptyRoles = new HashSet<>();
+            User storedUser = optionalUser.get();
+            storedUser.setRoles(emptyRoles);
+            userRepository.save(storedUser);
+            userRepository.delete(storedUser);
+        }
     }
 
     @Override
@@ -62,15 +66,8 @@ public class UserServiceImpl implements UserService{
         user.setUsername(userRegistrationDTO.getUsername());
         user.setEmail(userRegistrationDTO.getEmail());
         user.setPassword(this.passwordEncoder.encode(userRegistrationDTO.getPassword()));
-
         Set<Role> roles = new HashSet<>();
-        if(userRegistrationDTO.getRoles() == null){
-            roles.add(roleService.findByName("ROLE_USER"));
-        }
-        else if(userRegistrationDTO.getRoles().isEmpty()){
-            roles.add(roleService.findByName("ROLE_USER"));
-        }
-        else{
+        if(userRegistrationDTO.getRoles() != null){
             for (Integer roleId : userRegistrationDTO.getRoles()) {
                 Role role = roleService.getRoleById(roleId);
                 roles.add(role);
@@ -79,7 +76,7 @@ public class UserServiceImpl implements UserService{
         user.setRoles(roles);
         userRepository.save(user);
         User profileUser = userRepository.findByUsernameOrEmail(user.getUsername(), user.getUsername()).get();
-        profileService.createProfile(userRegistrationDTO.getName(),profileUser);
+        profileService.createProfile(profileUser);
         return true;
     }
 
