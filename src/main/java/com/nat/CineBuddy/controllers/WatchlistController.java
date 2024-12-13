@@ -13,6 +13,7 @@ import java.util.List;
 /**
  * Written By Cody Adams
  * Handles user interactions with Watchlists (view, create, delete).
+ * Will be connected with UserService.
  */
 
 @Controller
