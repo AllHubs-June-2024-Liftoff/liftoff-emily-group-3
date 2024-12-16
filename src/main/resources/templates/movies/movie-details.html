@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org/" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${movie.title}">Movie Details</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/flickity@2/dist/flickity.min.css">
+    <link rel="stylesheet" th:href="@{/movie-details-styles.css}">
+</head>
+<body>
+<div th:replace="fragments :: page-header"></div>
+<div class="container">
+    <div class="left-section">
+        <h2 th:text="${movie.title}"></h2>
+        <div class="button-container">
+            <button class="btn btn-primary">Favorite</button>
+            <button class="btn btn-secondary">Add to Watchlist</button>
+        </div>
+        <img th:src="@{'https://image.tmdb.org/t/p/w500' + ${movie.posterPath}}" alt="Movie Poster"/>
+        <p th:text="${movie.overview}"></p>
+
+        <p class="movie-stats">Average Rating: <span th:text="${movie.voteAverage}"></span></p>
+        <p class="movie-stats">Release Date: <span th:text="${movie.releaseDate}"></span></p>
+        <p class="movie-stats">Genres: <span th:text="${movie.formattedGenres}"></span></p>
+        <p class="movie-stats">Budget: $<span th:text="${movie.budget}"></span></p>
+        <p class="movie-stats">Revenue: $<span th:text="${movie.revenue}"></span></p>
+        <p class="movie-stats">Runtime: <span th:text="${movie.runtime}"></span> minutes</p>
+    </div>
+    <div class="right-section">
+        <h3>Rate and Review</h3>
+        <form action="/submit-review" method="POST">
+            <div class="form-group">
+                <label for="rating">Rating (1-10):</label>
+                <input type="number" id="rating" name="rating" min="1" max="10" required>
+            </div>
+            <div class="form-group">
+                <label for="review">Your Review:</label>
+                <textarea id="review" name="review" placeholder="Write your review here..." required></textarea>
+            </div>
+            <div class="form-button">
+                <button type="submit">Submit</button>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+<!--todo: if no profilePath replace with blank profile image-->
+<div class="recommended-actors">
+    <h3>Actors</h3>
+    <div class="gallery js-flickity" data-flickity-options='{ "wrapAround": true, "contain": true, "pageDots": false }'>
+        <div class="gallery-cell" th:each="actor : ${actors}">
+            <a th:href="@{https://www.themoviedb.org/person/{id}(id=${actor.id})}">
+                <div class="actor-img">
+                    <img th:src="${actor.profilePath != null ? 'https://image.tmdb.org/t/p/w500' + actor.profilePath :
+                                '/images/blank-profile-picture-973460_1280.webp'}"
+                         th:alt="${actor.name}"/>
+                </div>
+                <div class="caption">
+                    <h5 th:text="${actor.name}"></h5>
+                    <p th:text="${actor.character}"></p>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+
+
+<div class="recommended-movies">
+    <h3>Recommended Movies</h3>
+    <div class="gallery js-flickity" data-flickity-options='{ "wrapAround": true, "contain": true, "pageDots": false }'>
+        <div class="gallery-cell" th:each="movie : ${similarMovies}">
+            <a th:href="@{/movie-details/{id}(id=${movie.id})}">
+                <img th:src="@{'https://image.tmdb.org/t/p/w500' + ${movie.posterPath}}" alt="Movie Poster"/>
+                <div class="caption">
+                    <h5 th:text="${movie.title}"></h5>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+
+<script src="https://unpkg.com/flickity@2/dist/flickity.pkgd.min.js"></script>
+</body>
+</html>
