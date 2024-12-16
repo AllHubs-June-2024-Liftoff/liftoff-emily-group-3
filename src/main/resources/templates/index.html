@@ -12,36 +12,8 @@
 </head>
 <body>
 
-<div class="topnav" id="myTopnav">
+<div th:replace="fragments :: page-nav"></div>
 
-    <a href="#home" class="active">CineBuddy</a>
-
-    <!-- Navigation Links -->
-    <a href="#news">Groups</a>
-    <a href="#about">About</a>
-
-    <!-- Search Bar -->
-    <div class="search-container">
-        <form action="/search">
-            <input type="text" placeholder="Search.." name="search">
-            <button type="submit">
-                <i class="fa fa-search"></i>
-            </button>
-        </form>
-    </div>
-
-    <!-- Responsive Icon -->
-    <a href="javascript:void(0);" class="icon" onclick="myFunction()">
-        <i class="fa fa-bars"></i>
-    </a>
-
-
-    <!-- Profile Link Icon -->
-    <a href="#profile" class="profile-icon">
-        <i class="fa fa-user"></i>
-    </a>
-
-</div>
 
 <h2>Trending Movies</h2>
 
