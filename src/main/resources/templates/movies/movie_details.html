@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org/">
+<head th:replace="~{fragments :: head}">
+  <title th:text="${movie.title}">Movie Details</title>
+</head>
+<body>
+<header th:replace="~{fragments :: page-nav}"></header>
+<div class="container">
+  <h1 th:text="${movie.title}">Movie Title</h1>
+  <img th:src="${movie.fullPosterPath}" alt="Movie Poster" class="img-fluid" />
+  <p><strong>Release Date:</strong> <span th:text="${movie.releaseDate}"></span></p>
+  <p><strong>Average Rating:</strong> <span th:text="${movie.voteAverage}"></span></p>
+  <p><strong>Description:</strong></p>
+  <p th:text="${movie.overview}">Movie description here...</p>
+
+  <!-- Back to Watchlist Link -->
+  <a th:href="@{'/watchlists/' + ${watchlist.id}}" class="btn btn-secondary">Back to Watchlist</a>
+</div>
+</body>
+</html>

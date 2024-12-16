@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org/">
+<head th:replace="~{fragments :: head}">
+    <title>Watchlist Details</title>
+</head>
+<body>
+<header th:replace="~{fragments :: page-nav}"></header>
+<div class="container">
+    <h1 th:text="${watchlist.name}">Watchlist Name</h1>
+    <p th:text="${watchlist.description}">Watchlist Description</p>
+
+    <h3>Movies</h3>
+    <form method="post" th:action="@{/watchlists/{id}/update(id=${watchlist.id})}">
+        <ul>
+            <li th:each="movie : ${watchlist.movies}">
+                <!-- Link to the movie details page -->
+                <a th:href="@{'/watchlists/' + ${watchlist.id} + '/movies/' + ${movie.id}}"
+                   th:text="${movie.title}"></a>
+                <br />
+
+                <!-- Watched checkbox -->
+                <label>
+                    <input type="checkbox" th:name="watchedMovieIds" th:value="${movie.id}" th:checked="${movie.watched}"/> Watched
+                </label>
+                <br />
+
+                <!-- Comment textarea -->
+                <label th:for="${'comment-' + movie.id}">
+                    Comment:
+                    <textarea th:id="${'comment-' + movie.id}" th:name="comments[${movie.id}]" th:text="${movie.comment}"></textarea>
+                </label>
+            </li>
+        </ul>
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+    </form>
+</div>
+</body>
+</html>

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org/">
+<head th:replace="~{fragments :: head}">
+    <title>Create Watchlist</title>
+    <script>
+        // Search for movies using the TMDB API
+        async function searchMovies() {
+            const query = document.getElementById('searchQuery').value;
+            const resultsContainer = document.getElementById('searchResults');
+            resultsContainer.innerHTML = '';
+
+            if (query.trim() === '') {
+                alert("Please enter a search term.");
+                return;
+            }
+
+            try {
+                const response = await fetch(`/watchlists/search?query=${query}`);
+                const movies = await response.json();
+
+                if (movies.length === 0) {
+                    resultsContainer.innerHTML = "<p>No movies found. Try a different search term.</p>";
+                } else {
+                    movies.forEach(movie => {
+                        const movieElement = document.createElement('div');
+                        movieElement.innerHTML = `
+                            <span>${movie.title} (${movie.releaseDate})</span>
+                            <button type="button" onclick="addMovie('${movie.id}', '${movie.title}', '${movie.releaseDate}')">Add</button>
+                        `;
+                        resultsContainer.appendChild(movieElement);
+                    });
+                }
+            } catch (error) {
+                console.error("Error fetching movies:", error);
+                resultsContainer.innerHTML = "<p>Error fetching movies. Please try again later.</p>";
+            }
+        }
+
+        // Add a movie to the selected list
+        function addMovie(id, title, releaseDate) {
+            const selectedMoviesContainer = document.getElementById('selectedMovies');
+            const selectedMoviesInputs = document.querySelectorAll('input[name="movieIds"]');
+
+            if (selectedMoviesInputs.length >= 5) {
+                alert("You can only add up to 5 movies.");
+                return;
+            }
+
+            // Check if the movie is already selected
+            if (Array.from(selectedMoviesInputs).some(input => input.value === id)) {
+                alert("This movie is already added.");
+                return;
+            }
+
+            // Create a hidden input for the movie ID
+            const movieInput = document.createElement('input');
+            movieInput.type = 'hidden';
+            movieInput.name = 'movieIds';
+            movieInput.value = id;
+
+            // Add the hidden input and display the movie
+            selectedMoviesContainer.appendChild(movieInput);
+
+            const movieDisplay = document.createElement('div');
+            movieDisplay.innerHTML = `
+                <span>${title} (${releaseDate})</span>
+                <button type="button" onclick="removeMovie(this, '${id}')">Remove</button>
+            `;
+            movieDisplay.dataset.movieId = id;
+            selectedMoviesContainer.appendChild(movieDisplay);
+        }
+
+        // Remove a movie from the selected list
+        function removeMovie(button, id) {
+            const selectedMoviesContainer = document.getElementById('selectedMovies');
+
+            // Remove the hidden input for the movie
+            const hiddenInput = document.querySelector(`input[name="movieIds"][value="${id}"]`);
+            if (hiddenInput) hiddenInput.remove();
+
+            // Remove the movie display element
+            button.parentElement.remove();
+        }
+    </script>
+</head>
+<body>
+<header th:replace="~{fragments :: page-nav}"></header>
+<div class="container">
+    <h1>Create Watchlist</h1>
+
+    <!-- Watchlist Form -->
+    <form method="post" th:action="@{/watchlists/create}" th:object="${watchlist}">
+        <div>
+            <label>Name:</label>
+            <input type="text" th:field="*{name}" required />
+        </div>
+        <div>
+            <label>Description:</label>
+            <textarea th:field="*{description}" required></textarea>
+        </div>
+
+        <!-- Search Bar for Movies -->
+        <div>
+            <label>Search for Movies:</label>
+            <input type="text" id="searchQuery" placeholder="Enter movie title" />
+            <button type="button" class="btn btn-secondary" onclick="searchMovies()">Search</button>
+        </div>
+
+        <!-- Search Results -->
+        <div id="searchResults">
+            <!-- Movies from TMDB API will appear here -->
+        </div>
+
+        <!-- Selected Movies -->
+        <div>
+            <h3>Selected Movies (Limit: 5):</h3>
+            <div id="selectedMovies">
+                <!-- Selected movies will appear here as hidden inputs and visible entries -->
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Save</button>
+    </form>
+</div>
+</body>
+</html>
