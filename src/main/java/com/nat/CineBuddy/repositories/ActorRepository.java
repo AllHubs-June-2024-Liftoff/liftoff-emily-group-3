@@ -1,4 +1,4 @@
-package com.nat.CineBuddy.models.data;
+package com.nat.CineBuddy.repositories;
 
 import com.nat.CineBuddy.models.Actor;
 import org.springframework.data.repository.CrudRepository;
