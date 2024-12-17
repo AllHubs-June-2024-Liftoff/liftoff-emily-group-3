@@ -1,33 +1,44 @@
 package com.nat.CineBuddy.models;
 
-import jakarta.persistence.*;
 
-@Entity
 public class Movie {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-
-    @Column(nullable = false)
+    private String id;
     private String title;
+    private String overview;
+    private String releaseDate;
+    private String posterPath;
+    private String genres;
+    private String budget;
+    private String revenue;
+    private String runtime;
+    private String voteAverage;
 
-    @Column
-    private String genre;
+    // Constructors
 
-    @Column
-    private String description;
-
-    @Column
-    private Double rating; // Average rating
-
-    // Getters and Setters
-    public Integer getId() {
-        return id;
+    //empty constructor for sql database connection
+    public Movie() {
     }
 
-    public void setId(Integer id) {
+
+    public Movie(String id, String title, String overview, String releaseDate, String posterPath) {
         this.id = id;
+        this.title = title;
+        this.overview = overview;
+        this.releaseDate = releaseDate;
+        this.posterPath = posterPath;
+    }
+
+    public Movie(String id, String title, String overview, String releaseDate, String posterPath, String genres, String budget, String revenue, String runtime, String voteAverage) {
+        this.id = id;
+        this.title = title;
+        this.overview = overview;
+        this.releaseDate = releaseDate;
+        this.posterPath = posterPath;
+        this.genres = genres;
+        this.budget = budget;
+        this.revenue = revenue;
+        this.runtime = runtime;
+        this.voteAverage = voteAverage;
     }
 
     public String getTitle() {
@@ -38,27 +49,79 @@ public class Movie {
         this.title = title;
     }
 
-    public String getGenre() {
-        return genre;
+    public String getOverview() {
+        return overview;
     }
 
-    public void setGenre(String genre) {
-        this.genre = genre;
+    public void setOverview(String overview) {
+        this.overview = overview;
     }
 
-    public String getDescription() {
-        return description;
+    public String getReleaseDate() {
+        return releaseDate;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setReleaseDate(String releaseDate) {
+        this.releaseDate = releaseDate;
     }
 
-    public Double getRating() {
-        return rating;
+    public String getPosterPath() {
+        return posterPath;
     }
 
-    public void setRating(Double rating) {
-        this.rating = rating;
+    public void setPosterPath(String posterPath) {
+        this.posterPath = posterPath;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getGenres() {
+        return genres;
+    }
+
+    public void setGenres(String genres) {
+        this.genres = genres;
+    }
+
+    public String getBudget() {
+        return budget;
+    }
+
+    public void setBudget(String budget) {
+        this.budget = budget;
+    }
+
+    public String getRevenue() {
+        return revenue;
+    }
+
+    public void setRevenue(String revenue) {
+        this.revenue = revenue;
+    }
+
+    public String getRuntime() {
+        return runtime;
+    }
+
+    public void setRuntime(String runtime) {
+        this.runtime = runtime;
+    }
+
+    public String getVoteAverage() {
+        return voteAverage;
+    }
+
+    public void setVoteAverage(String voteAverage) {
+        this.voteAverage = voteAverage;
+    }
+
+    public String getFormattedGenres() {
+        return String.join(", ", this.genres);
     }
 }

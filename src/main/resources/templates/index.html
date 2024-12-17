@@ -1,10 +1,43 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org/">
-<head th:replace="~{fragments :: head}"></head>
+
+<html xmlns:th="http://www.thymeleaf.org/" lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trending Movies</title>
+    <!-- Flickity CSS -->
+    <div th:replace="fragments :: head"></div>
+    <link rel="stylesheet" href="https://unpkg.com/flickity@2/dist/flickity.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" th:href="@{/styles.css}">
+</head>
 <body>
 
-<nav th:replace="~{fragments :: page-nav}"></nav>
-<div class="container body-content"></div>
+<div th:replace="fragments :: page-nav"></div>
 
+
+<h2>Trending Movies</h2>
+
+<!-- Flickity Carousel -->
+<div class="gallery js-flickity"
+     data-flickity-options='{ "wrapAround": true, "contain": true, "pageDots": false }'>
+
+    <!-- Dynamic movie cells -->
+    <div class="gallery-cell" th:each="movie : ${movies}">
+        <a th:href="@{/movie-details/{id}(id=${movie.id})}">
+            <img th:src="@{'https://image.tmdb.org/t/p/w500' + ${movie.posterPath}}" alt="Movie Poster"/>
+            <div class="caption">
+                <h5 th:text="${movie.title}"></h5>
+                <p th:text="${movie.overview}"></p>
+            </div>
+        </a>
+    </div>
+
+</div>
+
+
+<!-- Flickity JavaScript -->
+<script src="https://unpkg.com/flickity@2/dist/flickity.pkgd.min.js"></script>
 </body>
-</html>
+</html>l>
