@@ -1,0 +1,171 @@
+/* General styling */
+    * {
+      -webkit-box-sizing: border-box;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: sans-serif;
+      background-color: lightblue;
+      margin: 0;
+      padding: 20px;
+    }
+
+    /* Page title styling */
+    h2 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    /* Carousel container background */
+    .gallery {
+      background: #EEE;
+      margin: 20px auto;
+      max-width: 100%;
+      padding: 10px 0;
+    }
+
+    /* Carousel cell styling */
+    .gallery-cell {
+      width: 200px; /* Adjust width to fit multiple posters */
+      height: auto;
+      margin-right: 10px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .gallery-cell img {
+      width: 100%;
+      border-radius: 10px;
+      transition: transform 0.3s ease;
+    }
+
+    .gallery-cell:hover img {
+      transform: scale(1.1); /* Slight zoom effect on hover */
+    }
+
+    /* Caption styling */
+    .caption {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(0, 0, 0, 0.7);
+      color: white;
+      text-align: left;
+      padding: 10px;
+      display: none; /* Hidden by default */
+      width: 100%; /* Make the caption width equal to the poster width */
+      max-height: 40%; /* Limit caption height */
+      overflow-y: auto; /* Enable vertical scrolling if content exceeds max height */
+      border-bottom-left-radius: 10px; /* Match poster border radius */
+      border-bottom-right-radius: 10px;
+
+    }
+
+    .gallery-cell:hover .caption {
+      display: block; /* Show on hover */
+    }
+.caption h5 {
+  font-size: 16px;
+  margin: 0 0 5px 0; /* Margin below the title */
+}
+
+.caption p {
+  font-size: 14px;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Show caption on hover */
+.gallery-cell:hover .caption {
+  display: block; /* Display caption when hovered */
+}
+
+/* Customize scrollbar appearance */
+.caption::-webkit-scrollbar {
+  width: 6px; /* Width of the scrollbar */
+}
+
+.caption::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.5); /* Scrollbar thumb color */
+  border-radius: 5px; /* Rounded scrollbar edges */
+}
+
+.caption::-webkit-scrollbar-track {
+  background: transparent; /* Transparent scrollbar track */
+}
+     /* Add a black background color to the top navigation */
+.topnav {
+  background-color: #333;
+  overflow: hidden;
+}
+
+.topnav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #333;
+    overflow: hidden;
+  }
+
+  .topnav a {
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
+  }
+
+  .topnav .profile-icon {
+    order: -1;
+  }
+
+  .search-container {
+    display: flex;
+    align-items: center;
+  }
+
+  .search-container input[type="text"] {
+    padding: 6px;
+    margin-top: 8px;
+    margin-right: 8px;
+    font-size: 17px;
+    border: none;
+  }
+
+  .search-container button {
+    padding: 6px;
+    margin-top: 8px;
+    background: #ddd;
+    font-size: 17px;
+    border: none;
+    cursor: pointer;
+  }
+
+  .search-container button:hover {
+    background: #ccc;
+  }
+
+  .topnav .icon {
+    display: none;
+  }
+
+  @media screen and (max-width: 600px) {
+    .topnav a:not(:first-child), .search-container {
+      display: none;
+    }
+    .topnav a.icon {
+      display: block;
+    }
+    .topnav.responsive {
+      flex-direction: column;
+    }
+    .topnav.responsive a, .topnav.responsive .search-container {
+      display: block;
+      text-align: left;
+    }
+
+
+   }
