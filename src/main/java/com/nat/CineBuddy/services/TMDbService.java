@@ -1,4 +1,4 @@
-package com.nat.CineBuddy.service;
+package com.nat.CineBuddy.services;
 
 import com.nat.CineBuddy.models.Actor;
 import com.nat.CineBuddy.models.Movie;

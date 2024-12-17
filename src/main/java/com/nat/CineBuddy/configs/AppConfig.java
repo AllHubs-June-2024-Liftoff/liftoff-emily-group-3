@@ -1,4 +1,4 @@
-package com.nat.CineBuddy.configurations;
+package com.nat.CineBuddy.configs;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

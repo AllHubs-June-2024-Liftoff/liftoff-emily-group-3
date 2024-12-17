@@ -1,7 +1,7 @@
 package com.nat.CineBuddy.controllers;
 
 import com.nat.CineBuddy.models.Movie;
-import com.nat.CineBuddy.service.TMDbService;
+import com.nat.CineBuddy.services.TMDbService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
