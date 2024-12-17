@@ -1,3 +1,13 @@
+import com.nat.CineBuddy.models.Movie;
+import com.nat.CineBuddy.models.Watchlist;
+import com.nat.CineBuddy.repositories.WatchlistRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 @Service
 public class WatchlistService {
 
