@@ -21,8 +21,8 @@ public class Watchlist {
     @ManyToOne
     private User user; // Link to the User entity
 
-    @ManyToMany
-    private List<Movie> movies; // List of movies in the watchlist
+    @OneToMany(mappedBy = "watchlist", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<WatchlistMovie> movies; // List of movies in the watchlist
 
     // Getters and Setters
     public Integer getId() {
@@ -57,11 +57,11 @@ public class Watchlist {
         this.user = user;
     }
 
-    public List<Movie> getMovies() {
+    public List<WatchlistMovie> getMovies() {
         return movies;
     }
 
-    public void setMovies(List<Movie> movies) {
+    public void setMovies(List<WatchlistMovie> movies) {
         this.movies = movies;
     }
 }

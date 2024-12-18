@@ -1,7 +1,13 @@
+package com.nat.CineBuddy.services;
+
 import com.nat.CineBuddy.models.Movie;
 import com.nat.CineBuddy.models.Watchlist;
+import com.nat.CineBuddy.models.WatchlistMovie;
+import com.nat.CineBuddy.repositories.MovieRepository;
+import com.nat.CineBuddy.repositories.UserRepository;
 import com.nat.CineBuddy.repositories.WatchlistRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import com.nat.CineBuddy.models.User;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,11 +19,13 @@ public class WatchlistService {
 
     private final WatchlistRepository watchlistRepository;
     private final MovieRepository movieRepository;
+    private final UserRepository userRepository;
 
     @Autowired
-    public WatchlistService(WatchlistRepository watchlistRepository, MovieRepository movieRepository) {
+    public WatchlistService(WatchlistRepository watchlistRepository, MovieRepository movieRepository, UserRepository userRepository) {
         this.watchlistRepository = watchlistRepository;
         this.movieRepository = movieRepository;
+        this.userRepository = userRepository;
     }
 
     /**
@@ -96,5 +104,41 @@ public class WatchlistService {
         });
 
         save(watchlist); // Save updated watchlist
+    }
+    /**
+     * Convert a list of Movie objects to WatchlistMovie objects with default values.
+     *
+     * @param movies List of Movie objects
+     * @return List of WatchlistMovie objects
+     */
+    public List<WatchlistMovie> convertToWatchlistMovies(List<Movie> movies) {
+        return movies.stream()
+                .map(movie -> new WatchlistMovie(movie, false, "")) // Default values for watched=false and comment=""
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Create a Watchlist and associate it with movies.
+     *
+     * @param watchlist The Watchlist to create
+     * @param movieIds  List of movie IDs to associate with the Watchlist
+     * @param username    username of the user creating the Watchlist
+     * @return The saved Watchlist
+     */
+    public Watchlist createWatchlistWithMovies(Watchlist watchlist, List<String> movieIds, String username) {
+
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        // Fetch movies from the database
+        List<Movie> movies = getMoviesByIds(movieIds);
+
+        // Convert movies to WatchlistMovie objects
+        List<WatchlistMovie> watchlistMovies = convertToWatchlistMovies(movies);
+
+        // Associate the movies and user with the Watchlist
+        watchlist.setUser(user);
+        watchlist.setMovies(watchlistMovies);
+
+        return save(watchlist);
     }
 }

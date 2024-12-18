@@ -6,6 +6,9 @@ public class MovieDto {
     private String posterPath;
     private String releaseDate;
 
+    public MovieDto(String title, String releaseDate, String posterPath, String overview) {
+    }
+
     // Getters and setters
 
     public String getTitle() {

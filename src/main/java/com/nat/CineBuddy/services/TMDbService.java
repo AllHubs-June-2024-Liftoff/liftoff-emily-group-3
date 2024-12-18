@@ -124,4 +124,15 @@ public class TMDbService {
     private String getJsonField(JsonNode node, String fieldName, String defaultValue) {
         return node.has(fieldName) ? node.get(fieldName).asText() : defaultValue;
     }
+
+    public List<Movie> searchMovies(String query) {
+        try {
+            JsonNode response = fetchFromApi("/search/movie?query=" + query);
+            return response != null && response.has("results") ? parseMovies(response.get("results")) : Collections.emptyList();
+        } catch (Exception e) {
+            System.err.println("Error searching for movies: " + e.getMessage());
+            return Collections.emptyList();
+        }
+    }
+
 }

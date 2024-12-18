@@ -1,9 +1,10 @@
 package com.nat.CineBuddy.controllers;
 
+import com.nat.CineBuddy.models.Movie;
 import com.nat.CineBuddy.models.Watchlist;
-import com.nat.CineBuddy.models.MovieDto;
+import com.nat.CineBuddy.dto.MovieDto;
 import com.nat.CineBuddy.models.User;
-import com.nat.CineBuddy.services.TmdbApiService;
+import com.nat.CineBuddy.services.TMDbService;
 import com.nat.CineBuddy.services.UserService;
 import com.nat.CineBuddy.services.WatchlistService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Handles all operations related to Watchlists, including:
@@ -33,13 +35,13 @@ import java.util.Map;
 public class WatchlistController {
 
     private final WatchlistService watchlistService;
-    private final TmdbApiService tmdbApiService;
+    private final TMDbService tmDbService;
     private final UserService userService;
 
     @Autowired
-    public WatchlistController(WatchlistService watchlistService, TmdbApiService tmdbApiService, UserService userService) {
+    public WatchlistController(WatchlistService watchlistService, TMDbService tmDbService, UserService userService) {
         this.watchlistService = watchlistService;
-        this.tmdbApiService = tmdbApiService;
+        this.tmDbService = tmDbService;
         this.userService = userService;
     }
 
@@ -83,8 +85,15 @@ public class WatchlistController {
     @GetMapping("/search")
     @ResponseBody
     public List<MovieDto> searchMovies(@RequestParam String query) {
-        return tmdbApiService.searchMovies(query);
+        // Fetch movies from TMDbService
+        List<Movie> movies = tmDbService.searchMovies(query); // Or call a specific search method
+
+        // Convert Movie to MovieDto
+        return movies.stream()
+                .map(movie -> new MovieDto(movie.getTitle(), movie.getReleaseDate(), movie.getPosterPath(), movie.getOverview()))
+                .collect(Collectors.toList());
     }
+
 
     /**
      * Handle the creation of a new watchlist.
@@ -101,10 +110,11 @@ public class WatchlistController {
                                   Principal principal) {
         User user = userService.findByUsername(principal.getName())
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        String username = principal.getName();
 
-        watchlist.setUser(user); // Associate the watchlist with the logged-in user
-        watchlist.setMovies(watchlistService.getMoviesByIds(movieIds)); // Fetch selected movies from the database
-        watchlistService.save(watchlist); // Save the watchlist to the database
+        // Delegate the creation logic to the service
+        watchlistService.createWatchlistWithMovies(watchlist, movieIds, username);
+
         return "redirect:/watchlists";
     }
 
@@ -131,7 +141,8 @@ public class WatchlistController {
         Watchlist watchlist = watchlistService.findById(watchlistId);
 
         // Fetch the movie details from the TMDB API
-        MovieDto movieDetails = tmdbApiService.getMovieDetails(movieId);
+        Movie movieDetails = tmDbService.getMovieDetails(String.valueOf(movieId));
+
 
         // Add data to the model
         model.addAttribute("watchlist", watchlist);
