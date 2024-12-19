@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org/" xmlns:sec="http://www.w3.org/1999/xhtml">
 
-<head th:fragment="head">
+<th:block th:fragment="head">
     <!--Spring Security requires CSRF tokens for API Calls to all unsafe HTTP Requests (POST,PUT,DELETE)-->
     <meta th:name="_csrf" th:content="${_csrf.token}"/>
     <meta th:name="_csrf_header" th:content="${_csrf.headerName}"/>
@@ -13,7 +13,7 @@
     <link th:href="@{/css/cinebuddy.css}" rel="stylesheet" />
 
     <title>CineBuddy</title>
-</head>
+</th:block>
 
 <body>
 <nav th:fragment="page-nav" class="navbar navbar-expand-md navbar-dark bg-dark" aria-label="CineBuddy main navigation">

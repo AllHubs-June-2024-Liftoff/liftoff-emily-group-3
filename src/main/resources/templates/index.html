@@ -7,14 +7,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trending Movies</title>
     <!-- Flickity CSS -->
-    <div th:replace="fragments :: head"></div>
+    <th:block th:replace="~{fragments :: head}"></th:block>
     <link rel="stylesheet" href="https://unpkg.com/flickity@2/dist/flickity.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" th:href="@{/styles.css}">
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
 </head>
 <body>
 
-<div th:replace="fragments :: page-nav"></div>
+<div th:replace="~{fragments :: page-nav}"></div>
 
 
 <h2>Trending Movies</h2>
@@ -40,4 +40,4 @@
 <!-- Flickity JavaScript -->
 <script src="https://unpkg.com/flickity@2/dist/flickity.pkgd.min.js"></script>
 </body>
-</html>l>
+</html>

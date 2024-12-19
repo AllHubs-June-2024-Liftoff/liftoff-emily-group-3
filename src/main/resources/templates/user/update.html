@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org/">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Flickity CSS -->
+    <th:block th:replace="~{fragments :: head}"></th:block>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body class="bg-light">
+
+<nav th:replace="~{fragments :: page-nav}"></nav>
+<div class="container body-content pt-1">
+    <form method="post" style="max-width:600px;">
+        <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
+        <div class="form-group">
+            <label th:for="name">name</label>
+            <input class="form-control" th:field="${user.profile.name}"/>
+            <span th:errors="${user.profile.name}" class="error"></span>
+        </div>
+        <div class="form-group">
+            <label th:for="name">Bio</label>
+            <textarea class="form-control" th:field="${user.profile.bio}" th:text="${user.profile.bio}"></textarea>
+            <span th:errors="${user.profile.bio}" class="error"></span>
+        </div>
+        <div class="form-group">
+            <label th:for="name">Profile Picture</label>
+            <input class="form-control" th:field="${user.profile.image}" />
+            <span th:errors="${user.profile.image}" class="error"></span>
+        </div>
+        <div class="form-group">
+            <label th:for="isPrivate">Private Account</label>
+            <input type="hidden" name="isPrivate" value="false" />
+            <input type="checkbox" name="isPrivate" id="isPrivate" th:checked="${user.profile.isPrivate() ? 'checked' : ''}" />
+        </div>
+        <input type="submit" value="Save Profile" />
+    </form>
+</div>
+</body>
+</html>

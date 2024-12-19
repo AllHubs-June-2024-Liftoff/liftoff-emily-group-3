@@ -1,6 +1,11 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org/">
-<head th:replace="~{fragments :: head}"></head>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <th:block th:replace="~{fragments :: head}"></th:block>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
 <body>
 
 <header th:replace="~{fragments :: page-nav}"></header>
