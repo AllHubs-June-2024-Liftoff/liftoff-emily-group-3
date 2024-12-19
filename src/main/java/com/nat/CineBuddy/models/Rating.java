@@ -28,6 +28,7 @@ public class Rating {
     @Size(max = 1000, min = 3, message = "Review cannot be blank.")
     public String review;
 
+
     public Rating() {
     }
 
