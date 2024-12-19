@@ -17,7 +17,7 @@ public class WatchListService {
 
 
     @Autowired
-    private TmdbService tmdbService;
+    private TMDbService tmdbService;
 
     public void addMovieToWatchList(Integer userId, Integer movieId) {
         WatchList watchList = new WatchList();
@@ -32,7 +32,7 @@ public class WatchListService {
 
         for (WatchList item : watchLists) {
             // Call the TMDb API to fetch the movie details
-            MovieDTO movie = tmdbService.getMovieById(item.getMovieId());
+            MovieDTO movie = TMDbService.getMovieById(item.getMovieId());
             movieDetails.add(movie);
         }
 

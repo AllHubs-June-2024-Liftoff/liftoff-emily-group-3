@@ -1,5 +1,6 @@
 package com.nat.CineBuddy.services;
 
+import com.nat.CineBuddy.dto.MovieDTO;
 import com.nat.CineBuddy.models.Actor;
 import com.nat.CineBuddy.models.Movie;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,6 +25,11 @@ public class TMDbService {
 
     public TMDbService(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
+    }
+
+    // FIX THIS!! COME BACK TO THIS
+    public static MovieDTO getMovieById(Integer movieId) {
+        return null;
     }
 
     // Fetch movie details
