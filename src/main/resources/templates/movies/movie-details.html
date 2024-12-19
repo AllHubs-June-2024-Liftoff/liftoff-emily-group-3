@@ -14,10 +14,14 @@
 <body>
 <div th:replace="~{fragments :: page-nav}"></div>
 <div class="container">
+
     <div class="left-section">
         <h2 th:text="${movie.title}"></h2>
+
         <div class="button-container">
-            <button class="btn btn-primary">Favorite</button>
+            <a href="#reviews-display">
+                <button class="btn btn-primary">See Reviews</button>
+            </a>
             <button class="btn btn-secondary">Add to Watchlist</button>
         </div>
         <img th:src="@{'https://image.tmdb.org/t/p/w500' + ${movie.posterPath}}" alt="Movie Poster"/>
@@ -30,9 +34,13 @@
         <p class="movie-stats">Revenue: $<span th:text="${movie.revenue}"></span></p>
         <p class="movie-stats">Runtime: <span th:text="${movie.runtime}"></span> minutes</p>
     </div>
+
+    <!--todo: "review submitted! notification" -->
     <div class="right-section">
         <h3>Rate and Review</h3>
         <form action="/submit-review" method="POST">
+            <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
+            <input type="hidden" name="movieId" th:value="${movie.movieId}" />
             <div class="form-group">
                 <label for="rating">Rating (1-10):</label>
                 <input type="number" id="rating" name="rating" min="1" max="10" required>
@@ -44,7 +52,6 @@
             <div class="form-button">
                 <button type="submit">Submit</button>
             </div>
-
         </form>
     </div>
 </div>
@@ -74,12 +81,23 @@
     <h3>Recommended Movies</h3>
     <div class="gallery js-flickity" data-flickity-options='{ "wrapAround": true, "contain": true, "pageDots": false }'>
         <div class="gallery-cell" th:each="movie : ${similarMovies}">
-            <a th:href="@{/movie-details/{id}(id=${movie.id})}">
+            <a th:href="@{/movie-details/{id}(id=${movie.movieId})}">
                 <img th:src="@{'https://image.tmdb.org/t/p/w500' + ${movie.posterPath}}" alt="Movie Poster"/>
                 <div class="caption">
                     <h5 th:text="${movie.title}"></h5>
                 </div>
             </a>
+        </div>
+    </div>
+</div>
+<!-- Reviews Section -->
+<div class="movie-reviews" id="reviews-display">
+    <h3>User Reviews</h3>
+    <div th:each="review : ${reviews}">
+        <div class="review">
+            <p><strong th:text="${review.username}"></strong> (Rating: <span th:text="${review.rating}"></span>/10)</p>
+            <p th:text="${review.content}"></p>
+            <hr/>
         </div>
     </div>
 </div>
