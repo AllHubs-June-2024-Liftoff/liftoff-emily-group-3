@@ -1,7 +1,10 @@
 package com.nat.CineBuddy.controllers;
 
+import com.nat.CineBuddy.models.Profile;
 import com.nat.CineBuddy.services.ProfileService;
 import com.nat.CineBuddy.services.UserService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -27,28 +30,40 @@ public class ProfileController {
     private UserService userService;
 
     @GetMapping("profile")
-    public String index(@AuthenticationPrincipal User currentUser, Model model){
+    public String index(Model model){
         model.addAttribute("user",userService.getCurrentUser());
         return "user/index";
     }
 
     @GetMapping("profile/update")
-    public String userProfileUpdateForm(@AuthenticationPrincipal User currentUser, Model model){
-        model.addAttribute("user",userService.getCurrentUser());
+    public String userProfileUpdateForm(Model model){
+        model.addAttribute("profile",userService.getCurrentUser().getProfile());
         return "user/update";
     }
 
     @PostMapping("profile/update")
-    public String userProfileUpdate(@AuthenticationPrincipal User currentUser, @Valid @ModelAttribute("user") com.nat.CineBuddy.models.User user, BindingResult result, Errors errors, Model model){
-        System.out.println(user);
+    public String userProfileUpdate(@Valid @ModelAttribute("profile") Profile profile, BindingResult result, Errors errors){
         if(!errors.hasErrors() && !result.hasErrors()){
-            model.addAttribute("user",userService.getCurrentUser());
-            return "user/index";
+            com.nat.CineBuddy.models.User updatedUser = userService.getCurrentUser();
+            boolean success = profileService.updateProfile(updatedUser.getProfile().getId(),profile);
+            if(success){
+                return "redirect:/profile";
+            }
+            else{
+                return "redirect:/profile/update";
+            }
         }
         else{
-            model.addAttribute("user",user);
-            return "user/update";
+            return "redirect:/profile/update";
         }
+    }
+
+    @GetMapping("profile/delete")
+    public String deleteActiveUser(HttpServletRequest request, HttpServletResponse response){
+        com.nat.CineBuddy.models.User deleteUser = userService.getCurrentUser();
+        profileService.logoutUser(request,response);
+        userService.deleteUserById(deleteUser.getId());
+        return "redirect:/";
     }
 
     @GetMapping("profiles/{userName}")
@@ -56,7 +71,7 @@ public class ProfileController {
         Optional<com.nat.CineBuddy.models.User> possibleUser = userService.findByUsername(userName);
         if(possibleUser.isPresent()){
             com.nat.CineBuddy.models.User searchedUser = possibleUser.get();
-            if(!searchedUser.getProfile().isPrivate()){
+            if(!searchedUser.getProfile().getHidden()){
                 model.addAttribute("user",searchedUser);
                 return "user/index";
             }

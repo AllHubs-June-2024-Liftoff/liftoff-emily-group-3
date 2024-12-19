@@ -26,7 +26,7 @@
         <div class="collapse navbar-collapse" id="CBNav">
             <ul class="navbar-nav me-auto mb-2 mb-md-0">
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#">Movie Night</a>
+                    <a class="nav-link active" aria-current="page" href="/">Home link</a>
                 </li>
                 <li class="nav-item dropdown" sec:authorize="hasRole('ADMIN')">
                     <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">Administration</a>
@@ -35,23 +35,22 @@
                         <li><a class="dropdown-item" href="/admin/roles">All Roles</a></li>
                     </ul>
                 </li>
-                <li class="nav-item" sec:authorize="!isAuthenticated()">
-                    <a class="nav-link" href="/login">Login</a>
-                </li>
-                <li class="nav-item" sec:authorize="isAuthenticated()">
-                    <a class="nav-link" href="/logout">Logout</a>
-                </li>
             </ul>
             <form role="search">
                 <input class="form-control" type="search" placeholder="Search" aria-label="Search">
             </form>
             <div class="d-flex">
-                <div style="padding-left:1rem;">
-                    <a href="/profile">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" height="16" width="16" fill="#FFFFFF">
-                            <path d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512l388.6 0c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304l-91.4 0z"/>
-                        </svg>
-                    </a>
+                <div class="dropdown" style="padding-left:1rem;">
+                    <svg role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" height="16" width="16" fill="#FFFFFF" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <path d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512l388.6 0c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304l-91.4 0z"/>
+                    </svg>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
+                        <li sec:authorize="!isAuthenticated()"><a class="dropdown-item" href="/login" >Login</a></li>
+                        <li sec:authorize="isAuthenticated()"><a class="dropdown-item" href="/profile">View Profile</a></li>
+                        <li sec:authorize="isAuthenticated()"><a class="dropdown-item" href="/profile/update">Edit Profile</a></li>
+                        <li sec:authorize="isAuthenticated()"><hr class="dropdown-divider"></li>
+                        <li sec:authorize="isAuthenticated()"><a class="dropdown-item" href="/logout">Logout</a></li>
+                    </ul>
                 </div>
             </div>
         </div>
