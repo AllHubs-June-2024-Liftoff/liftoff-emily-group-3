@@ -25,7 +25,7 @@
 
     <!-- Dynamic movie cells -->
     <div class="gallery-cell" th:each="movie : ${movies}">
-        <a th:href="@{/movie-details/{id}(id=${movie.id})}">
+        <a th:href="@{/movie-details/{id}(id=${movie.movieId})}">
             <img th:src="@{'https://image.tmdb.org/t/p/w500' + ${movie.posterPath}}" alt="Movie Poster"/>
             <div class="caption">
                 <h5 th:text="${movie.title}"></h5>
