@@ -59,7 +59,7 @@ public class WatchlistController {
 
         List<Watchlist> watchlists = watchlistService.findByUserId(user.getId());
         model.addAttribute("watchlists", watchlists);
-        return "watchlists"; // Renders watchlists.html
+        return "watchlists/index"; // Renders index.html
     }
 
     /**
@@ -72,7 +72,7 @@ public class WatchlistController {
     public String showCreateForm(Model model) {
         model.addAttribute("watchlist", new Watchlist()); // Initial empty Watchlist object
         model.addAttribute("movies", new ArrayList<>());  // Empty list of movies for search results
-        return "create"; // Renders create.html
+        return "watchlists/create"; // Renders create.html
     }
 
     /**
