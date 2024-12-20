@@ -5,6 +5,7 @@ import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
 
-public interface ReviewRepository extends CrudRepository<Review, String> {
+public interface ReviewRepository extends CrudRepository<Review, Long> {
     List<Review> findByMovieId(String movieId);
+    List<Review> findByUsername(String username);
 }
