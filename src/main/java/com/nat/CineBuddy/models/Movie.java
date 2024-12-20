@@ -1,10 +1,18 @@
 package com.nat.CineBuddy.models;
 
+import jakarta.persistence.*;
 
+// This annotation marks the class as a JPA entity
+@Entity
 public class Movie {
+
+    @Id // Marks 'id' as the primary key
     private String id;
+
     private String title;
+
     private String overview;
+
     private String releaseDate;
     private String posterPath;
     private String genres;
@@ -15,10 +23,9 @@ public class Movie {
 
     // Constructors
 
-    //empty constructor for sql database connection
+    // Empty constructor for SQL database connection
     public Movie() {
     }
-
 
     public Movie(String id, String title, String overview, String releaseDate, String posterPath) {
         this.id = id;
@@ -39,6 +46,16 @@ public class Movie {
         this.revenue = revenue;
         this.runtime = runtime;
         this.voteAverage = voteAverage;
+    }
+
+    // Getters and Setters
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getTitle() {
@@ -71,14 +88,6 @@ public class Movie {
 
     public void setPosterPath(String posterPath) {
         this.posterPath = posterPath;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String getGenres() {
