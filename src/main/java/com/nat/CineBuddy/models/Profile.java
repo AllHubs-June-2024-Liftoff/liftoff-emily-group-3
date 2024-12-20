@@ -11,7 +11,7 @@ public class Profile {
     private String name;
     private String bio;
     private String image;
-    private boolean isPrivate;
+    private boolean hidden;
     @OneToOne
     @JoinColumn(name = "user_id")
     private User user;
@@ -44,12 +44,12 @@ public class Profile {
         this.image = image;
     }
 
-    public boolean isPrivate() {
-        return isPrivate;
+    public boolean getHidden() {
+        return hidden;
     }
 
-    public void setPrivate(boolean aPrivate) {
-        isPrivate = aPrivate;
+    public void setHidden(boolean hidden) {
+        this.hidden = hidden;
     }
 
     public User getUser() {
@@ -67,6 +67,7 @@ public class Profile {
                 ", image='" + image + '\'' +
                 ", bio='" + bio + '\'' +
                 ", name='" + name + '\'' +
+                ", private='" + hidden + '\'' +
                 '}';
     }
 }

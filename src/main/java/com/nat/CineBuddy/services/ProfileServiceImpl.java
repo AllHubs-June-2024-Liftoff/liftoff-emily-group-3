@@ -3,10 +3,12 @@ package com.nat.CineBuddy.services;
 import com.nat.CineBuddy.models.Profile;
 import com.nat.CineBuddy.models.User;
 import com.nat.CineBuddy.repositories.ProfileRepository;
-import com.nat.CineBuddy.security.CBUserDetailsService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -17,14 +19,15 @@ public class ProfileServiceImpl implements ProfileService{
     @Autowired
     private ProfileRepository profileRepository;
 
-    public boolean createProfile(User user){
+    public boolean createProfile(User user,String name){
         Optional<Profile> optionalProfile = profileRepository.findByUser(user);
         if(optionalProfile.isPresent()){
             return false;
         }
         Profile profile = new Profile();
         profile.setUser(user);
-        profile.setPrivate(false);
+        profile.setHidden(false);
+        profile.setName(name);
         profileRepository.save(profile);
         return true;
     }
@@ -38,7 +41,7 @@ public class ProfileServiceImpl implements ProfileService{
         storedProfile.setName(profile.getName());
         storedProfile.setBio(profile.getBio());
         storedProfile.setImage(profile.getImage());
-        storedProfile.setPrivate(profile.isPrivate());
+        storedProfile.setHidden(profile.getHidden());
         profileRepository.save(storedProfile);
         return true;
     }
@@ -56,4 +59,11 @@ public class ProfileServiceImpl implements ProfileService{
     }
 
 
+    public void logoutUser(HttpServletRequest request, HttpServletResponse response) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null) {
+            SecurityContextLogoutHandler logoutHandler = new SecurityContextLogoutHandler();
+            logoutHandler.logout(request, response, authentication);  // Log out the user
+        }
+    }
 }

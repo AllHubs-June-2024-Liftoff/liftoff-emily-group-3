@@ -76,8 +76,7 @@ public class UserServiceImpl implements UserService{
         user.setRoles(roles);
         userRepository.save(user);
         User profileUser = userRepository.findByUsernameOrEmail(user.getUsername(), user.getUsername()).get();
-        profileService.createProfile(profileUser);
-        return true;
+        return profileService.createProfile(profileUser,userRegistrationDTO.getName());
     }
 
     @Override
@@ -109,4 +108,5 @@ public class UserServiceImpl implements UserService{
             return new User();
         }
     }
+
 }
