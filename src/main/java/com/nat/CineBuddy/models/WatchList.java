@@ -8,6 +8,7 @@ import jakarta.persistence.Id;
 @Entity
     public class WatchList {
 
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
