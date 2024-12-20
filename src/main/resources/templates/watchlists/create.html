@@ -2,62 +2,119 @@
 <html xmlns:th="http://www.thymeleaf.org/">
 <head th:replace="~{fragments :: head}">
     <title>Create Watchlist</title>
+
     <script>
-        // Add a movie to the selected list
-       function addMovie() {
-           const movieSelect = document.getElementById('movieSelect');
-           const selectedMoviesContainer = document.getElementById('selectedMovies');
-           const selectedMoviesInputs = document.querySelectorAll('input[name="movieIds"]');
+        /**
+         * Fetch movie search results from the backend and populate the dropdown.
+         */
+        async function searchMovies() {
+            // Get the user's query
+            const query = document.getElementById('searchQuery').value;
+            const movieSelect = document.getElementById('movieSelect');
 
-           // Check if a movie is selected
-           if (movieSelect.value === "") {
-               alert("Please select a movie.");
-               return;
-           }
+            // Clear any previous search results
+            movieSelect.innerHTML = '<option value="" disabled selected>Select a movie...</option>';
 
-           // Check if the limit of 5 movies is reached
-           if (selectedMoviesInputs.length >= 5) {
-               alert("You can only add up to 5 movies.");
-               return;
-           }
+            // Validate the query is not empty
+            if (!query.trim()) {
+                alert('Please enter a search term.');
+                return;
+            }
 
-           const selectedOption = movieSelect.options[movieSelect.selectedIndex];
-           const movieId = movieSelect.value;
-           const movieTitle = selectedOption.text;
+            try {
+                // Send a GET request to the backend to search for movies
+                const response = await fetch(`/watchlists/search?query=${encodeURIComponent(query)}`);
 
-           // Check if the movie is already added
-           if (Array.from(selectedMoviesInputs).some(input => input.value === movieId)) {
-               alert("This movie is already added.");
-               return;
-           }
+                // Check if the response is successful
+                if (!response.ok) {
+                    throw new Error(`Error fetching movies: ${response.statusText}`);
+                }
 
-           // Add hidden input for movie ID
-           const movieInput = document.createElement('input');
-           movieInput.type = 'hidden';
-           movieInput.name = 'movieIds';
-           movieInput.value = movieId;
+                // Parse the response JSON
+                const movies = await response.json();
 
-           // Add to the selected movies container
-           const movieDisplay = document.createElement('div');
-           movieDisplay.innerHTML = `
-               <span>${movieTitle}</span>
-               <button type="button" onclick="removeMovie(this, '${movieId}')">Remove</button>
-           `;
-           selectedMoviesContainer.appendChild(movieInput);
-           selectedMoviesContainer.appendChild(movieDisplay);
+                // Check if no movies are found
+                if (movies.length === 0) {
+                    alert('No movies found.');
+                    return;
+                }
 
-           // Clear selection
-           movieSelect.value = "";
-       }
+                // Populate the dropdown with movies
+                movies.forEach(movie => {
+                    const option = document.createElement('option');
+                    option.value = movie.id; // Movie ID
+                    option.textContent = `${movie.title} (${movie.releaseDate})`; // Movie title and release date
+                    movieSelect.appendChild(option);
+                });
+            } catch (error) {
+                // Handle any errors that occur during the fetch
+                console.error('Error fetching movies:', error);
+                alert('An error occurred while searching. Please try again.');
+            }
+        }
 
-       // Remove a movie from the selected list
-       function removeMovie(button, id) {
-           const selectedMoviesContainer = document.getElementById('selectedMovies');
-           const hiddenInput = document.querySelector(`input[name="movieIds"][value="${id}"]`);
+        /**
+         * Add the selected movie to the "Selected Movies" section.
+         */
+        function addMovie() {
+            const movieSelect = document.getElementById('movieSelect');
+            const selectedMoviesContainer = document.getElementById('selectedMovies');
+            const selectedMoviesInputs = document.querySelectorAll('input[name="movieIds"]');
 
-           if (hiddenInput) hiddenInput.remove();
-           button.parentElement.remove();
-       }
+            // Validate a movie is selected
+            if (movieSelect.value === "") {
+                alert("Please select a movie.");
+                return;
+            }
+
+            // Validate the limit of 5 movies
+            if (selectedMoviesInputs.length >= 5) {
+                alert("You can only add up to 5 movies.");
+                return;
+            }
+
+            const selectedOption = movieSelect.options[movieSelect.selectedIndex];
+            const movieId = movieSelect.value;
+            const movieTitle = selectedOption.text;
+
+            // Validate the movie is not already added
+            if (Array.from(selectedMoviesInputs).some(input => input.value === movieId)) {
+                alert("This movie is already added.");
+                return;
+            }
+
+            // Create a hidden input for the movie ID
+            const movieInput = document.createElement('input');
+            movieInput.type = 'hidden';
+            movieInput.name = 'movieIds';
+            movieInput.value = movieId;
+
+            // Create a visual representation of the movie in the selected list
+            const movieDisplay = document.createElement('div');
+            movieDisplay.innerHTML = `
+                <span>${movieTitle}</span>
+                <button type="button" onclick="removeMovie(this, '${movieId}')">Remove</button>
+            `;
+
+            // Append the input and display to the container
+            selectedMoviesContainer.appendChild(movieInput);
+            selectedMoviesContainer.appendChild(movieDisplay);
+
+            // Clear the dropdown selection
+            movieSelect.value = "";
+        }
+
+        /**
+         * Remove a movie from the "Selected Movies" section.
+         */
+        function removeMovie(button, id) {
+            const selectedMoviesContainer = document.getElementById('selectedMovies');
+            const hiddenInput = document.querySelector(`input[name="movieIds"][value="${id}"]`);
+
+            // Remove the hidden input and the visual representation
+            if (hiddenInput) hiddenInput.remove();
+            button.parentElement.remove();
+        }
     </script>
 </head>
 <body>
@@ -76,13 +133,11 @@
             <textarea th:field="*{description}" required></textarea>
         </div>
 
-        <!-- Search for Movies-->
+        <!-- Search for Movies -->
         <div>
-            <form method="get" th:action="@{/watchlists/create}">
-                <label>Search for Movies:</label>
-                <input type="text" name="query" placeholder="Enter movie title" />
-                <button type="submit" class="btn btn-secondary">Search</button>
-            </form>
+            <label>Search for Movies:</label>
+            <input type="text" id="searchQuery" placeholder="Enter movie title" />
+            <button type="button" class="btn btn-secondary" onclick="searchMovies()">Search</button>
         </div>
 
         <!-- Search Results -->
@@ -90,22 +145,17 @@
             <h3>Search Results:</h3>
             <select id="movieSelect" size="5">
                 <option value="" disabled selected>Select a movie...</option>
-                <option th:each="movie : ${searchResults}"
-                        th:value="${movie.id}"
-                        th:text="${movie.title} + ' (' + movie.releaseDate + ')'">
-                </option>
             </select>
-            <button type="button" onclick="addMovie()" class="btn btn-secondary">Add</button>
+            <button type="button" class="btn btn-secondary" onclick="addMovie()">Add</button>
         </div>
 
         <!-- Selected Movies -->
         <div>
             <h3>Selected Movies (Limit: 5):</h3>
-            <div id="selectedMovies">
-                <!-- Hidden inputs and visible movie list will appear here -->
-            </div>
+            <div id="selectedMovies"></div>
         </div>
 
+        <!-- Submit the Form -->
         <button type="submit" class="btn btn-primary">Save</button>
     </form>
 </div>

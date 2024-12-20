@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import com.fasterxml.jackson.databind.JsonNode;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -127,12 +129,17 @@ public class TMDbService {
 
     public List<Movie> searchMovies(String query) {
         try {
-            JsonNode response = fetchFromApi("/search/movie?query=" + query);
-            return response != null && response.has("results") ? parseMovies(response.get("results")) : Collections.emptyList();
+            String url = BASE_URL + "/search/movie?query=" + URLEncoder.encode(query, StandardCharsets.UTF_8) + "&api_key=" + apiKey;
+            JsonNode response = restTemplate.getForObject(url, JsonNode.class);
+
+            if (response != null && response.has("results")) {
+                return parseMovies(response.get("results"));
+            }
         } catch (Exception e) {
             System.err.println("Error searching for movies: " + e.getMessage());
-            return Collections.emptyList();
         }
+        return Collections.emptyList();
     }
+
 
 }

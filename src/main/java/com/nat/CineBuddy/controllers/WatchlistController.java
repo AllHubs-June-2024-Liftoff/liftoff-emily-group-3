@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -63,17 +64,14 @@ public class WatchlistController {
     }
 
     /**
-     * Render the form to create a new watchlist.
-     *
-     * @param model Model to pass the form and initial data to the Thymeleaf template
-     * @return The "create" Thymeleaf template for the watchlist form
+     * Show the form to create a new watchlist with optional search results for movies.
      */
     @GetMapping("/create")
     public String showCreateForm(Model model) {
-        model.addAttribute("watchlist", new Watchlist()); // Initial empty Watchlist object
-        model.addAttribute("movies", new ArrayList<>());  // Empty list of movies for search results
-        return "watchlists/create"; // Renders create.html
+        model.addAttribute("watchlist", new Watchlist());
+        return "watchlists/create"; // Render the form
     }
+
 
     /**
      * Handle movie searches via the TMDB API.
@@ -85,12 +83,17 @@ public class WatchlistController {
     @GetMapping("/search")
     @ResponseBody
     public List<MovieDto> searchMovies(@RequestParam String query) {
-        // Fetch movies from TMDbService
-        List<Movie> movies = tmDbService.searchMovies(query); // Or call a specific search method
+        // Call the TMDbService to fetch movie data
+        List<Movie> movies = tmDbService.searchMovies(query);
 
-        // Convert Movie to MovieDto
+        // Map Movie objects to MovieDto for frontend consumption
         return movies.stream()
-                .map(movie -> new MovieDto(movie.getTitle(), movie.getReleaseDate(), movie.getPosterPath(), movie.getOverview()))
+                .map(movie -> new MovieDto(
+                        movie.getId(), // Assuming you have an ID in your Movie model
+                        movie.getTitle(),
+                        movie.getReleaseDate(),
+                        movie.getPosterPath(),
+                        movie.getOverview()))
                 .collect(Collectors.toList());
     }
 
@@ -110,10 +113,15 @@ public class WatchlistController {
                                   Principal principal) {
         User user = userService.findByUsername(principal.getName())
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
-        String username = principal.getName();
+
+        // Default to an empty list if no movies are selected
+        if (movieIds == null) {
+            movieIds = new ArrayList<>();
+        }
+
 
         // Delegate the creation logic to the service
-        watchlistService.createWatchlistWithMovies(watchlist, movieIds, username);
+        watchlistService.createWatchlistWithMovies(watchlist, movieIds, user.getUsername());
 
         return "redirect:/watchlists";
     }
@@ -153,13 +161,12 @@ public class WatchlistController {
     }
 
 
-
     /**
      * Update watched status and comments for movies in the watchlist.
      *
-     * @param id               Watchlist ID
-     * @param watchedMovieIds  List of movie IDs marked as watched
-     * @param comments         Map of movie IDs to comments
+     * @param id              Watchlist ID
+     * @param watchedMovieIds List of movie IDs marked as watched
+     * @param comments        Map of movie IDs to comments
      * @return Redirect to the watchlist details page
      */
     @PostMapping("/{id}/update")

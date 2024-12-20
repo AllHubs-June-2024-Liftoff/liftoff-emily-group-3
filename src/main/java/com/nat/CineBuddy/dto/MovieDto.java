@@ -1,15 +1,28 @@
 package com.nat.CineBuddy.dto;
 
 public class MovieDto {
+    private String id; // Add this field
     private String title;
     private String overview;
     private String posterPath;
     private String releaseDate;
 
-    public MovieDto(String title, String releaseDate, String posterPath, String overview) {
+    public MovieDto(String id, String title, String releaseDate, String posterPath, String overview) {
+        this.id = id; // Initialize the id field
+        this.title = title;
+        this.releaseDate = releaseDate;
+        this.posterPath = posterPath;
+        this.overview = overview;
     }
 
     // Getters and setters
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getTitle() {
         return title;
