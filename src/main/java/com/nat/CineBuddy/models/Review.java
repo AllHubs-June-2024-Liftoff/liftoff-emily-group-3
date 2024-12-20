@@ -6,6 +6,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
+import java.time.LocalDateTime;
+
 @Entity
 public class Review {
     @Id
@@ -18,6 +20,8 @@ public class Review {
     private String content;
     private String movieTitle;
 
+    private LocalDateTime dateCreated;
+
     public Review() {
     }
 
@@ -27,6 +31,16 @@ public class Review {
         this.username = username;
         this.rating = rating;
         this.content = content;
+    }
+
+    public Review(Long id, String movieId, String username, int rating, String content, String movieTitle, LocalDateTime dateCreated) {
+        this.id = id;
+        this.movieId = movieId;
+        this.username = username;
+        this.rating = rating;
+        this.content = content;
+        this.movieTitle = movieTitle;
+        this.dateCreated = dateCreated;
     }
 
     public Long getId() {
@@ -75,5 +89,13 @@ public class Review {
 
     public void setMovieTitle(String movieTitle) {
         this.movieTitle = movieTitle;
+    }
+
+    public LocalDateTime getDateCreated() {
+        return dateCreated;
+    }
+
+    public void setDateCreated(LocalDateTime dateCreated) {
+        this.dateCreated = dateCreated;
     }
 }

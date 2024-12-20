@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,6 +42,7 @@ public class MovieController {
         newReview.setRating(rating);
         newReview.setContent(review);
         newReview.setUsername(principal.getName());  // Assuming you have authentication enabled
+        newReview.setDateCreated(LocalDateTime.now());
 
         reviewRepository.save(newReview);
 
