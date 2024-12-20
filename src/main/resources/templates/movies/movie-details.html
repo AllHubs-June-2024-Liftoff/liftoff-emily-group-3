@@ -97,6 +97,13 @@
         <div class="review">
             <p><strong th:text="${review.username}"></strong> (Rating: <span th:text="${review.rating}"></span>/10)</p>
             <p th:text="${review.content}"></p>
+
+            <form th:action="@{/delete-review/{id}(id=${review.id})}" method="POST" style="display:inline;">
+                <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
+                <input type="hidden" name="movieId" value="{{movie.movieId}}">
+                <button type="submit" class="btn btn-danger">Delete</button>
+            </form>
+
             <hr/>
         </div>
     </div>

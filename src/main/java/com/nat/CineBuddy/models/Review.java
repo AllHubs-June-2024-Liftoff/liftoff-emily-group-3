@@ -16,6 +16,7 @@ public class Review {
     private String username;
     private int rating;
     private String content;
+    private String movieTitle;
 
     public Review() {
     }
@@ -66,5 +67,13 @@ public class Review {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public String getMovieTitle() {
+        return movieTitle;
+    }
+
+    public void setMovieTitle(String movieTitle) {
+        this.movieTitle = movieTitle;
     }
 }
