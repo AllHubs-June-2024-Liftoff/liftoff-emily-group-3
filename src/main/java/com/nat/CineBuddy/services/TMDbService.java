@@ -127,6 +127,12 @@ public class TMDbService {
         return node.has(fieldName) ? node.get(fieldName).asText() : defaultValue;
     }
 
+    /**
+     * - Searches for movies using an external API.
+     * - Takes a search query, sends a GET request to the API, and retrieves results.
+     * - Converts the API response into a list of Movie objects.
+     * - Returns the list of movies or an empty list if no results or errors occur.
+     */
     public List<Movie> searchMovies(String query) {
         try {
             String url = BASE_URL + "/search/movie?query=" + URLEncoder.encode(query, StandardCharsets.UTF_8) + "&api_key=" + apiKey;
