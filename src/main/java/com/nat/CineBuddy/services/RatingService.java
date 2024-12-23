@@ -1,7 +1,5 @@
 package com.nat.CineBuddy.services;
 
-import com.nat.CineBuddy.models.Rating;
-import com.nat.CineBuddy.repositories.RatingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
