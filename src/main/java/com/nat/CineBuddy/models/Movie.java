@@ -11,7 +11,7 @@ public class Movie {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String id; // Database primary key
+    private Long id; // Database primary key
 
     private String title;
     private String overview;
@@ -40,20 +40,23 @@ public class Movie {
     public Movie() {
     }
 
-    public Movie(String id, String title, String overview, String releaseDate) {
+    public Movie(Long id, String title, String overview, String releaseDate) {
         this.id = id;
         this.title = title;
         this.overview = overview;
         this.releaseDate = releaseDate;
     }
 
+    public Movie(Long id, String title, String overview, String releaseDate, String posterPath, String genres, String budget, String revenue, String runtime, String voteAverage) {
+    }
+
     // Getters and Setters
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

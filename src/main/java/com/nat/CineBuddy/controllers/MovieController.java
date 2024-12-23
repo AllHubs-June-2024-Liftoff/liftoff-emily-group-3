@@ -19,10 +19,10 @@ public class MovieController {
     }
 
     @GetMapping("/movie-details/{id}")
-    public String getMovieDetails(@PathVariable String id, Model model) {
+    public String getMovieDetails(@PathVariable Long id, Model model) {
         Movie movie = tmDbService.getMovieDetails(id);
-        List<Movie> similarMovies = tmDbService.getSimilarMovieRecommendations(id);
-        List<Actor> actors = tmDbService.getMovieActors(id);
+        List<Movie> similarMovies = tmDbService.getSimilarMovieRecommendations(String.valueOf(id));
+        List<Actor> actors = tmDbService.getMovieActors(String.valueOf(id));
         model.addAttribute("movie", movie);
         model.addAttribute("similarMovies", similarMovies);
         model.addAttribute("actors", actors);

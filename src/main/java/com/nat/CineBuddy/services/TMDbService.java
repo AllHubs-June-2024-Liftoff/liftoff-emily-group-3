@@ -33,7 +33,7 @@ public class TMDbService {
     }
 
     // Fetch movie details
-    public Movie getMovieDetails(String movieId) {
+    public Movie getMovieDetails(Long movieId) {
         try {
             JsonNode response = fetchFromApi("/movie/" + movieId);
             return response != null ? parseMovie(response) : null;
@@ -85,7 +85,7 @@ public class TMDbService {
 
     // Parse a single movie JSON object into a Movie instance
     private Movie parseMovie(JsonNode node) {
-        String id = getJsonField(node, "id", "N/A");
+        Long id = getJsonFieldAsLong(node, "id", -1L); // Use a helper method to parse Long
         String title = getJsonField(node, "title", "Unknown Title");
         String overview = getJsonField(node, "overview", "No overview available");
         String releaseDate = getJsonField(node, "release_date", "N/A");
@@ -98,6 +98,18 @@ public class TMDbService {
 
         return new Movie(id, title, overview, releaseDate, posterPath, genres, budget, revenue, runtime, voteAverage);
     }
+
+    // Helper method to safely parse Long values
+    private Long getJsonFieldAsLong(JsonNode node, String fieldName, Long defaultValue) {
+        try {
+            return node.has(fieldName) && !node.get(fieldName).isNull()
+                    ? node.get(fieldName).asLong(defaultValue)
+                    : defaultValue;
+        } catch (Exception e) {
+            return defaultValue;
+        }
+    }
+
 
     // Parse a list of movie JSON objects into a list of Movie instances
     private List<Movie> parseMovies(JsonNode nodes) {
