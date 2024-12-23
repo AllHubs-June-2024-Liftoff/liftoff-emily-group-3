@@ -1,6 +1,5 @@
 package com.nat.CineBuddy.controllers;
 
-import com.nat.CineBuddy.models.Actor;
 import com.nat.CineBuddy.models.Movie;
 import com.nat.CineBuddy.models.Review;
 import com.nat.CineBuddy.repositories.ReviewRepository;
@@ -45,16 +44,19 @@ public class ReviewController {
         return "redirect:/profile/reviews";
     }
 
-
     @GetMapping("/profile/reviews")
     public String viewUserReviews(Principal principal, Model model, @RequestParam(value = "sort", required = false) String sort) {
         // Fetch reviews by the currently authenticated user (principal)
         List<Review> userReviews = reviewRepository.findByUsername(principal.getName());
 
-        // Set movie titles using TMDB service
+        // Set movie titles using TMDB service (if necessary)
         for (Review review : userReviews) {
-            Movie movie = tmDbService.getMovieDetails(review.getMovieId());  // Get movie details by ID
-            review.setMovieTitle(movie.getTitle());  // Set movie title
+            Movie movie = review.getMovie();  // Fetch the associated Movie object
+            // If needed, you can also fetch more movie details using the TMDb service
+            if (movie == null) {
+                movie = tmDbService.getMovieDetails(review.getMovie().getId()); // Assuming you still need to fetch additional details
+                review.setMovie(movie);  // Set the Movie object in Review (if it's not already set)
+            }
         }
 
         // Sort the reviews based on the 'sort' parameter
@@ -64,7 +66,7 @@ public class ReviewController {
                     userReviews.sort(Comparator.comparingInt(Review::getRating));  // Sort by rating
                     break;
                 case "title":
-                    userReviews.sort(Comparator.comparing(Review::getMovieTitle, Comparator.nullsFirst(Comparator.naturalOrder())));  // Sort by movie title
+                    userReviews.sort(Comparator.comparing(r -> r.getMovie().getTitle(), Comparator.nullsFirst(Comparator.naturalOrder())));  // Sort by movie title
                     break;
                 case "date":
                     userReviews.sort(Comparator.comparing(Review::getDateCreated, Comparator.nullsFirst(Comparator.naturalOrder())));  // Sort by date created
@@ -79,5 +81,4 @@ public class ReviewController {
 
         return "profile/reviews";  // Return the reviews page
     }
-
 }

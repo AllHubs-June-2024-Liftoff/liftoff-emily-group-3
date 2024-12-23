@@ -1,10 +1,6 @@
 package com.nat.CineBuddy.models;
 
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 
@@ -14,32 +10,35 @@ public class Review {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String movieId;
-    private String username;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id") // Foreign key column to link the review to the user
+    private User user;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "movie_id") // Foreign key column to link the review to the movie
+    private Movie movie;
+
     private int rating;
     private String content;
-    private String movieTitle;
-
     private LocalDateTime dateCreated;
 
     public Review() {
     }
 
-    public Review(Long id, String movieId, String username, int rating, String content) {
+    public Review(Long id, User user, Movie movie, int rating, String content) {
         this.id = id;
-        this.movieId = movieId;
-        this.username = username;
+        this.user = user;
+        this.movie = movie;
         this.rating = rating;
         this.content = content;
     }
 
-    public Review(Long id, String movieId, String username, int rating, String content, String movieTitle, LocalDateTime dateCreated) {
+    public Review(Long id, User user, Movie movie, int rating, String content, LocalDateTime dateCreated) {
         this.id = id;
-        this.movieId = movieId;
-        this.username = username;
+        this.user = user;
+        this.movie = movie;
         this.rating = rating;
         this.content = content;
-        this.movieTitle = movieTitle;
         this.dateCreated = dateCreated;
     }
 
@@ -51,20 +50,20 @@ public class Review {
         this.id = id;
     }
 
-    public String getMovieId() {
-        return movieId;
+    public User getUser() {
+        return user;
     }
 
-    public void setMovieId(String movieId) {
-        this.movieId = movieId;
+    public void setUser(User user) {
+        this.user = user;
     }
 
-    public String getUsername() {
-        return username;
+    public Movie getMovie() {
+        return movie;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setMovie(Movie movie) {
+        this.movie = movie;
     }
 
     public int getRating() {
@@ -81,14 +80,6 @@ public class Review {
 
     public void setContent(String content) {
         this.content = content;
-    }
-
-    public String getMovieTitle() {
-        return movieTitle;
-    }
-
-    public void setMovieTitle(String movieTitle) {
-        this.movieTitle = movieTitle;
     }
 
     public LocalDateTime getDateCreated() {
