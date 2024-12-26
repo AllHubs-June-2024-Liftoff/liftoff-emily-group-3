@@ -2,6 +2,8 @@ package com.nat.CineBuddy.models;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 
 @Entity
 public class Profile {
@@ -15,6 +17,8 @@ public class Profile {
     @OneToOne
     @JoinColumn(name = "user_id")
     private User user;
+    @OneToMany(mappedBy = "leader")
+    private List<Group> groups;
 
     public Integer getId() {
         return id;
