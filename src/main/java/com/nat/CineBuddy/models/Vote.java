@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.User;
 import java.util.HashMap;
 import java.util.Map;
 
+@Entity
 public class Vote {
 
     @Id
