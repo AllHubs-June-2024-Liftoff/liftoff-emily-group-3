@@ -9,6 +9,8 @@ import com.nat.CineBuddy.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 @Service
 public class ReviewService {
 
@@ -22,24 +24,20 @@ public class ReviewService {
     private UserRepository userRepository;
 
     // Method to create a new review
-    public Review createReview(Long movieId, Long userId, int rating, String content) {
-        // Fetch Movie by ID
+    public Review createReview(Long movieId, Integer userId, int rating, String content) {
         Movie movie = movieRepository.findById(movieId)
-                .orElseThrow(() -> new RuntimeException("Movie not found"));
+                .orElseThrow(() -> new IllegalArgumentException("Invalid movie ID"));
 
-        // Fetch User by ID
-        User user = userRepository.findById(Math.toIntExact(userId))
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid user ID"));
 
-        // Create and set up Review object
         Review review = new Review();
         review.setMovie(movie);
         review.setUser(user);
         review.setRating(rating);
         review.setContent(content);
-        review.setDateCreated(java.time.LocalDateTime.now());
+        review.setDateCreated(LocalDateTime.now());
 
-        // Save Review in the repository
         return reviewRepository.save(review);
     }
 
