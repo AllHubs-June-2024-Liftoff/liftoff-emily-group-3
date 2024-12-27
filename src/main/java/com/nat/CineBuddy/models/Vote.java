@@ -1,13 +1,22 @@
 package com.nat.CineBuddy.models;
 
 import com.nat.CineBuddy.models.Movie;
+import jakarta.persistence.*;
 import org.springframework.security.core.userdetails.User;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class Vote {
-    private Integer id; // Temporary unique identifier for the vote session
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;// Temporary unique identifier for the vote session
+
+    @ManyToOne
+    private Group group; //links to the group
+
+    @ElementCollection
     private Map<User, Movie> votes; // Tracks users and their movie choices
 
     // Constructor
@@ -40,5 +49,27 @@ public class Vote {
                 .max(Map.Entry.comparingByValue())
                 .orElseThrow(() -> new IllegalStateException("No votes yet"))
                 .getKey();
+    }
+
+    //Getters and Setters
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Group getGroup() {
+        return group;
+    }
+
+    public void setGroup(Group group) {
+        this.group = group;
+    }
+
+    public void setVotes(Map<User, Movie> votes) {
+        this.votes = votes;
     }
 }
