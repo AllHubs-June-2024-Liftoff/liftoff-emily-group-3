@@ -13,11 +13,12 @@ public class VoteService {
     private VoteRepository voteRepository;
 
     // Add a vote
-    public void castVote(Group group, Integer userId, Integer movieId) {
+    public boolean castVote(Group group, Integer userId, Integer movieId) {
         Vote vote = group.getVotes().stream().findFirst().orElse(new Vote());
         vote.addVote(userId, movieId);
         vote.setGroup(group);
         voteRepository.save(vote);
+        return false;
     }
 
     // Get the most voted movie
