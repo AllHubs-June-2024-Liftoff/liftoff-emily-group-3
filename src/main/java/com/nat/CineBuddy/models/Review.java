@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 public class Review {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     private String movieId;
     private String username;
@@ -25,7 +25,7 @@ public class Review {
     public Review() {
     }
 
-    public Review(Long id, String movieId, String username, int rating, String content) {
+    public Review(Integer id, String movieId, String username, int rating, String content) {
         this.id = id;
         this.movieId = movieId;
         this.username = username;
@@ -33,7 +33,7 @@ public class Review {
         this.content = content;
     }
 
-    public Review(Long id, String movieId, String username, int rating, String content, String movieTitle, LocalDateTime dateCreated) {
+    public Review(Integer id, String movieId, String username, int rating, String content, String movieTitle, LocalDateTime dateCreated) {
         this.id = id;
         this.movieId = movieId;
         this.username = username;
@@ -43,11 +43,11 @@ public class Review {
         this.dateCreated = dateCreated;
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

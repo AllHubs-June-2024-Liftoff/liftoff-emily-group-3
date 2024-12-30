@@ -34,7 +34,7 @@ public class ReviewController {
     }
 
     @PostMapping("/delete-review/{id}")
-    public String deleteReview(@PathVariable("id") Long reviewId, RedirectAttributes redirectAttributes) {
+    public String deleteReview(@PathVariable("id") Integer reviewId, RedirectAttributes redirectAttributes) {
         // Call the service to delete the review by ID
         reviewService.deleteReview(reviewId);
 

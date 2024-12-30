@@ -15,7 +15,7 @@ public class ReviewService {
     private ReviewRepository reviewRepository;
 
     // Method to delete a review by its ID
-    public void deleteReview(Long reviewId) {
+    public void deleteReview(Integer reviewId) {
         reviewRepository.deleteById(reviewId);
     }
 
