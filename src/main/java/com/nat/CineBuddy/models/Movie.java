@@ -1,8 +1,17 @@
 package com.nat.CineBuddy.models;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
 
+@Entity
 public class Movie {
-    private String id;
+
+    @Id
+    @GeneratedValue
+    private Integer id;
+
+    private String movieId;
     private String title;
     private String overview;
     private String releaseDate;
@@ -20,16 +29,16 @@ public class Movie {
     }
 
 
-    public Movie(String id, String title, String overview, String releaseDate, String posterPath) {
-        this.id = id;
+    public Movie(String movieId, String title, String overview, String releaseDate, String posterPath) {
+        this.movieId = movieId;
         this.title = title;
         this.overview = overview;
         this.releaseDate = releaseDate;
         this.posterPath = posterPath;
     }
 
-    public Movie(String id, String title, String overview, String releaseDate, String posterPath, String genres, String budget, String revenue, String runtime, String voteAverage) {
-        this.id = id;
+    public Movie(String movieId, String title, String overview, String releaseDate, String posterPath, String genres, String budget, String revenue, String runtime, String voteAverage) {
+        this.movieId = movieId;
         this.title = title;
         this.overview = overview;
         this.releaseDate = releaseDate;
@@ -73,12 +82,12 @@ public class Movie {
         this.posterPath = posterPath;
     }
 
-    public String getId() {
-        return id;
+    public String getMovieId() {
+        return movieId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setMovieId(String movieId) {
+        this.movieId = movieId;
     }
 
     public String getGenres() {
