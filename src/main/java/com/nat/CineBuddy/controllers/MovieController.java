@@ -35,7 +35,7 @@ public class MovieController {
     private MovieRepository movieRepository;
 
     @PostMapping("/submit-review")
-    public String submitReview(@RequestParam String movieId, @RequestParam int rating,
+    public String submitReview(@RequestParam Integer movieId, @RequestParam int rating,
                                @RequestParam String review, Principal principal, Model model) {
         Review newReview = new Review();
         newReview.setMovieId(movieId);
@@ -64,7 +64,7 @@ public class MovieController {
 
 
     @GetMapping("/movie-details/{id}")
-    public String getMovieDetails(@PathVariable String id, Model model) {
+    public String getMovieDetails(@PathVariable Integer id, Model model) {
         Movie movie = tmDbService.getMovieDetails(id);
         List<Movie> similarMovies = tmDbService.getSimilarMovieRecommendations(id);
         List<Actor> actors = tmDbService.getMovieActors(id);

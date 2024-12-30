@@ -11,7 +11,7 @@ public class Movie {
     @GeneratedValue
     private Integer id;
 
-    private String movieId;
+    private Integer movieId;
     private String title;
     private String overview;
     private String releaseDate;
@@ -29,7 +29,7 @@ public class Movie {
     }
 
 
-    public Movie(String movieId, String title, String overview, String releaseDate, String posterPath) {
+    public Movie(Integer movieId, String title, String overview, String releaseDate, String posterPath) {
         this.movieId = movieId;
         this.title = title;
         this.overview = overview;
@@ -37,7 +37,7 @@ public class Movie {
         this.posterPath = posterPath;
     }
 
-    public Movie(String movieId, String title, String overview, String releaseDate, String posterPath, String genres, String budget, String revenue, String runtime, String voteAverage) {
+    public Movie(Integer movieId, String title, String overview, String releaseDate, String posterPath, String genres, String budget, String revenue, String runtime, String voteAverage) {
         this.movieId = movieId;
         this.title = title;
         this.overview = overview;
@@ -82,11 +82,11 @@ public class Movie {
         this.posterPath = posterPath;
     }
 
-    public String getMovieId() {
+    public Integer getMovieId() {
         return movieId;
     }
 
-    public void setMovieId(String movieId) {
+    public void setMovieId(Integer movieId) {
         this.movieId = movieId;
     }
 

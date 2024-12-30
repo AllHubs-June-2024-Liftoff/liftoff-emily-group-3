@@ -14,7 +14,8 @@ public class Review {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private String movieId;
+
+    private Integer movieId;
     private String username;
     private int rating;
     private String content;
@@ -25,7 +26,7 @@ public class Review {
     public Review() {
     }
 
-    public Review(Integer id, String movieId, String username, int rating, String content) {
+    public Review(Integer id, Integer movieId, String username, int rating, String content) {
         this.id = id;
         this.movieId = movieId;
         this.username = username;
@@ -33,7 +34,7 @@ public class Review {
         this.content = content;
     }
 
-    public Review(Integer id, String movieId, String username, int rating, String content, String movieTitle, LocalDateTime dateCreated) {
+    public Review(Integer id, Integer movieId, String username, int rating, String content, String movieTitle, LocalDateTime dateCreated) {
         this.id = id;
         this.movieId = movieId;
         this.username = username;
@@ -51,11 +52,11 @@ public class Review {
         this.id = id;
     }
 
-    public String getMovieId() {
+    public Integer getMovieId() {
         return movieId;
     }
 
-    public void setMovieId(String movieId) {
+    public void setMovieId(Integer movieId) {
         this.movieId = movieId;
     }
 

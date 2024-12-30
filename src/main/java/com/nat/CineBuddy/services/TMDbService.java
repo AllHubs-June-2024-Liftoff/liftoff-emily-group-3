@@ -33,7 +33,7 @@ public class TMDbService {
     }
 
     // Fetch movie details
-    public Movie getMovieDetails(String movieId) {
+    public Movie getMovieDetails(Integer movieId) {
         try {
             JsonNode response = fetchFromApi("/movie/" + movieId);
             return response != null ? parseMovie(response) : null;
@@ -55,7 +55,7 @@ public class TMDbService {
     }
 
     // Fetch similar movie recommendations
-    public List<Movie> getSimilarMovieRecommendations(String movieId) {
+    public List<Movie> getSimilarMovieRecommendations(Integer movieId) {
         try {
             JsonNode response = fetchFromApi("/movie/" + movieId + "/recommendations");
             return response != null && response.has("results") ? parseMovies(response.get("results")) : Collections.emptyList();
@@ -67,7 +67,7 @@ public class TMDbService {
 
     // Fetch actors for a movie
     //todo rename e variable to error
-    public List<Actor> getMovieActors(String movieId) {
+    public List<Actor> getMovieActors(Integer movieId) {
         try {
             JsonNode response = fetchFromApi("/movie/" + movieId + "/credits");
             return response != null && response.has("cast") ? parseActors(response.get("cast")) : Collections.emptyList();
@@ -85,7 +85,7 @@ public class TMDbService {
 
     // Parse a single movie JSON object into a Movie instance
     private Movie parseMovie(JsonNode node) {
-        String id = getJsonField(node, "id", "N/A");
+        Integer id = Integer.valueOf(getJsonField(node, "id", "N/A"));
         String title = getJsonField(node, "title", "Unknown Title");
         String overview = getJsonField(node, "overview", "No overview available");
         String releaseDate = getJsonField(node, "release_date", "N/A");
