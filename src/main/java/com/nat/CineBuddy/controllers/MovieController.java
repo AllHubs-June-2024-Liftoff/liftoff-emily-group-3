@@ -48,7 +48,7 @@ public class MovieController {
 
         // Fetch all reviews for the movie
         List<Review> reviews = reviewRepository.findByMovieId(movieId);
-        Movie movie = tmDbService.getMovieDetails(movieId);
+//        Movie movie = tmDbService.getMovieDetails(movieId);
         List<Movie> similarMovies = tmDbService.getSimilarMovieRecommendations(movieId);
         List<Actor> actors = tmDbService.getMovieActors(movieId);
 
@@ -56,7 +56,6 @@ public class MovieController {
         model.addAttribute("movie", movie);
         model.addAttribute("similarMovies", similarMovies);
         model.addAttribute("actors", actors);
-//        model.addAttribute("movie", movieRepository.findById(Long.valueOf(movieId)));
 
         return "movies/movie-details";  // The movie detail page
     }

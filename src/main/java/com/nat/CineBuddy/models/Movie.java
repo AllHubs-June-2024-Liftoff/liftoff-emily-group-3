@@ -1,8 +1,8 @@
 package com.nat.CineBuddy.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+
+import java.util.List;
 
 @Entity
 public class Movie {
@@ -11,7 +11,9 @@ public class Movie {
     @GeneratedValue
     private Integer id;
 
+    @Column(unique = true, nullable = false)
     private Integer movieId;
+
     private String title;
     private String overview;
     private String releaseDate;
@@ -23,6 +25,9 @@ public class Movie {
     private String voteAverage;
 
     // Constructors
+
+    @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Review> reviews;
 
     //empty constructor for sql database connection
     public Movie() {

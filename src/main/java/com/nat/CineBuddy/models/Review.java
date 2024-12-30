@@ -1,10 +1,7 @@
 package com.nat.CineBuddy.models;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 
@@ -14,9 +11,14 @@ public class Review {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @ManyToOne
+    @JoinColumn(name = "movie_id", nullable = false)
+    private Movie movie;
 
-    private Integer movieId;
-    private String username;
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
     private int rating;
     private String content;
     private String movieTitle;
@@ -26,18 +28,14 @@ public class Review {
     public Review() {
     }
 
-    public Review(Integer id, Integer movieId, String username, int rating, String content) {
+    public Review(Integer id, int rating, String content) {
         this.id = id;
-        this.movieId = movieId;
-        this.username = username;
         this.rating = rating;
         this.content = content;
     }
 
-    public Review(Integer id, Integer movieId, String username, int rating, String content, String movieTitle, LocalDateTime dateCreated) {
+    public Review(Integer id, int rating, String content, String movieTitle, LocalDateTime dateCreated) {
         this.id = id;
-        this.movieId = movieId;
-        this.username = username;
         this.rating = rating;
         this.content = content;
         this.movieTitle = movieTitle;
@@ -50,22 +48,6 @@ public class Review {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public Integer getMovieId() {
-        return movieId;
-    }
-
-    public void setMovieId(Integer movieId) {
-        this.movieId = movieId;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
     }
 
     public int getRating() {
