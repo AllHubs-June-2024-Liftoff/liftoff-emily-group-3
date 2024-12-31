@@ -6,15 +6,22 @@ public class Actor {
     private String character;
     private String profilePath;
 
-    //empty constructor for sql database connection
+    // Empty constructor for SQL database connection
     public Actor() {
     }
 
+    // Constructor with all fields
     public Actor(String id, String name, String character, String profilePath) {
         this.id = id;
         this.name = name;
         this.character = character;
         this.profilePath = profilePath;
+    }
+
+    // Constructor with only name and character (to match the constructor in TMDbService)
+    public Actor(String name, String character) {
+        this.name = name;
+        this.character = character;
     }
 
     // Getters and Setters

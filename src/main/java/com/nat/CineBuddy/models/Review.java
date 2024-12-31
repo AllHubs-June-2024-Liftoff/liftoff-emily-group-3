@@ -11,13 +11,23 @@ public class Review {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToOne
-    @JoinColumn(name = "movie_id", nullable = false)
-    private Movie movie;
+    private Integer movieId;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "movieId", insertable = false, updatable = false)
+    private Movie movie;  // Optional - if you want to access the full Movie object in your code
+
+    public Movie getMovie() {
+        return movie;
+    }
+
+    public void setMovie(Movie movie) {
+        this.movie = movie;
+    }
 
     private int rating;
     private String content;
@@ -40,6 +50,14 @@ public class Review {
         this.content = content;
         this.movieTitle = movieTitle;
         this.dateCreated = dateCreated;
+    }
+
+    public Integer getMovieId() {
+        return movieId;
+    }
+
+    public void setMovieId(Integer movieId) {
+        this.movieId = movieId;
     }
 
     public Integer getId() {
@@ -81,4 +99,13 @@ public class Review {
     public void setDateCreated(LocalDateTime dateCreated) {
         this.dateCreated = dateCreated;
     }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser (User user) {
+        this.user = user;
+    }
+
 }

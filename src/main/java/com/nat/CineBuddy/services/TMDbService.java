@@ -2,7 +2,6 @@ package com.nat.CineBuddy.services;
 
 import com.nat.CineBuddy.dto.MovieDTO;
 import com.nat.CineBuddy.models.Actor;
-import com.nat.CineBuddy.models.Movie;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -12,7 +11,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
-
 
 @Service
 public class TMDbService {
@@ -26,39 +24,28 @@ public class TMDbService {
     public TMDbService(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
-
-    // FIX THIS!! COME BACK TO THIS
-    public static MovieDTO getMovieById(Integer movieId) {
-        return null;
+    public List<MovieDTO> getTrendingMovies() {
+        String url = BASE_URL + "/trending/movie/day?api_key=" + apiKey;
+        MovieDTO[] trendingMoviesArray = restTemplate.getForObject(url, MovieDTO[].class);
+        assert trendingMoviesArray != null;
+        return List.of(trendingMoviesArray); // Convert the array to a list and return
     }
-
-    // Fetch movie details
-    public Movie getMovieDetails(Integer movieId) {
+    // Fetch movie details and return MovieDTO
+    public MovieDTO getMovieDetails(Integer movieId) {
         try {
             JsonNode response = fetchFromApi("/movie/" + movieId);
-            return response != null ? parseMovie(response) : null;
+            return response != null ? parseMovieDTO(response) : null;
         } catch (Exception e) {
             System.err.println("Error fetching movie details: " + e.getMessage());
             return null;
         }
     }
 
-    // Fetch trending movies
-    public List<Movie> getTrendingMovies() {
-        try {
-            JsonNode response = fetchFromApi("/trending/movie/day");
-            return response != null && response.has("results") ? parseMovies(response.get("results")) : Collections.emptyList();
-        } catch (Exception e) {
-            System.err.println("Error fetching trending movies: " + e.getMessage());
-            return Collections.emptyList();
-        }
-    }
-
-    // Fetch similar movie recommendations
-    public List<Movie> getSimilarMovieRecommendations(Integer movieId) {
+    // Fetch similar movie recommendations and return a list of MovieDTOs
+    public List<MovieDTO> getSimilarMovieRecommendations(Integer movieId) {
         try {
             JsonNode response = fetchFromApi("/movie/" + movieId + "/recommendations");
-            return response != null && response.has("results") ? parseMovies(response.get("results")) : Collections.emptyList();
+            return response != null && response.has("results") ? parseMovieDTOs(response.get("results")) : Collections.emptyList();
         } catch (Exception e) {
             System.err.println("Error fetching similar movie recommendations: " + e.getMessage());
             return Collections.emptyList();
@@ -66,7 +53,6 @@ public class TMDbService {
     }
 
     // Fetch actors for a movie
-    //todo rename e variable to error
     public List<Actor> getMovieActors(Integer movieId) {
         try {
             JsonNode response = fetchFromApi("/movie/" + movieId + "/credits");
@@ -83,51 +69,28 @@ public class TMDbService {
         return restTemplate.getForObject(url, JsonNode.class);
     }
 
-    // Parse a single movie JSON object into a Movie instance
-    private Movie parseMovie(JsonNode node) {
-        Integer id = Integer.valueOf(getJsonField(node, "id", "N/A"));
-        String title = getJsonField(node, "title", "Unknown Title");
-        String overview = getJsonField(node, "overview", "No overview available");
-        String releaseDate = getJsonField(node, "release_date", "N/A");
-        String posterPath = getJsonField(node, "poster_path", "N/A");
-        String genres = parseGenres(node);
-        String budget = getJsonField(node, "budget", "N/A");
-        String revenue = getJsonField(node, "revenue", "N/A");
-        String runtime = getJsonField(node, "runtime", "N/A");
-        String voteAverage = getJsonField(node, "vote_average", "N/A");
-
-        return new Movie(id, title, overview, releaseDate, posterPath, genres, budget, revenue, runtime, voteAverage);
+    // Parse movie data from TMDb API and return as MovieDTO
+    private MovieDTO parseMovieDTO(JsonNode node) {
+        MovieDTO movieDTO = new MovieDTO();
+        movieDTO.setId(node.get("id").asInt());
+        movieDTO.setTitle(node.get("title").asText());
+        movieDTO.setOverview(node.get("overview").asText());
+        movieDTO.setReleaseDate(node.get("release_date").asText());
+        movieDTO.setPosterPath(node.get("poster_path").asText());
+        return movieDTO;
     }
 
-    // Parse a list of movie JSON objects into a list of Movie instances
-    private List<Movie> parseMovies(JsonNode nodes) {
+    // Parse a list of MovieDTOs from a JsonNode array
+    private List<MovieDTO> parseMovieDTOs(JsonNode nodes) {
         return StreamSupport.stream(nodes.spliterator(), false)
-                .map(this::parseMovie)
+                .map(this::parseMovieDTO)
                 .collect(Collectors.toList());
     }
 
-    // Parse a list of actor JSON objects into a list of Actor instances
+    // Parse actor information
     private List<Actor> parseActors(JsonNode nodes) {
         return StreamSupport.stream(nodes.spliterator(), false)
-                .map(node -> new Actor(
-                        getJsonField(node, "id", "N/A"),
-                        getJsonField(node, "name", "Unknown Actor"),
-                        getJsonField(node, "character", "Unknown Character"),
-                        getJsonField(node, "profile_path", null)
-                ))
+                .map(node -> new Actor(node.get("name").asText(), node.get("character").asText()))
                 .collect(Collectors.toList());
-    }
-
-    // Parse genres from a movie JSON object
-    private String parseGenres(JsonNode node) {
-        if (!node.has("genres")) return "N/A";
-        return StreamSupport.stream(node.get("genres").spliterator(), false)
-                .map(genre -> genre.get("name").asText())
-                .collect(Collectors.joining(", "));
-    }
-
-    // Helper method to safely extract a JSON field
-    private String getJsonField(JsonNode node, String fieldName, String defaultValue) {
-        return node.has(fieldName) ? node.get(fieldName).asText() : defaultValue;
     }
 }

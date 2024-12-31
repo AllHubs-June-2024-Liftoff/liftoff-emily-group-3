@@ -26,7 +26,7 @@ public class Movie {
 
     // Constructors
 
-    @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "movieId", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Review> reviews;
 
     //empty constructor for sql database connection
