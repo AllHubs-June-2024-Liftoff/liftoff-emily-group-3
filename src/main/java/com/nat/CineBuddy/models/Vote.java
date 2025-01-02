@@ -1,9 +1,6 @@
 package com.nat.CineBuddy.models;
 
-import com.nat.CineBuddy.models.Movie;
 import jakarta.persistence.*;
-import org.springframework.security.core.userdetails.User;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,48 +9,44 @@ public class Vote {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;// Temporary unique identifier for the vote session
+    private Integer id; // Unique identifier for the vote session
 
     @ManyToOne
-    private Group group; //links to the group
+    private Group group; // Links the votes to a group
 
     @ElementCollection
-    private Map<User, Movie> votes; // Tracks users and their movie choices
-
-    // Constructor
-    public Vote() {
-        this.votes = new HashMap<>();
-    }
+    @CollectionTable(name = "user_votes", joinColumns = @JoinColumn(name = "vote_id"))
+    @MapKeyColumn(name = "user_id")
+    @Column(name = "movie_id")
+    private Map<Integer, Integer> votes = new HashMap<>(); // Tracks user votes (userId -> movieId)
 
     // Add a vote
-    public void addVote(User user, Movie movie) {
-        if (votes.containsKey(user)) {
-            System.out.println("User has already voted!");
-        } else {
-            votes.put(user, movie);
+    public boolean addVote(Integer userId, Integer movieId) {
+        if (votes.containsKey(userId)) {
+            return false; // User has already voted
         }
+        votes.put(userId, movieId); // Add the user's vote
+        return true;
     }
 
-    // Retrieve all votes
-    public Map<User, Movie> getVotes() {
-        return votes;
+    // Get vote counts for all movies
+    public Map<Integer, Integer> getVoteCounts() {
+        Map<Integer, Integer> movieCounts = new HashMap<>();
+        for (Integer movieId : votes.values()) {
+            movieCounts.put(movieId, movieCounts.getOrDefault(movieId, 0) + 1);
+        }
+        return movieCounts;
     }
 
     // Get the most voted movie
-    public Movie getMostVotedMovie() {
-        Map<Movie, Integer> movieCount = new HashMap<>();
-        for (Movie movie : votes.values()) {
-            movieCount.put(movie, movieCount.getOrDefault(movie, 0) + 1);
-        }
-
-        return movieCount.entrySet().stream()
+    public Integer getMostVotedMovie() {
+        return getVoteCounts().entrySet().stream()
                 .max(Map.Entry.comparingByValue())
                 .orElseThrow(() -> new IllegalStateException("No votes yet"))
                 .getKey();
     }
 
-    //Getters and Setters
-
+    // Getters and setters
     public Integer getId() {
         return id;
     }
@@ -70,7 +63,11 @@ public class Vote {
         this.group = group;
     }
 
-    public void setVotes(Map<User, Movie> votes) {
+    public Map<Integer, Integer> getVotes() {
+        return votes;
+    }
+
+    public void setVotes(Map<Integer, Integer> votes) {
         this.votes = votes;
     }
 }

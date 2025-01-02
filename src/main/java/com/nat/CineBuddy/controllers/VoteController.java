@@ -21,26 +21,30 @@ public class VoteController {
 
     /**
      * Cast a vote for a movie in a group.
-     * @param groupId The ID of the group where the vote is being cast.
-     * @param userId The ID of the user casting the vote.
-     * @param movieId The ID of the movie being voted for.
-     * @return A success or failure message.
      */
     @PostMapping("/{groupId}/vote")
     public String castVote(@PathVariable Integer groupId, @RequestParam Integer userId, @RequestParam Integer movieId) {
-        // Retrieve the group
-        Group group = groupService.findById(groupId);
+        Group group = groupService.findById(groupId); // Find the group
+        boolean success = voteService.castVote(group, userId, movieId); // Cast vote
 
-        // Cast the vote via the service
-        boolean success = voteService.castVote(group, userId, movieId);
-
-        if (success) {
-            return "Vote cast successfully!";
-        } else {
-            return "You have already voted for this movie.";
-        }
+        return success ? "Vote cast successfully!" : "You have already voted for this movie.";
     }
 
+    /**
+     * Retrieve the current vote counts for all movies in a group.
+     */
+    @GetMapping("/{groupId}/votes")
+    public Map<Integer, Integer> getVoteCounts(@PathVariable Integer groupId) {
+        Group group = groupService.findById(groupId); // Find the group
+        return voteService.getAllVoteCounts(group); // Get vote counts
+    }
 
-
+    /**
+     * Get the most voted movie in a group.
+     */
+    @GetMapping("/{groupId}/results")
+    public String getMostVotedMovie(@PathVariable Integer groupId) {
+        Group group = groupService.findById(groupId); // Find the group
+        return "The most voted movie is: " + voteService.getMostVotedMovie(group);
+    }
 }
