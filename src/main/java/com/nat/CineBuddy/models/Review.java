@@ -1,6 +1,6 @@
 package com.nat.CineBuddy.models;
 
-
+import com.nat.CineBuddy.dto.MovieDTO;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -11,53 +11,26 @@ public class Review {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private Integer movieId;
+    @Transient
+    private MovieDTO movieDTO;  // Not persisted in the database, used for transfer of movie data
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    private User user;
-
-    @ManyToOne
-    @JoinColumn(name = "movieId", insertable = false, updatable = false)
-    private Movie movie;  // Optional - if you want to access the full Movie object in your code
-
-    public Movie getMovie() {
-        return movie;
-    }
-
-    public void setMovie(Movie movie) {
-        this.movie = movie;
-    }
+    private User user;  // Maps to the User entity
 
     private int rating;
     private String content;
-    private String movieTitle;
-
     private LocalDateTime dateCreated;
 
     public Review() {
     }
 
-    public Review(Integer id, int rating, String content) {
+    public Review(Integer id, int rating, String content, LocalDateTime dateCreated, MovieDTO movieDTO) {
         this.id = id;
         this.rating = rating;
         this.content = content;
-    }
-
-    public Review(Integer id, int rating, String content, String movieTitle, LocalDateTime dateCreated) {
-        this.id = id;
-        this.rating = rating;
-        this.content = content;
-        this.movieTitle = movieTitle;
         this.dateCreated = dateCreated;
-    }
-
-    public Integer getMovieId() {
-        return movieId;
-    }
-
-    public void setMovieId(Integer movieId) {
-        this.movieId = movieId;
+        this.movieDTO = movieDTO;
     }
 
     public Integer getId() {
@@ -66,6 +39,22 @@ public class Review {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public MovieDTO getMovieDTO() {
+        return movieDTO;
+    }
+
+    public void setMovieDTO(MovieDTO movieDTO) {
+        this.movieDTO = movieDTO;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public int getRating() {
@@ -84,14 +73,6 @@ public class Review {
         this.content = content;
     }
 
-    public String getMovieTitle() {
-        return movieTitle;
-    }
-
-    public void setMovieTitle(String movieTitle) {
-        this.movieTitle = movieTitle;
-    }
-
     public LocalDateTime getDateCreated() {
         return dateCreated;
     }
@@ -100,12 +81,11 @@ public class Review {
         this.dateCreated = dateCreated;
     }
 
-    public User getUser() {
-        return user;
+    // Helper method to fetch the id from MovieDTO
+    public Integer getMovieId() {
+        return movieDTO != null ? movieDTO.getId() : null;
     }
 
-    public void setUser (User user) {
-        this.user = user;
+    public void setMovieId(Integer id) {
     }
-
 }

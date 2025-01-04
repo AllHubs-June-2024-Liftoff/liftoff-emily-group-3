@@ -23,17 +23,15 @@ import java.util.Optional;
 @Controller
 public class MovieController {
     private final TMDbService tmDbService;
+    private final ReviewRepository reviewRepository;
+    private final UserRepository userRepository;
 
     @Autowired
-    public MovieController(TMDbService tmDbService) {
+    public MovieController(TMDbService tmDbService, ReviewRepository reviewRepository, UserRepository userRepository) {
         this.tmDbService = tmDbService;
+        this.reviewRepository = reviewRepository;
+        this.userRepository = userRepository;
     }
-
-    @Autowired
-    private ReviewRepository reviewRepository;
-
-    @Autowired
-    private UserRepository userRepository;
 
     @PostMapping("/submit-review")
     public String submitReview(@RequestParam Integer movieId, @RequestParam int rating,
@@ -58,15 +56,16 @@ public class MovieController {
 
         // Create and save a new review
         Review newReview = new Review();
-        newReview.setMovieId(movieDTO.getId());  // Store movieId, not the full movie object
+        newReview.setMovieDTO(movieDTO);
         newReview.setUser(user);
         newReview.setRating(rating);
         newReview.setContent(review);
         newReview.setDateCreated(LocalDateTime.now());
         reviewRepository.save(newReview);
 
-        // Fetch reviews and other details to render on the page
-        List<Review> reviews = reviewRepository.findByMovieId(movieDTO.getId());
+        List<Review> reviews = ((List<Review>) reviewRepository.findAll()).stream()
+                .filter(r -> r.getMovieDTO() != null && r.getMovieDTO().getId().equals(movieDTO.getId()))
+                .toList();
         List<MovieDTO> similarMovies = tmDbService.getSimilarMovieRecommendations(movieId);
         List<Actor> actors = tmDbService.getMovieActors(movieId);
 
@@ -85,14 +84,16 @@ public class MovieController {
             return "redirect:/error";
         }
 
+        List<Review> reviews = ((List<Review>) reviewRepository.findAll()).stream()
+                .filter(r -> r.getMovieDTO() != null && r.getMovieDTO().getId().equals(movieDTO.getId()))
+                .toList();
         List<MovieDTO> similarMovies = tmDbService.getSimilarMovieRecommendations(id);
         List<Actor> actors = tmDbService.getMovieActors(id);
-        List<Review> reviews = reviewRepository.findByMovieId(id);
 
-        model.addAttribute("reviews", reviews);
         model.addAttribute("movie", movieDTO);
         model.addAttribute("similarMovies", similarMovies);
         model.addAttribute("actors", actors);
+        model.addAttribute("reviews", reviews);
 
         return "movies/movie-details";
     }

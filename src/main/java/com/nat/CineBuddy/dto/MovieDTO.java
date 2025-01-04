@@ -82,4 +82,5 @@ public class MovieDTO {
     public void setPosterPath(String posterPath) {
         this.posterPath = posterPath;
     }
+
 }

@@ -39,16 +39,23 @@ public class ReviewController {
 
     @GetMapping("/profile/reviews")
     public String viewUserReviews(Principal principal, Model model) {
+        if (principal == null) {
+            return "redirect:/login";
+        }
+
         User currentUser = userRepository.findByUsernameOrEmail(principal.getName(), principal.getName())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         List<Review> userReviews = reviewRepository.findByUser(currentUser);
-        for (Review review : userReviews) {
-            MovieDTO movieDTO = tmDbService.getMovieDetails(review.getMovieId());  // Use MovieDTO for fetching movie info
-            review.setMovieTitle(movieDTO != null ? movieDTO.getTitle() : "Unknown Movie");
-        }
+
+        userReviews.forEach(review -> {
+            MovieDTO movieDTO = tmDbService.getMovieDetails(review.getMovieId());
+            review.setMovieDTO(movieDTO); // Directly set the MovieDTO for the review
+        });
 
         model.addAttribute("reviews", userReviews);
         return "profile/reviews";
     }
+
+
 }

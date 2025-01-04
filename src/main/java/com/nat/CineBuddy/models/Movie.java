@@ -1,14 +1,13 @@
 package com.nat.CineBuddy.models;
 
+import com.nat.CineBuddy.dto.MovieDTO;
 import jakarta.persistence.*;
-
-import java.util.List;
 
 @Entity
 public class Movie {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(unique = true, nullable = false)
@@ -24,16 +23,11 @@ public class Movie {
     private String runtime;
     private String voteAverage;
 
-    // Constructors
-
-    @OneToMany(mappedBy = "movieId", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Review> reviews;
-
-    //empty constructor for sql database connection
+    // Default constructor
     public Movie() {
     }
 
-
+    // Constructor for essential fields
     public Movie(Integer movieId, String title, String overview, String releaseDate, String posterPath) {
         this.movieId = movieId;
         this.title = title;
@@ -42,6 +36,7 @@ public class Movie {
         this.posterPath = posterPath;
     }
 
+    // Constructor for all fields
     public Movie(Integer movieId, String title, String overview, String releaseDate, String posterPath, String genres, String budget, String revenue, String runtime, String voteAverage) {
         this.movieId = movieId;
         this.title = title;
@@ -53,6 +48,33 @@ public class Movie {
         this.revenue = revenue;
         this.runtime = runtime;
         this.voteAverage = voteAverage;
+    }
+
+    // Getters and Setters
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Integer getMovieId() {
+        return movieId;
+    }
+
+    public void setMovieId(Integer movieId) {
+        this.movieId = movieId;
+    }
+
+    // Helper method to convert Movie to MovieDTO
+    public MovieDTO toMovieDTO() {
+        MovieDTO dto = new MovieDTO();
+        dto.setId(this.movieId);
+        // Populate other fields by fetching details from the API if needed
+        dto.setGenre(this.genres);
+        dto.setOverview(this.overview);
+        return dto;
     }
 
     public String getTitle() {
@@ -85,14 +107,6 @@ public class Movie {
 
     public void setPosterPath(String posterPath) {
         this.posterPath = posterPath;
-    }
-
-    public Integer getMovieId() {
-        return movieId;
-    }
-
-    public void setMovieId(Integer movieId) {
-        this.movieId = movieId;
     }
 
     public String getGenres() {
