@@ -34,7 +34,7 @@ public class MovieController {
     }
 
     @PostMapping("/submit-review")
-    public String submitReview(@RequestParam Integer movieId, @RequestParam int rating,
+    public String submitReview(@RequestParam String movieId, @RequestParam int rating,
                                @RequestParam String review, Principal principal, Model model) {
         if (principal == null || movieId == null) {
             return "redirect:/error";
@@ -78,7 +78,7 @@ public class MovieController {
     }
 
     @GetMapping("/movie-details/{id}")
-    public String getMovieDetails(@PathVariable Integer id, Model model) {
+    public String getMovieDetails(@PathVariable String id, Model model) {
         MovieDTO movieDTO = tmDbService.getMovieDetails(id);
         if (movieDTO == null) {
             return "redirect:/error";

@@ -2,16 +2,42 @@ package com.nat.CineBuddy.dto;
 
 public class MovieDTO {
 
+    private String id;
     private String title;
-    private Integer id;
-    private String genre;
-    private Integer runtime;
-    private Integer releaseYear;
     private String overview;
     private String releaseDate;
     private String posterPath;
+    private String genres;
+    private String budget;
+    private String revenue;
+    private String runtime;
+    private String voteAverage;
 
-    // Getter and Setter for title
+    public MovieDTO(String id, String title, String overview, String releaseDate, String posterPath, String genres, String budget, String revenue, String runtime, String voteAverage) {
+        this.id = id;
+        this.title = title;
+        this.overview = overview;
+        this.releaseDate = releaseDate;
+        this.posterPath = posterPath;
+        this.genres = genres;
+        this.budget = budget;
+        this.revenue = revenue;
+        this.runtime = runtime;
+        this.voteAverage = voteAverage;
+    }
+
+    public MovieDTO() {
+
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public String getTitle() {
         return title;
     }
@@ -20,43 +46,6 @@ public class MovieDTO {
         this.title = title;
     }
 
-    // Getter and Setter for id
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    // Getter and Setter for genre
-    public String getGenre() {
-        return genre;
-    }
-
-    public void setGenre(String genre) {
-        this.genre = genre;
-    }
-
-    // Getter and Setter for runtime
-    public Integer getRuntime() {
-        return runtime;
-    }
-
-    public void setRuntime(Integer runtime) {
-        this.runtime = runtime;
-    }
-
-    // Getter and Setter for releaseYear
-    public Integer getReleaseYear() {
-        return releaseYear;
-    }
-
-    public void setReleaseYear(Integer releaseYear) {
-        this.releaseYear = releaseYear;
-    }
-
-    // Getter and Setter for overview (description)
     public String getOverview() {
         return overview;
     }
@@ -65,7 +54,6 @@ public class MovieDTO {
         this.overview = overview;
     }
 
-    // Getter and Setter for releaseDate
     public String getReleaseDate() {
         return releaseDate;
     }
@@ -74,7 +62,6 @@ public class MovieDTO {
         this.releaseDate = releaseDate;
     }
 
-    // Getter and Setter for posterPath
     public String getPosterPath() {
         return posterPath;
     }
@@ -83,4 +70,48 @@ public class MovieDTO {
         this.posterPath = posterPath;
     }
 
+    public String getGenres() {
+        return genres;
+    }
+
+    public void setGenres(String genres) {
+        this.genres = genres;
+    }
+
+    public String getBudget() {
+        return budget;
+    }
+
+    public void setBudget(String budget) {
+        this.budget = budget;
+    }
+
+    public String getRevenue() {
+        return revenue;
+    }
+
+    public void setRevenue(String revenue) {
+        this.revenue = revenue;
+    }
+
+    public String getRuntime() {
+        return runtime;
+    }
+
+    public void setRuntime(String runtime) {
+        this.runtime = runtime;
+    }
+
+    public String getVoteAverage() {
+        return voteAverage;
+    }
+
+    public void setVoteAverage(String voteAverage) {
+        this.voteAverage = voteAverage;
+    }
+    public String getFormattedGenres() {
+        return String.join(", ", this.genres);
+    }
+
 }
+

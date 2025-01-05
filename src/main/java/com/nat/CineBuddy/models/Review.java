@@ -82,7 +82,7 @@ public class Review {
     }
 
     // Helper method to fetch the id from MovieDTO
-    public Integer getMovieId() {
+    public String getMovieId() {
         return movieDTO != null ? movieDTO.getId() : null;
     }
 

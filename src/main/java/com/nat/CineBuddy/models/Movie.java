@@ -70,9 +70,9 @@ public class Movie {
     // Helper method to convert Movie to MovieDTO
     public MovieDTO toMovieDTO() {
         MovieDTO dto = new MovieDTO();
-        dto.setId(this.movieId);
+        dto.setId(String.valueOf(this.movieId));
         // Populate other fields by fetching details from the API if needed
-        dto.setGenre(this.genres);
+        dto.setGenres(this.genres);
         dto.setOverview(this.overview);
         return dto;
     }
