@@ -2,6 +2,8 @@ package com.nat.CineBuddy.models;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 
 @Entity
 public class Profile {
@@ -15,6 +17,9 @@ public class Profile {
     @OneToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    @OneToMany(mappedBy = "profile", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Review> reviews;
 
     public Integer getId() {
         return id;

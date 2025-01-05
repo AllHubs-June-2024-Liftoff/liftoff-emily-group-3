@@ -15,8 +15,8 @@ public class Review {
     private MovieDTO movieDTO;  // Not persisted in the database, used for transfer of movie data
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;  // Maps to the User entity
+    @JoinColumn(name = "profile_id", nullable = false)
+    private Profile profile;  // Maps to the User entity
 
     private int rating;
     private String content;
@@ -49,12 +49,12 @@ public class Review {
         this.movieDTO = movieDTO;
     }
 
-    public User getUser() {
-        return user;
+    public Profile getProfile() {
+        return profile;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setProfile(Profile profile) {
+        this.profile = profile;
     }
 
     public int getRating() {

@@ -1,8 +1,10 @@
 package com.nat.CineBuddy.controllers;
 
 import com.nat.CineBuddy.dto.MovieDTO;
+import com.nat.CineBuddy.models.Profile;
 import com.nat.CineBuddy.models.Review;
 import com.nat.CineBuddy.models.User;
+import com.nat.CineBuddy.repositories.ProfileRepository;
 import com.nat.CineBuddy.repositories.ReviewRepository;
 import com.nat.CineBuddy.repositories.UserRepository;
 import com.nat.CineBuddy.services.TMDbService;
@@ -22,12 +24,14 @@ public class ReviewController {
 
     private final TMDbService tmDbService;
     private final ReviewRepository reviewRepository;
+    private final ProfileRepository profileRepository;
     private final UserRepository userRepository;
 
     @Autowired
-    public ReviewController(TMDbService tmDbService, ReviewRepository reviewRepository, UserRepository userRepository) {
+    public ReviewController(TMDbService tmDbService, ReviewRepository reviewRepository, ProfileRepository profileRepository, UserRepository userRepository) {
         this.tmDbService = tmDbService;
         this.reviewRepository = reviewRepository;
+        this.profileRepository = profileRepository;
         this.userRepository = userRepository;
     }
 
@@ -43,14 +47,15 @@ public class ReviewController {
             return "redirect:/login";
         }
 
-        User currentUser = userRepository.findByUsernameOrEmail(principal.getName(), principal.getName())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        Profile currentProfile = profileRepository.findByUser(userRepository.findByUsernameOrEmail(principal.getName(), principal.getName())
+                        .orElseThrow(() -> new RuntimeException("User not found")))
+                .orElseThrow(() -> new RuntimeException("Profile not found"));
 
-        List<Review> userReviews = reviewRepository.findByUser(currentUser);
+        List<Review> userReviews = reviewRepository.findByProfile(currentProfile);
 
         userReviews.forEach(review -> {
             MovieDTO movieDTO = tmDbService.getMovieDetails(review.getMovieId());
-            review.setMovieDTO(movieDTO); // Directly set the MovieDTO for the review
+            review.setMovieDTO(movieDTO); // Ensure Review has this setter
         });
 
         model.addAttribute("reviews", userReviews);
