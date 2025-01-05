@@ -1,8 +1,10 @@
 package com.nat.CineBuddy.controllers;
 
 import com.nat.CineBuddy.models.Actor;
+import com.nat.CineBuddy.models.Profile;
 import com.nat.CineBuddy.models.Review;
 import com.nat.CineBuddy.models.User;
+import com.nat.CineBuddy.repositories.ProfileRepository;
 import com.nat.CineBuddy.repositories.ReviewRepository;
 import com.nat.CineBuddy.repositories.UserRepository;
 import com.nat.CineBuddy.services.TMDbService;
@@ -25,12 +27,14 @@ public class MovieController {
     private final TMDbService tmDbService;
     private final ReviewRepository reviewRepository;
     private final UserRepository userRepository;
+    private final ProfileRepository profileRepository;
 
     @Autowired
-    public MovieController(TMDbService tmDbService, ReviewRepository reviewRepository, UserRepository userRepository) {
+    public MovieController(TMDbService tmDbService, ReviewRepository reviewRepository, UserRepository userRepository, ProfileRepository profileRepository) {
         this.tmDbService = tmDbService;
         this.reviewRepository = reviewRepository;
         this.userRepository = userRepository;
+        this.profileRepository = profileRepository;
     }
 
     @PostMapping("/submit-review")
@@ -54,10 +58,15 @@ public class MovieController {
 
         User user = optionalUser.get();
 
+        // Fetch the profile associated with the user
+        Profile profile = profileRepository.findByUser(user)
+                .orElseThrow(() -> new RuntimeException("Profile not found for the user"));
+
+
         // Create and save a new review
         Review newReview = new Review();
         newReview.setMovieDTO(movieDTO);
-        newReview.setUser(user);
+        newReview.setProfile(profile);
         newReview.setRating(rating);
         newReview.setContent(review);
         newReview.setDateCreated(LocalDateTime.now());
