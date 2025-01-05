@@ -17,8 +17,10 @@ public class Profile {
     @OneToOne
     @JoinColumn(name = "user_id")
     private User user;
+    @ManyToMany
+    private List<WatchParty> joinedGroups;
     @OneToMany(mappedBy = "leader")
-    private List<Group> groups;
+    private List<WatchParty> hostedGroups;
 
     public Integer getId() {
         return id;
@@ -64,14 +66,31 @@ public class Profile {
         this.user = user;
     }
 
+    public List<WatchParty> getJoinedGroups() {
+        return joinedGroups;
+    }
+
+    public void setJoinedGroups(List<WatchParty> joinedGroups) {
+        this.joinedGroups = joinedGroups;
+    }
+
+    public List<WatchParty> getHostedGroups() {
+        return hostedGroups;
+    }
+
+    public void setHostedGroups(List<WatchParty> hostedGroups) {
+        this.hostedGroups = hostedGroups;
+    }
 
     @Override
     public String toString() {
         return "Profile{" +
-                ", image='" + image + '\'' +
+                "name='" + name + '\'' +
                 ", bio='" + bio + '\'' +
-                ", name='" + name + '\'' +
-                ", private='" + hidden + '\'' +
+                ", image='" + image + '\'' +
+                ", hidden=" + hidden +
+                ", joinedGroups=" + joinedGroups +
+                ", hostedGroups=" + hostedGroups +
                 '}';
     }
 }

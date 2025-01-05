@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org/" lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CineBuddy | Watch Party</title>
+    <th:block th:replace="~{fragments :: head}"></th:block>
+</head>
+<body>
+
+<div th:replace="~{fragments :: page-nav}"></div>
+
+<div class="container">
+    <h2>Watch Parties</h2>
+    <p th:text="${user}"></p>
+    <ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <a class="nav-link active" id="wp-organizer" data-bs-toggle="tab" href="#wp-organizer-panel" role="tab" aria-controls="wp-organizer-panel" aria-selected="true">Organizer</a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link" id="wp-member" data-bs-toggle="tab" href="#wp-member-panel" role="tab" aria-controls="wp-member-panel" aria-selected="false">Member</a>
+        </li>
+        <li class="align-content-center">
+            <a href="/watchparty/host">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" height="16" width="16">
+                    <path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 144L48 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l144 0 0 144c0 17.7 14.3 32 32 32s32-14.3 32-32l0-144 144 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-144 0 0-144z"/>
+                </svg>
+            </a>
+        </li>
+    </ul>
+    <div class="tab-content pt-5" id="tab-content">
+        <div class="tab-pane active" id="wp-organizer-panel" role="tabpanel" aria-labelledby="wp-organizer">
+            <p th:if="${#lists.isEmpty(user.profile.hostedGroups)}">No Groups</p>
+        </div>
+        <div class="tab-pane" id="wp-member-panel" role="tabpanel" aria-labelledby="wp-member">
+            <p th:if="${#lists.isEmpty(user.profile.joinedGroups)}">No Groups</p>
+        </div>
+    </div>
+</div>
+</body>
+</html>
