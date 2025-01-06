@@ -38,13 +38,54 @@
     <!--todo: "review submitted! notification"-->
     <div class="right-section">
         <h3>Rate and Review</h3>
+        <div th:if="${#authentication.principal != null}">
         <form action="/submit-review" method="POST">
             <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
             <input type="hidden" name="movieId" th:value="${movie.movieId}" />
+            <!-- Replace the existing rating input section in the form -->
             <div class="form-group">
-                <label for="rating">Rating (1-10):</label>
-                <input type="number" id="rating" name="rating" min="1" max="10" required>
+                <label for="rating">Rating:</label>
+                <div>
+                    <div class="container__items">
+                        <input type="radio" name="rating" id="st5" value="5" required>
+                        <label for="st5">
+                            <div class="star-stroke">
+                                <div class="star-fill"></div>
+                            </div>
+                            <div class="label-description" data-content="5 Stars"></div>
+                        </label>
+                        <input type="radio" name="rating" id="st4" value="4">
+                        <label for="st4">
+                            <div class="star-stroke">
+                                <div class="star-fill"></div>
+                            </div>
+                            <div class="label-description" data-content="4 Stars"></div>
+                        </label>
+                        <input type="radio" name="rating" id="st3" value="3">
+                        <label for="st3">
+                            <div class="star-stroke">
+                                <div class="star-fill"></div>
+                            </div>
+                            <div class="label-description" data-content="3 Stars"></div>
+                        </label>
+                        <input type="radio" name="rating" id="st2" value="2">
+                        <label for="st2">
+                            <div class="star-stroke">
+                                <div class="star-fill"></div>
+                            </div>
+                            <div class="label-description" data-content="2 Stars"></div>
+                        </label>
+                        <input type="radio" name="rating" id="st1" value="1">
+                        <label for="st1">
+                            <div class="star-stroke">
+                                <div class="star-fill"></div>
+                            </div>
+                            <div class="label-description" data-content="1 Star"></div>
+                        </label>
+                    </div>
+                </div>
             </div>
+
             <div class="form-group">
                 <label for="review">Your Review:</label>
                 <textarea id="review" name="review" placeholder="Write your review here..." required></textarea>
@@ -53,6 +94,10 @@
                 <button type="submit">Submit</button>
             </div>
         </form>
+        </div>
+        <div th:if="${#authentication.principal == null}">
+            <p>You need to be logged in to leave a review.</p>
+        </div>
     </div>
 </div>
 
@@ -91,13 +136,16 @@
     </div>
 </div>
 <!-- Reviews Section -->
+
 <div class="movie-reviews" id="reviews-display">
     <h3>User Reviews</h3>
+    <div th:if="${reviews.isEmpty()}">
+        <p>No reviews have been left for this movie.</p>
+    </div>
     <div th:each="review : ${reviews}">
         <div class="review">
-            <p><strong th:text="${review.username}"></strong> (Rating: <span th:text="${review.rating}"></span>/10)</p>
+            <p><strong th:text="${review.username}"></strong> (Rating: <span th:each="star : ${#numbers.sequence(1, review.rating)}" class="star-filled">&#9733;</span>)</p>
             <p th:text="${review.content}"></p>
-
             <hr/>
         </div>
     </div>

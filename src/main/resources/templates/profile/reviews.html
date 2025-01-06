@@ -31,31 +31,33 @@
     </div>
 
     <!-- Display user's reviews -->
-    <div th:each="review : ${reviews}">
-        <div class="review-card mb-4">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">
-                        Movie:
-                        <a th:href="@{/movie-details/{id}(id=${review.movieId})}" th:text="${review.movieTitle}"></a>
-                    </h5>
-                    <p class="card-text">
-                        <strong>Rating:</strong> <span th:text="${review.rating}"></span>/10
-                    </p>
-                    <p class="card-text">
-                        <strong>Review:</strong> <span th:text="${review.content}"></span>
-                    </p>
-                </div>
-            </div>
+    <table class="table table-bordered table-striped">
+        <thead class="thead-dark">
+        <tr>
+            <th>Movie</th>
+            <th>Rating</th>
+            <th>Review</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="review : ${reviews}">
+            <td>
+                <a th:href="@{/movie-details/{id}(id=${review.movieId})}" th:text="${review.movieTitle}"></a>
+            </td>
+            <td th:text="${review.rating}"> </td>
+            <td th:text="${review.content}"></td>
+            <td>
+                <!-- Button to delete review -->
+                <form th:action="@{/delete-review/{id}(id=${review.id})}" method="POST" style="display:inline;">
+                    <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
+                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
 
-            <!-- Button to delete review -->
-            <form th:action="@{/delete-review/{id}(id=${review.id})}" method="POST" style="display:inline;">
-                <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
-                <button type="submit" class="btn btn-danger">Delete Review</button>
-            </form>
-            <hr/>
-        </div>
-    </div>
 
     <!-- Button to add a new review -->
     <a href="/movie-details/{id}">
