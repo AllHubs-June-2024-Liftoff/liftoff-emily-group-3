@@ -1,5 +1,7 @@
 package com.nat.CineBuddy.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -16,10 +18,19 @@ public class Profile {
     private boolean hidden;
     @OneToOne
     @JoinColumn(name = "user_id")
+    @JsonIgnore
     private User user;
     @ManyToMany
+    @JsonIgnore
+    @JoinTable(
+            name = "profile_watchparty",
+            joinColumns = @JoinColumn(name = "profile_id"),
+            inverseJoinColumns = @JoinColumn(name = "watchparty_id")
+    )
     private List<WatchParty> joinedGroups;
+    @JsonBackReference
     @OneToMany(mappedBy = "leader")
+    @JsonIgnore
     private List<WatchParty> hostedGroups;
 
     public Integer getId() {

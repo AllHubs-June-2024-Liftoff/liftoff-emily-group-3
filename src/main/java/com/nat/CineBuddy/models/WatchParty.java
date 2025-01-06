@@ -1,5 +1,6 @@
 package com.nat.CineBuddy.models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 
@@ -17,7 +18,8 @@ public class WatchParty {
     private Profile leader;
     private List<Integer> movies;
     private Integer movieChoice;
-    @ManyToMany(mappedBy = "joinedGroups")
+    @ManyToMany(mappedBy = "joinedGroups", cascade = CascadeType.PERSIST)
+    @JsonManagedReference
     private List<Profile> members;
 
     public WatchParty() {}
@@ -82,12 +84,12 @@ public class WatchParty {
     @Override
     public String toString() {
         return "WatchParty{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", leader=" + leader +
-                ", movies=" + movies +
-                ", movieChoice=" + movieChoice +
-                ", members=" + members +
-                '}';
+            "id=" + id +
+            ", name='" + name + '\'' +
+            ", leader=" + (leader != null ? leader.getName() : null) + // Avoid circular reference
+            ", movies=" + movies +
+            ", movieChoice=" + movieChoice +
+            ", members=" + (members != null ? members.size() : 0) + // Avoid circular reference
+        '}';
     }
 }

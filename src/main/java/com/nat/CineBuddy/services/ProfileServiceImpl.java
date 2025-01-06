@@ -44,6 +44,7 @@ public class ProfileServiceImpl implements ProfileService{
         storedProfile.setBio(profile.getBio());
         storedProfile.setImage(profile.getImage());
         storedProfile.setHidden(profile.getHidden());
+        storedProfile.setJoinedGroups(profile.getJoinedGroups());
         profileRepository.save(storedProfile);
         return true;
     }
@@ -60,8 +61,8 @@ public class ProfileServiceImpl implements ProfileService{
         profileRepository.deleteById(id);
     }
 
-    public Iterable<Profile> getAllPublicProfiles(String search){
-        Iterable<Profile> allProfiles = profileRepository.findAll();
+    public Iterable<Profile> searchAllPublicProfiles(String search){
+        Iterable<Profile> allProfiles = profileRepository.findByNameContainingIgnoreCase(search);
         Iterator<Profile> iterator = allProfiles.iterator();
         while(iterator.hasNext()){
             Profile profile = iterator.next();

@@ -20,6 +20,6 @@ public interface ProfileService {
 
     public void logoutUser(HttpServletRequest request, HttpServletResponse response);
 
-    public Iterable<Profile> getAllPublicProfiles(String search);
+    public Iterable<Profile> searchAllPublicProfiles(String search);
 
 }
