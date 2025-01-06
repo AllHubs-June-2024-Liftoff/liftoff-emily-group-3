@@ -4,12 +4,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <th:block th:replace="~{fragments :: head}"></th:block>
     <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <script src="@{/js/watchparty/members.js}"></script>
 </head>
 <body>
 <header th:replace="~{fragments :: page-nav}"></header>
 <main class="container">
     <h1>Create a Watch Party!</h1>
-    <form method="post" style="max-width:600px;">
+    <form method="post">
         <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
         <div class="form-group">
             <label th:for="name">Watch Party Name</label>
@@ -17,13 +18,17 @@
             <span th:errors="${watchparty.name}" class="error"></span>
         </div>
         <div class="form-group">
-            <label for="members">Add Members</label>
+            <label for="members">Added Members</label>
             <select id="members" name="members" class="form-control" multiple="multiple" th:field="*{watchparty.members}">
 
             </select>
         </div>
         <input type="submit" value="Create Watch Party" />
     </form>
+    <div class="form-group">
+        <label for="searchMembers">Add Members</label>
+        <input type="text" name="searchMembers" id="searchMembers">
+    </div>
     <a href="/watchparty">Return to Watch Parties</a>
 </main>
 </body>

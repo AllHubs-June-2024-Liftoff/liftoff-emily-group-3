@@ -11,6 +11,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Service;
 
+import java.util.Iterator;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -58,6 +60,17 @@ public class ProfileServiceImpl implements ProfileService{
         profileRepository.deleteById(id);
     }
 
+    public Iterable<Profile> getAllPublicProfiles(String search){
+        Iterable<Profile> allProfiles = profileRepository.findAll();
+        Iterator<Profile> iterator = allProfiles.iterator();
+        while(iterator.hasNext()){
+            Profile profile = iterator.next();
+            if(profile.getHidden()){
+                iterator.remove();
+            }
+        }
+        return allProfiles;
+    }
 
     public void logoutUser(HttpServletRequest request, HttpServletResponse response) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
