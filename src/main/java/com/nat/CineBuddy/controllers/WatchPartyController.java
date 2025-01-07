@@ -40,6 +40,7 @@ public class WatchPartyController {
     @GetMapping("/{watchPartyId}")
     public String viewWatchParty(@PathVariable Integer watchPartyId, Model model){
         model.addAttribute("watchparty",watchPartyService.viewWatchParty(watchPartyId));
+        model.addAttribute("profile", userService.getCurrentUser().getProfile());
         return "watchparty/details";
     }
 
@@ -65,6 +66,33 @@ public class WatchPartyController {
         }
     }
 
+    @GetMapping("/{watchPartyId}/update")
+    public String updateWatchPartyForm(@PathVariable Integer watchPartyId, Model model){
+        model.addAttribute("user",userService.getCurrentUser());
+        model.addAttribute("watchparty", watchPartyService.viewWatchParty(watchPartyId));
+        return "watchparty/update";
+    }
+
+    @PostMapping("/{watchPartyId}/update")
+    public String userProfileUpdate(@Valid @ModelAttribute("watchparty") WatchParty watchParty, @PathVariable Integer watchPartyId, BindingResult result, Errors errors, Model model){
+        if(!errors.hasErrors() && !result.hasErrors()){
+            boolean success = watchPartyService.updateWatchParty(watchPartyId, watchParty);
+            if(success){
+                return "redirect:/watchparty/"+watchPartyId;
+            }
+            else{
+                model.addAttribute("watchparty",watchParty);
+                model.addAttribute("profile", userService.getCurrentUser().getProfile());
+                return "watchparty/details";
+            }
+        }
+        else{
+            model.addAttribute("watchparty",watchParty);
+            model.addAttribute("profile", userService.getCurrentUser().getProfile());
+            return "watchparty/details";
+        }
+    }
+
     @GetMapping("/{watchPartyId}/delete")
     public String deleteWatchParty(@PathVariable Integer watchPartyId){
         boolean success = watchPartyService.deleteWatchParty(watchPartyId);
@@ -75,4 +103,29 @@ public class WatchPartyController {
             return "redirect:/watchparty/"+watchPartyId;
         }
     }
+
+    @GetMapping("/{watchPartyId}/leave")
+    public String leaveWatchParty(@PathVariable Integer watchPartyId){
+        boolean success = watchPartyService.leaveWatchParty(watchPartyId, userService.getCurrentUser().getProfile());
+        if(success){
+            return "redirect:/watchparty";
+        }
+        else{
+            return "redirect:/watchparty/"+watchPartyId;
+        }
+    }
+
+    @GetMapping("/add/{movieId}")
+    public String addMovieToWatchPartyForm(@PathVariable Integer movieId, Model model){
+        model.addAttribute("movieId",movieId);
+        model.addAttribute("user",userService.getCurrentUser());
+        return "watchparty/add-movie";
+    }
+
+    @PostMapping("/add/{movieId}")
+    public String addMovieToWatchParty(@PathVariable Integer movieId, @RequestParam("watchpartyOption") List<Integer> watchPartyIds){
+        watchPartyService.addMovieToList(movieId, watchPartyIds);
+        return "redirect:/movie-details/"+movieId;
+    }
+
 }

@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CineBuddy | Watch Party</title>
     <th:block th:replace="~{fragments :: head}"></th:block>
+    <link rel="stylesheet" th:href="@{/css/watch-party-votes.css}">
 </head>
 <body>
 
@@ -18,27 +19,31 @@
         <th:block th:if="${watchparty.movies?.size() > 0}">
             <div class="d-flex justify-content-between">
                 <h3 th:text="'Selected Movies (' + ${#lists.size(watchparty.movies)} + ')'"></h3>
-                <div>
-                    <a th:href="'/watchparty/' + ${watchparty.id} + '/delete'" onclick="return confirm('Delete Watch Party? This can not be undone.');">Delete Watch Party</a>
+                <div class="d-flex">
+                    <a class="px-1" th:href="'/watchparty/' + ${watchparty.id} + '/update'">Update Watch Party</a>
+                    <a th:if="${watchparty.leader.equals(profile)}" class="px-1" th:href="'/watchparty/' + ${watchparty.id} + '/delete'" onclick="return confirm('Delete Watch Party? This can not be undone.');">Delete Watch Party</a>
+                    <a th:unless="${watchparty.leader.equals(profile)}" class="px-1" th:href="'/watchparty/' + ${watchparty.id} + '/leave'" onclick="return confirm('Leave Watch Party?');">Leave Watch Party</a>
                 </div>
             </div>
             <ul class="list-group">
             <th:block th:each="movie : ${watchparty.movies}">
                 <li class="list-group-item d-flex justify-content-between align-items-center vote-radio" >
-                    <!--Add radio button with fancy movie card. right now just says id-->
-                    <label th:for="'voteOption-' + ${movie}" th:text="'Movie ' + ${movie}"></label>
-                    <input type="radio" name="voteOption" th:id="'voteOption-' + ${movie}" th:value="${movie}">
+                    <!--Add fancy movie card. right now just says id-->
+                    <input type="radio" name="voteOption" th:id="'voteOption-' + ${movie}" th:value="${movie}" aria-hidden="false">
+                    <label class="flex-fill" th:for="'voteOption-' + ${movie}" th:text="'Movie ' + ${movie}"></label>
                 </li>
             </th:block>
             </ul>
-            <button type="button" class="btn btn-primary mt-2">Submit Vote</button>
+            <button type="button" class="btn btn-primary mt-2">Submit Vote (does nothing currently)</button>
         </th:block>
 
         <th:block th:unless="${watchparty.movies?.size() > 0}">
             <div class="d-flex justify-content-between">
                 <h3>Selected Movies (0)</h3>
-                <div>
-                    <a th:href="'/watchparty/' + ${watchparty.id} + '/delete'" onclick="return confirm('Delete Watch Party? This can not be undone.');">Delete Watch Party</a>
+                <div class="d-flex">
+                    <a class="px-1" th:href="'/watchparty/' + ${watchparty.id} + '/update'">Update Watch Party</a>
+                    <a th:if="${watchparty.leader.equals(profile)}" class="px-1" th:href="'/watchparty/' + ${watchparty.id} + '/delete'" onclick="return confirm('Delete Watch Party? This can not be undone.');">Delete Watch Party</a>
+                    <a th:unless="${watchparty.leader.equals(profile)}" class="px-1" th:href="'/watchparty/' + ${watchparty.id} + '/leave'" onclick="return confirm('Leave Watch Party?');">Leave Watch Party</a>
                 </div>
             </div>
             <ul class="list-group">
@@ -47,6 +52,12 @@
         </th:block>
     </div>
 
+    <div>
+        <h3>Members</h3>
+        <ul>
+            <li th:each="member : ${watchparty.members}" th:text="${member.name}"></li>
+        </ul>
+    </div>
 </div>
 </body>
 </html>

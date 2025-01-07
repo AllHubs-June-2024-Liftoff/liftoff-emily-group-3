@@ -1,10 +1,10 @@
-.vote-radio{
+.watch-party-checkbox{
     padding: 0;
 }
-.vote-radio label{
+.watch-party-checkbox label{
  padding: 0.5rem;
 }
-.vote-radio input{
+.watch-party-checkbox input{
     position: absolute;
     width: 1px;
     height: 1px;
@@ -14,7 +14,7 @@
     clip: rect(0, 0, 0, 0);  /* Hides the element visually */
     overflow: hidden;
 }
-.vote-radio input[type="radio"]:checked + label {
+.watch-party-checkbox input[type="checkbox"]:checked + label {
     border: 2px solid black;
     border-radius: 4px;
 }
