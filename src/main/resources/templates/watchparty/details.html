@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org/" lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CineBuddy | Watch Party</title>
+    <th:block th:replace="~{fragments :: head}"></th:block>
+</head>
+<body>
+
+<div th:replace="~{fragments :: page-nav}"></div>
+
+<div class="container">
+    <h2 th:text="${watchparty.name} + ' Watch Party'"></h2>
+    <div>
+        <th:block th:if="${watchparty.movies?.size() > 0}">
+            <div class="d-flex justify-content-between">
+                <h3 th:text="'Selected Movies (' + ${#lists.size(watchparty.movies)} + ')'"></h3>
+                <div>
+                    <a th:href="'/watchparty/' + ${watchparty.id} + '/delete'" onclick="return confirm('Delete Watch Party? This can not be undone.');">Delete Watch Party</a>
+                </div>
+            </div>
+            <ul class="list-group">
+            <th:block th:each="movie : ${watchparty.movies}">
+                <li class="list-group-item d-flex justify-content-between align-items-center vote-radio" >
+                    <!--Add radio button with fancy movie card. right now just says id-->
+                    <label th:for="'voteOption-' + ${movie}" th:text="'Movie ' + ${movie}"></label>
+                    <input type="radio" name="voteOption" th:id="'voteOption-' + ${movie}" th:value="${movie}">
+                </li>
+            </th:block>
+            </ul>
+            <button type="button" class="btn btn-primary mt-2">Submit Vote</button>
+        </th:block>
+
+        <th:block th:unless="${watchparty.movies?.size() > 0}">
+            <div class="d-flex justify-content-between">
+                <h3>Selected Movies (0)</h3>
+                <div>
+                    <a th:href="'/watchparty/' + ${watchparty.id} + '/delete'" onclick="return confirm('Delete Watch Party? This can not be undone.');">Delete Watch Party</a>
+                </div>
+            </div>
+            <ul class="list-group">
+                <li class="list-group-item d-flex justify-content-between align-items-center">No movies currently selected</li>
+            </ul>
+        </th:block>
+    </div>
+
+</div>
+</body>
+</html>

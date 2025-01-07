@@ -1,0 +1,12 @@
+.vote-radio{
+
+}
+.vote-radio label{
+
+}
+.vote-radio input{
+
+}
+.vote-radio input[type="radio"]:checked + label {
+    border:2px solid black;
+}
