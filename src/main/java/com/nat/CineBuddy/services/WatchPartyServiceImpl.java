@@ -19,10 +19,6 @@ public class WatchPartyServiceImpl implements WatchPartyService{
 
     public boolean createWatchParty(WatchParty watchParty){
         watchPartyRepository.save(watchParty);
-        for (Profile member : watchParty.getMembers()){
-            member.getJoinedGroups().add(watchParty);
-            profileService.updateProfile(member.getId(),member);
-        }
         return true;
     }
 
@@ -51,9 +47,9 @@ public class WatchPartyServiceImpl implements WatchPartyService{
         else{
             WatchParty updatedWatchParty = storedWatchParty.get();
             updatedWatchParty.setName(watchParty.getName());
-            updatedWatchParty.setMembers(watchParty.getMembers());
             updatedWatchParty.setMovies(watchParty.getMovies());
             updatedWatchParty.setMovieChoice(watchParty.getMovieChoice());
+            updatedWatchParty.setMembers(watchParty.getMembers());
             watchPartyRepository.save(updatedWatchParty);
             return true;
         }

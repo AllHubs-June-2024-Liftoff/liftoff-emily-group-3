@@ -73,6 +73,10 @@ public class ProfileServiceImpl implements ProfileService{
         return allProfiles;
     }
 
+    public void saveAll(List<Profile> profiles){
+        profileRepository.saveAll(profiles);
+    }
+
     public void logoutUser(HttpServletRequest request, HttpServletResponse response) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null) {

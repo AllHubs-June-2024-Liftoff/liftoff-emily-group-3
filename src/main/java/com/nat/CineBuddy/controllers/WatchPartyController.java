@@ -53,6 +53,7 @@ public class WatchPartyController {
 
     @PostMapping("/host")
     public String createWatchParty(@Valid @ModelAttribute("watchparty") WatchParty watchParty, BindingResult result, Errors errors){
+        System.out.println(watchParty.getMembers());
         if(!errors.hasErrors() && !result.hasErrors()){
             watchParty.setLeader(userService.getCurrentUser().getProfile());
             if(watchParty.getMovies() == null){

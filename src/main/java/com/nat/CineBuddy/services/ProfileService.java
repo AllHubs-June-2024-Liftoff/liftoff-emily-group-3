@@ -6,6 +6,8 @@ import com.nat.CineBuddy.models.User;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+import java.util.List;
+
 public interface ProfileService {
 
     boolean createProfile(User user, String name);
@@ -22,4 +24,5 @@ public interface ProfileService {
 
     public Iterable<Profile> searchAllPublicProfiles(String search);
 
+    public void saveAll(List<Profile> profiles);
 }

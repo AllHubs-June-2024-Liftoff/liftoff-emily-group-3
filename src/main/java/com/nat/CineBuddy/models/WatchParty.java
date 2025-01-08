@@ -14,11 +14,11 @@ public class WatchParty {
     @Column(nullable = false)
     @NotEmpty(message="Watch Party name is required")
     private String name;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private Profile leader;
     private List<Integer> movies;
     private Integer movieChoice;
-    @ManyToMany(mappedBy = "joinedGroups", cascade = CascadeType.PERSIST)
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JsonManagedReference
     private List<Profile> members;
 

@@ -20,15 +20,9 @@ public class Profile {
     @JoinColumn(name = "user_id")
     @JsonIgnore
     private User user;
-    @ManyToMany
+    @ManyToMany(mappedBy = "members", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JsonIgnore
-    @JoinTable(
-            name = "profile_watchparty",
-            joinColumns = @JoinColumn(name = "profile_id"),
-            inverseJoinColumns = @JoinColumn(name = "watchparty_id")
-    )
     private List<WatchParty> joinedGroups;
-    @JsonBackReference
     @OneToMany(mappedBy = "leader")
     @JsonIgnore
     private List<WatchParty> hostedGroups;
