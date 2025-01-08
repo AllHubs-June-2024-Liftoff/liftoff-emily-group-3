@@ -11,6 +11,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 
@@ -124,5 +125,33 @@ public class TMDbService {
     // Helper method to safely extract a JSON field
     private String getJsonField(JsonNode node, String fieldName, String defaultValue) {
         return node.has(fieldName) ? node.get(fieldName).asText() : defaultValue;
+    }
+    public List<MovieDTO> searchMovies(String query, String filter) {
+        String endpoint = "/search/movie";
+        if ("actor".equalsIgnoreCase(filter)) {
+            endpoint = "/search/person";
+        }
+
+        String url = BASE_URL + endpoint + "?api_key=" + apiKey + "&query=" + query;
+
+        try {
+            JsonNode response = restTemplate.getForObject(url, JsonNode.class);
+            if ("actor".equalsIgnoreCase(filter) && response != null && response.has("results")) {
+                // Get movies where the actor appears
+                return parseActorMovies(response.get("results"));
+            }
+            return response != null && response.has("results") ? parseMovies(response.get("results")) : Collections.emptyList();
+        } catch (Exception e) {
+            System.err.println("Error searching movies: " + e.getMessage());
+            return Collections.emptyList();
+        }
+    }
+
+    // Helper method to parse actor-related movies
+    private List<MovieDTO> parseActorMovies(JsonNode nodes) {
+        return StreamSupport.stream(nodes.spliterator(), false)
+                .flatMap(node -> node.has("known_for") ? parseMovies(node.get("known_for")).stream() : Stream.empty())
+                .distinct()
+                .collect(Collectors.toList());
     }
 }
