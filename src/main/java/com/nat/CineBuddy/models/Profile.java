@@ -1,6 +1,10 @@
 package com.nat.CineBuddy.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+
+import java.util.List;
 
 
 @Entity
@@ -14,7 +18,14 @@ public class Profile {
     private boolean hidden;
     @OneToOne
     @JoinColumn(name = "user_id")
+    @JsonIgnore
     private User user;
+    @ManyToMany(mappedBy = "members", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JsonIgnore
+    private List<WatchParty> joinedGroups;
+    @OneToMany(mappedBy = "leader")
+    @JsonIgnore
+    private List<WatchParty> hostedGroups;
 
     public Integer getId() {
         return id;
@@ -60,14 +71,31 @@ public class Profile {
         this.user = user;
     }
 
+    public List<WatchParty> getJoinedGroups() {
+        return joinedGroups;
+    }
+
+    public void setJoinedGroups(List<WatchParty> joinedGroups) {
+        this.joinedGroups = joinedGroups;
+    }
+
+    public List<WatchParty> getHostedGroups() {
+        return hostedGroups;
+    }
+
+    public void setHostedGroups(List<WatchParty> hostedGroups) {
+        this.hostedGroups = hostedGroups;
+    }
 
     @Override
     public String toString() {
         return "Profile{" +
-                ", image='" + image + '\'' +
+                "name='" + name + '\'' +
                 ", bio='" + bio + '\'' +
-                ", name='" + name + '\'' +
-                ", private='" + hidden + '\'' +
+                ", image='" + image + '\'' +
+                ", hidden=" + hidden +
+                ", joinedGroups=" + joinedGroups +
+                ", hostedGroups=" + hostedGroups +
                 '}';
     }
 }
