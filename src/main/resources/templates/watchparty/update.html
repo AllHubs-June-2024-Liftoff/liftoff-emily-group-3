@@ -15,16 +15,16 @@
         <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
 
         <th:block th:if="${user.profile == watchparty.leader}">
-            <div class="form-group">
+            <div class="form-watchParty">
                 <label th:for="name">Watch Party Name</label>
                 <input class="form-control" th:field="${watchparty.name}" />
                 <span th:errors="${watchparty.name}" class="error"></span>
             </div>
-            <div class="form-group pt-2">
+            <div class="form-watchParty pt-2">
                 <label for="searchMembers">Search Members</label>
                 <input type="text" name="searchMembers" id="searchMembers">
             </div>
-            <div class="form-group">
+            <div class="form-watchParty">
                 <label for="members">Edit Members</label>
                 <select id="members" name="members" class="form-control" multiple="multiple" th:field="*{watchparty.members}">
                     <th:block th:each="member : ${watchparty.members}">
@@ -36,7 +36,7 @@
 
         <th:block th:unless="${user.profile == watchparty.leader}">
             <input class="form-control" type="hidden" th:field="${watchparty.name}" />
-            <div class="form-group">
+            <div class="form-watchParty">
                 <h2 th:text="${watchparty.name}"></h2>
                 <p>
                     Members:
@@ -50,11 +50,11 @@
         </th:block>
 
 
-        <div class="form-group pt-2">
+        <div class="form-watchParty pt-2">
             <label for="searchMovies">Search Movies</label>
             <input type="text" name="searchMovies" id="searchMovies">
         </div>
-        <div class="form-group">
+        <div class="form-watchParty">
             <label for="movies">Edit Movies</label>
             <select id="movies" name="movies" class="form-control" multiple="multiple" th:field="*{watchparty.movies}">
                 <th:block th:each="movie : ${watchparty.movies}">
