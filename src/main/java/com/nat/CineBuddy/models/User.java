@@ -27,9 +27,6 @@ public class User {
     @JsonIgnore
     private String password;
 
-//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<Review> reviews;
-
     @ManyToMany(fetch = FetchType.EAGER)
     @JsonIgnore
     private Set<Role> roles;

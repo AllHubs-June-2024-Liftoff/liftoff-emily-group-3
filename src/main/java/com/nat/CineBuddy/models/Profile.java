@@ -1,6 +1,5 @@
 package com.nat.CineBuddy.models;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
@@ -26,9 +25,6 @@ public class Profile {
     @OneToMany(mappedBy = "leader")
     @JsonIgnore
     private List<WatchParty> hostedGroups;
-
-    @OneToMany(mappedBy = "profile", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Review> reviews;
 
     public Integer getId() {
         return id;
