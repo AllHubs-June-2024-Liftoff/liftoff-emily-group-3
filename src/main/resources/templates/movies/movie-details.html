@@ -9,7 +9,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/flickity@2/dist/flickity.min.css">
     <link rel="stylesheet" th:href="@{/css/movie-details-styles.css}">
-    <link rel="stylesheet" th:href="@{/css/styles.css}">
+<!--    <link rel="stylesheet" th:href="@{/css/styles.css}">-->
 </head>
 <body>
 <div th:replace="~{fragments :: page-nav}"></div>
@@ -35,13 +35,12 @@
         <p class="movie-stats">Runtime: <span th:text="${movie.runtime}"></span> minutes</p>
     </div>
 
-    <!--todo: "review submitted! notification"-->
     <div class="right-section">
         <h3>Rate and Review</h3>
         <div th:if="${#authentication.principal != null}">
         <form action="/submit-review" method="POST">
             <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
-            <input type="hidden" name="movieId" th:value="${movie.movieId}" />
+            <input type="hidden" name="movieId" th:value="${movie.id}" />
             <!-- Replace the existing rating input section in the form -->
             <div class="form-group">
                 <label for="rating">Rating:</label>
@@ -95,13 +94,9 @@
             </div>
         </form>
         </div>
-        <div th:if="${#authentication.principal == null}">
-            <p>You need to be logged in to leave a review.</p>
-        </div>
     </div>
 </div>
 
-<!--todo: if no profilePath replace with blank profile image-->
 <div class="recommended-actors">
     <h3>Actors</h3>
     <div class="gallery js-flickity" data-flickity-options='{ "wrapAround": true, "contain": true, "pageDots": false }'>
@@ -114,7 +109,7 @@
                 </div>
                 <div class="caption">
                     <h5 th:text="${actor.name}"></h5>
-                    <p th:text="${actor.character}"></p>
+                    <h6 th:text="${actor.character}"></h6>
                 </div>
             </a>
         </div>
@@ -126,7 +121,7 @@
     <h3>Recommended Movies</h3>
     <div class="gallery js-flickity" data-flickity-options='{ "wrapAround": true, "contain": true, "pageDots": false }'>
         <div class="gallery-cell" th:each="movie : ${similarMovies}">
-            <a th:href="@{/movie-details/{id}(id=${movie.movieId})}">
+            <a th:href="@{/movie-details/{id}(id=${movie.id})}">
                 <img th:src="@{'https://image.tmdb.org/t/p/w500' + ${movie.posterPath}}" alt="Movie Poster"/>
                 <div class="caption">
                     <h5 th:text="${movie.title}"></h5>
@@ -152,5 +147,21 @@
 </div>
 
 <script src="https://unpkg.com/flickity@2/dist/flickity.pkgd.min.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const actorImages = document.querySelectorAll(".actor-img img");
+
+        actorImages.forEach(img => {
+            img.onerror = () => {
+                img.src = "/images/profile_picture_cinebuddy.png";
+            };
+
+            if (img.src.endsWith("null") || img.src.endsWith("undefined")) {
+                img.src = "/images/profile_picture_cinebuddy.png";
+            }
+        });
+    });
+</script>
+
 </body>
 </html>

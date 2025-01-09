@@ -1,7 +1,8 @@
+
 package com.nat.CineBuddy.services;
 
+import com.nat.CineBuddy.dto.MovieDTO;
 import com.nat.CineBuddy.models.Actor;
-import com.nat.CineBuddy.models.Movie;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -27,7 +28,7 @@ public class TMDbService {
     }
 
     // Fetch movie details
-    public Movie getMovieDetails(String movieId) {
+    public MovieDTO getMovieDetails(String movieId) {
         try {
             JsonNode response = fetchFromApi("/movie/" + movieId);
             return response != null ? parseMovie(response) : null;
@@ -38,7 +39,7 @@ public class TMDbService {
     }
 
     // Fetch trending movies
-    public List<Movie> getTrendingMovies() {
+    public List<MovieDTO> getTrendingMovies() {
         try {
             JsonNode response = fetchFromApi("/trending/movie/day");
             return response != null && response.has("results") ? parseMovies(response.get("results")) : Collections.emptyList();
@@ -49,7 +50,7 @@ public class TMDbService {
     }
 
     // Fetch similar movie recommendations
-    public List<Movie> getSimilarMovieRecommendations(String movieId) {
+    public List<MovieDTO> getSimilarMovieRecommendations(String movieId) {
         try {
             JsonNode response = fetchFromApi("/movie/" + movieId + "/recommendations");
             return response != null && response.has("results") ? parseMovies(response.get("results")) : Collections.emptyList();
@@ -78,7 +79,7 @@ public class TMDbService {
     }
 
     // Parse a single movie JSON object into a Movie instance
-    private Movie parseMovie(JsonNode node) {
+    private MovieDTO parseMovie(JsonNode node) {
         String id = getJsonField(node, "id", "N/A");
         String title = getJsonField(node, "title", "Unknown Title");
         String overview = getJsonField(node, "overview", "No overview available");
@@ -90,11 +91,11 @@ public class TMDbService {
         String runtime = getJsonField(node, "runtime", "N/A");
         String voteAverage = getJsonField(node, "vote_average", "N/A");
 
-        return new Movie(id, title, overview, releaseDate, posterPath, genres, budget, revenue, runtime, voteAverage);
+        return new MovieDTO(id, title, overview, releaseDate, posterPath, genres, budget, revenue, runtime, voteAverage);
     }
 
     // Parse a list of movie JSON objects into a list of Movie instances
-    private List<Movie> parseMovies(JsonNode nodes) {
+    private List<MovieDTO> parseMovies(JsonNode nodes) {
         return StreamSupport.stream(nodes.spliterator(), false)
                 .map(this::parseMovie)
                 .collect(Collectors.toList());

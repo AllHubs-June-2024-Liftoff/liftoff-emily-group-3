@@ -1,5 +1,6 @@
 package com.nat.CineBuddy.controllers;
 
+import com.nat.CineBuddy.dto.MovieDTO;
 import com.nat.CineBuddy.models.Actor;
 import com.nat.CineBuddy.models.Movie;
 import com.nat.CineBuddy.models.Review;
@@ -34,7 +35,7 @@ public class ReviewController {
     }
 
     @PostMapping("/delete-review/{id}")
-    public String deleteReview(@PathVariable("id") Long reviewId, RedirectAttributes redirectAttributes) {
+    public String deleteReview(@PathVariable("id") Integer reviewId, RedirectAttributes redirectAttributes) {
         // Call the service to delete the review by ID
         reviewService.deleteReview(reviewId);
 
@@ -53,26 +54,10 @@ public class ReviewController {
 
             // Set movie titles using TMDB service
             for (Review review : userReviews) {
-                Movie movie = tmDbService.getMovieDetails(review.getMovieId());  // Get movie details by ID
-                review.setMovieTitle(movie.getTitle());  // Set movie title
+                MovieDTO movieDTO = tmDbService.getMovieDetails(review.getMovieId());  // Get movie details by ID
+                review.setMovieTitle(movieDTO.getTitle());  // Set movie title
             }
 
-            // Sort the reviews based on the 'sort' parameter
-            if (sort != null) {
-                switch (sort) {
-                    case "rating":
-                        userReviews.sort(Comparator.comparingInt(Review::getRating));  // Sort by rating
-                        break;
-                    case "title":
-                        userReviews.sort(Comparator.comparing(Review::getMovieTitle, Comparator.nullsFirst(Comparator.naturalOrder())));  // Sort by movie title
-                        break;
-                    case "date":
-                        userReviews.sort(Comparator.comparing(Review::getDateCreated, Comparator.nullsFirst(Comparator.naturalOrder())));  // Sort by date created
-                        break;
-                    default:
-                        break;
-                }
-            }
 
             // Add reviews to the model
             model.addAttribute("reviews", userReviews);

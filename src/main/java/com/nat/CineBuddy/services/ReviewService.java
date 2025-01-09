@@ -15,20 +15,8 @@ public class ReviewService {
     private ReviewRepository reviewRepository;
 
     // Method to delete a review by its ID
-    public void deleteReview(Long reviewId) {
+    public void deleteReview(Integer reviewId) {
         reviewRepository.deleteById(reviewId);
     }
 
-    // Method to get reviews sorted by the selected criteria
-//    public List<Review> getReviewsBySortCriteria(String sortBy) {
-//        // You can customize this logic to apply different sorting criteria
-//        Sort sort = switch (sortBy) {
-//            case "rating" -> Sort.by(Sort.Order.asc("rating"));
-//            case "title" -> Sort.by(Sort.Order.asc("movieTitle"));
-//            case "date" -> Sort.by(Sort.Order.desc("dateCreated"));
-//            default -> Sort.by(Sort.Order.desc("dateCreated"));
-//        };
-//
-//        return (List<Review>) reviewRepository.findAll(sort);
-//    }
 }

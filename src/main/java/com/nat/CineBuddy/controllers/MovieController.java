@@ -1,5 +1,6 @@
 package com.nat.CineBuddy.controllers;
 
+import com.nat.CineBuddy.dto.MovieDTO;
 import com.nat.CineBuddy.models.Actor;
 import com.nat.CineBuddy.models.Movie;
 import com.nat.CineBuddy.models.Review;
@@ -37,23 +38,25 @@ public class MovieController {
     @PostMapping("/submit-review")
     public String submitReview(@RequestParam String movieId, @RequestParam int rating,
                                @RequestParam String review, Principal principal, Model model) {
-        Review newReview = new Review();
+        if (principal == null) {
+            return "redirect:/login";
+        }        Review newReview = new Review();
         newReview.setMovieId(movieId);
         newReview.setRating(rating);
         newReview.setContent(review);
-        newReview.setUsername(principal.getName());  // Assuming you have authentication enabled
+        newReview.setUsername(principal.getName());
         newReview.setDateCreated(LocalDateTime.now());
 
         reviewRepository.save(newReview);
 
         // Fetch all reviews for the movie
         List<Review> reviews = reviewRepository.findByMovieId(movieId);
-        Movie movie = tmDbService.getMovieDetails(movieId);
-        List<Movie> similarMovies = tmDbService.getSimilarMovieRecommendations(movieId);
+        MovieDTO movieDTO = tmDbService.getMovieDetails(movieId);
+        List<MovieDTO> similarMovies = tmDbService.getSimilarMovieRecommendations(movieId);
         List<Actor> actors = tmDbService.getMovieActors(movieId);
 
         model.addAttribute("reviews", reviews);
-        model.addAttribute("movie", movie);
+        model.addAttribute("movie", movieDTO);
         model.addAttribute("similarMovies", similarMovies);
         model.addAttribute("actors", actors);
 //        model.addAttribute("movie", movieRepository.findById(Long.valueOf(movieId)));
@@ -65,12 +68,12 @@ public class MovieController {
 
     @GetMapping("/movie-details/{id}")
     public String getMovieDetails(@PathVariable String id, Model model) {
-        Movie movie = tmDbService.getMovieDetails(id);
-        List<Movie> similarMovies = tmDbService.getSimilarMovieRecommendations(id);
+        MovieDTO movieDTO = tmDbService.getMovieDetails(id);
+        List<MovieDTO> similarMovies = tmDbService.getSimilarMovieRecommendations(id);
         List<Actor> actors = tmDbService.getMovieActors(id);
         List<Review> reviews = reviewRepository.findByMovieId(id);
         model.addAttribute("reviews", reviews);
-        model.addAttribute("movie", movie);
+        model.addAttribute("movie", movieDTO);
         model.addAttribute("similarMovies", similarMovies);
         model.addAttribute("actors", actors);
         return "movies/movie-details";
