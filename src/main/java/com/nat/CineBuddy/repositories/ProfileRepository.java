@@ -8,4 +8,5 @@ import java.util.Optional;
 
 public interface ProfileRepository extends CrudRepository<Profile, Integer> {
     Optional<Profile> findByUser(User user);
+    Iterable<Profile> findByNameContainingIgnoreCase(String name);
 }
