@@ -62,7 +62,6 @@ public class TMDbService {
     }
 
     // Fetch actors for a movie
-    //todo rename e variable to error
     public List<Actor> getMovieActors(String movieId) {
         try {
             JsonNode response = fetchFromApi("/movie/" + movieId + "/credits");
