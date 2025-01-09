@@ -23,6 +23,7 @@
                 <button class="btn btn-primary">See Reviews</button>
             </a>
             <button class="btn btn-secondary">Add to Watchlist</button>
+            <a sec:authorize="isAuthenticated()" th:href="'/watchparty/add/' + ${movie.id}" class="btn btn-warning">Add to WatchParty</a>
         </div>
         <img th:src="@{'https://image.tmdb.org/t/p/w500' + ${movie.posterPath}}" alt="Movie Poster"/>
         <p th:text="${movie.overview}"></p>

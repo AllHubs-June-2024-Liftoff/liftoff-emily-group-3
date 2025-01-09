@@ -26,8 +26,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests((authorize) -> authorize
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/profile/**").fullyAuthenticated()
+                        .requestMatchers("/watchparty/**").fullyAuthenticated()
                         .requestMatchers("/notifications/**").fullyAuthenticated()
-                        .requestMatchers("/img/**", "/css/**").permitAll()
+                        .requestMatchers("/img/**", "/css/**", "/js/**").permitAll()
                         .anyRequest().permitAll()
                 ).formLogin(
                         form -> form
