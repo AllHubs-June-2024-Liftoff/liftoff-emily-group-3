@@ -1,0 +1,85 @@
+/* General container styles */
+.container {
+    margin-top: 20px;
+}
+
+/* Movie card styling */
+.movie-card {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.2s ease-in-out;
+}
+
+.movie-card:hover {
+    transform: scale(1.05);
+}
+
+.movie-card img {
+    width: 100%;
+    height: auto;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Movie info container (for title and description) */
+.movie-info {
+    padding: 15px;
+}
+
+.movie-info h3 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.25rem;
+    margin-bottom: 10px;
+}
+
+.movie-info p {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+/* Link styling for the movie card */
+.movie-card-link {
+    text-decoration: none;
+    color: inherit;
+}
+
+.movie-card-link:hover {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* Styles for Results title */
+.results-title {
+    font-family: 'Poppins', sans-serif;
+    font-size: 2rem; /* Bigger font size */
+    font-weight: 600;
+    color: #333; /* Dark gray text color */
+    text-align: left; /* Align text to the left */
+    background-color: #fff; /* White background box */
+    padding: 10px 15px; /* Padding inside the box */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow effect */
+    margin-bottom: 20px; /* Space below the title */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .movie-card {
+        flex-direction: column; /* Stack poster and text vertically */
+        align-items: center;
+    }
+
+    .movie-card img {
+        margin-right: 0; /* Remove right margin */
+        margin-bottom: 10px; /* Add space below poster */
+    }
+
+    .movie-card h3 {
+        text-align: center; /* Center align title */
+    }
+
+    .movie-card p {
+        text-align: center; /* Center align description */
+    }
+}
