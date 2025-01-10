@@ -1,12 +1,11 @@
 package com.nat.CineBuddy.controllers;
 
-import com.nat.CineBuddy.models.Profile;
+import com.nat.CineBuddy.dto.MovieDTO;
 import com.nat.CineBuddy.models.WatchParty;
 import com.nat.CineBuddy.services.ProfileService;
+import com.nat.CineBuddy.services.TMDbService;
 import com.nat.CineBuddy.services.UserService;
 import com.nat.CineBuddy.services.WatchPartyService;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -31,6 +30,9 @@ public class WatchPartyController {
     @Autowired
     private WatchPartyService watchPartyService;
 
+    @Autowired
+    private TMDbService tmDbService;
+
     @GetMapping
     public String index(Model model){
         model.addAttribute("user",userService.getCurrentUser());
@@ -39,8 +41,14 @@ public class WatchPartyController {
 
     @GetMapping("/{watchPartyId}")
     public String viewWatchParty(@PathVariable Integer watchPartyId, Model model){
-        model.addAttribute("watchparty",watchPartyService.viewWatchParty(watchPartyId));
+        WatchParty watchParty = watchPartyService.viewWatchParty(watchPartyId);
+        List<MovieDTO> movies = new ArrayList<>();
+        for(Integer movieId : watchParty.getMovies()){
+            movies.add(tmDbService.getMovieDetails(movieId.toString()));
+        }
+        model.addAttribute("watchparty",watchParty);
         model.addAttribute("profile", userService.getCurrentUser().getProfile());
+        model.addAttribute("movies",movies);
         return "watchparty/details";
     }
 
