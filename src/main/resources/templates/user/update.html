@@ -15,19 +15,19 @@
     <p style="text-align: end;"><a href="/profile/delete" onclick="return confirm('Delete Account? This can not be undone.');">Delete Account</a></p>
     <form th:object="${profile}" method="post" style="max-width:600px;">
         <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
-        <div class="form-watchParty">
+        <div class="form-group">
             <label for="name">Name:</label>
             <input class="form-control" type="text" th:field="*{name}" id="name" />
         </div>
-        <div class="form-watchParty">
+        <div class="form-group">
             <label for="bio">Bio:</label>
             <textarea class="form-control" th:field="*{bio}" id="bio"></textarea>
         </div>
-        <div class="form-watchParty">
+        <div class="form-group">
             <label for="image">Image:</label>
             <input class="form-control" type="text" th:field="*{image}" id="image" />
         </div>
-        <div class="form-watchParty">
+        <div class="form-group">
             <label for="hidden">Private Profile:</label>
             <input type="checkbox" th:field="*{hidden}" id="hidden" checked="${profile.getHidden() ? 'checked' : ''}" />
         </div>

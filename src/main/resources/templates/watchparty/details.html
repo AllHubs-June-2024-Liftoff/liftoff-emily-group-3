@@ -25,9 +25,9 @@
                     <a th:unless="${watchparty.leader.equals(profile)}" class="px-1" th:href="'/watchparty/' + ${watchparty.id} + '/leave'" onclick="return confirm('Leave Watch Party?');">Leave Watch Party</a>
                 </div>
             </div>
-            <ul class="list-watchParty">
+            <ul class="list-group">
             <th:block th:each="movie : ${watchparty.movies}">
-                <li class="list-watchParty-item d-flex justify-content-between align-items-center vote-radio" >
+                <li class="list-group-item d-flex justify-content-between align-items-center vote-radio" >
                     <!--Add fancy movie card. right now just says id-->
                     <input type="radio" name="voteOption" th:id="'voteOption-' + ${movie}" th:value="${movie}" aria-hidden="false">
                     <label class="flex-fill" th:for="'voteOption-' + ${movie}" th:text="'Movie ' + ${movie}"></label>
@@ -46,8 +46,8 @@
                     <a th:unless="${watchparty.leader.equals(profile)}" class="px-1" th:href="'/watchparty/' + ${watchparty.id} + '/leave'" onclick="return confirm('Leave Watch Party?');">Leave Watch Party</a>
                 </div>
             </div>
-            <ul class="list-watchParty">
-                <li class="list-watchParty-item d-flex justify-content-between align-items-center">No movies currently selected</li>
+            <ul class="list-group">
+                <li class="list-group-item d-flex justify-content-between align-items-center">No movies currently selected</li>
             </ul>
         </th:block>
     </div>

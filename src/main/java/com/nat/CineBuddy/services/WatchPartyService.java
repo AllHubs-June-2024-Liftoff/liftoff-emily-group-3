@@ -13,7 +13,7 @@ public interface WatchPartyService {
     public boolean updateWatchParty(Integer watchPartyId, WatchParty watchParty);
     public boolean deleteWatchParty(Integer watchPartyId);
     public boolean leaveWatchParty(Integer watchPartyId, Profile removeProfile);
-    Optional<WatchParty> findById(Integer id);
+//    Optional<WatchParty> findById(Integer id);
 
 
 }

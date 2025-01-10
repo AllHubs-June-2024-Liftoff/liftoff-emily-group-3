@@ -12,22 +12,22 @@
     <h1>Create a user!</h1>
     <form method="post" style="max-width:600px;">
         <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
-        <div class="form-watchParty">
+        <div class="form-group">
             <label th:for="name">Username</label>
             <input class="form-control" th:field="${user.username}" />
             <span th:errors="${user.username}" class="error"></span>
         </div>
-        <div class="form-watchParty">
+        <div class="form-group">
             <label th:for="name">Email</label>
             <input class="form-control" th:field="${user.email}" />
             <span th:errors="${user.email}" class="error"></span>
         </div>
-        <div class="form-watchParty">
+        <div class="form-group">
             <label th:for="name">Password</label>
             <input class="form-control" th:field="${user.password}" />
             <span th:errors="${user.password}" class="error"></span>
         </div>
-        <div class="form-watchParty">
+        <div class="form-group">
             <label th:for="roles">Roles</label>
             <th:block th:each="role : ${roles}">
                 <input type="checkbox" name="roles" th:value="${role.id}" th:id="'role-' + ${role.id}" />

@@ -41,6 +41,8 @@ public class VoteController {
         WatchParty watchParty = watchPartyService.viewWatchParty(watchPartyId);
         return voteService.getAllVoteCounts(watchParty);
     }
+
+
     /**
      * Get the most voted movie in a group.
      */

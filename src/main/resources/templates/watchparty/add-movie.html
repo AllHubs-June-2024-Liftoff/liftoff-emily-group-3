@@ -17,16 +17,16 @@
     <form method="POST">
         <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
 
-        <ul class="list-watchParty">
+        <ul class="list-group">
             <th:block th:each="watchparty : ${user.getProfile().getHostedGroups()}">
-                <li class="list-watchParty-item d-flex justify-content-between align-items-center watch-party-checkbox" >
+                <li class="list-group-item d-flex justify-content-between align-items-center watch-party-checkbox" >
                     <input type="checkbox" name="watchpartyOption" th:id="'watchpartyOption-' + ${watchparty.id}" th:value="${watchparty.id}" aria-hidden="false">
                     <label class="flex-fill" th:for="'watchpartyOption-' + ${watchparty.id}" th:text="'Watch Party: ' + ${watchparty.name}"></label>
                 </li>
             </th:block>
 
             <th:block th:each="watchparty : ${user.getProfile().getJoinedGroups()}">
-                <li class="list-watchParty-item d-flex justify-content-between align-items-center watch-party-checkbox" >
+                <li class="list-group-item d-flex justify-content-between align-items-center watch-party-checkbox" >
                     <input type="checkbox" name="watchpartyOption" th:id="'watchpartyOption-' + ${watchparty.id}" th:value="${watchparty.id}" aria-hidden="false">
                     <label class="flex-fill" th:for="'watchpartyOption-' + ${watchparty.id}" th:text="'Watch Party: ' + ${watchparty.name}"></label>
                 </li>
