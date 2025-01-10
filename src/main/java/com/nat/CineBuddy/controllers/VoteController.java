@@ -32,8 +32,6 @@ public class VoteController {
         return success ? "Vote cast successfully!" : "You have already voted for this movie.";
     }
 
-
-
     /**
      * Retrieve the current vote counts for all movies in a group.
      */

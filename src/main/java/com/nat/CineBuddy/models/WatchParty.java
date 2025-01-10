@@ -18,14 +18,6 @@ public class WatchParty {
     private String name;
     @ManyToOne(fetch = FetchType.EAGER)
     private Profile leader;
-
-    @ElementCollection
-    @CollectionTable(name = "watchparty_votes", joinColumns = @JoinColumn(name = "watchparty_id"))
-    @MapKeyColumn(name = "user_id")
-    @Column(name = "movie_id")
-    private Map<Integer, Integer> votes = new HashMap<>(); // Tracks votes: userId -> movieId
-
-
     private List<Integer> movies;
     private Integer movieChoice;
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
@@ -43,32 +35,6 @@ public class WatchParty {
         this.movies = movies;
         this.movieChoice = movieChoice;
         this.members = members;
-    }
-
-    // Add a vote
-    public boolean addVote(Integer userId, Integer movieId) {
-        if (votes.containsKey(userId)) {
-            return false; // User has already voted
-        }
-        votes.put(userId, movieId); // Add the user's vote
-        return true;
-    }
-
-    // Get vote counts for all movies
-    public Map<Integer, Integer> getVoteCounts() {
-        Map<Integer, Integer> movieCounts = new HashMap<>();
-        for (Integer movieId : votes.values()) {
-            movieCounts.put(movieId, movieCounts.getOrDefault(movieId, 0) + 1);
-        }
-        return movieCounts;
-    }
-
-    // Get the most voted movie
-    public Integer getMostVotedMovie() {
-        return getVoteCounts().entrySet().stream()
-                .max(Map.Entry.comparingByValue())
-                .orElseThrow(() -> new IllegalStateException("No votes yet"))
-                .getKey();
     }
 
 
@@ -121,13 +87,6 @@ public class WatchParty {
         this.members = members;
     }
 
-    public Map<Integer, Integer> getVotes() {
-        return votes;
-    }
-
-    public void setVotes(Map<Integer, Integer> votes) {
-        this.votes = votes;
-    }
 
 
 

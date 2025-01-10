@@ -87,10 +87,12 @@ public class WatchPartyServiceImpl implements WatchPartyService{
 
     }
 
-    @Override
-    public Optional<WatchParty> findById(Integer id) {
-        return watchPartyRepository.findById(id);
-    }
+//
+//    May use if Optional<WatchParty> for safe null checks:
+//    @Override
+//    public Optional<WatchParty> findById(Integer id) {
+//        return watchPartyRepository.findById(id);
+//    }
 
 
 }
