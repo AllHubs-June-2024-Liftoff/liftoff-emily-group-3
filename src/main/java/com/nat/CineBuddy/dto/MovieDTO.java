@@ -1,18 +1,8 @@
-package com.nat.CineBuddy.models;
+package com.nat.CineBuddy.dto;
 
-import com.nat.CineBuddy.dto.MovieDTO;
-import jakarta.persistence.*;
+public class MovieDTO {
 
-@Entity
-public class Movie {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-
-    @Column(unique = true, nullable = false)
-    private Integer movieId;
-
+    private String id;
     private String title;
     private String overview;
     private String releaseDate;
@@ -23,22 +13,8 @@ public class Movie {
     private String runtime;
     private String voteAverage;
 
-    // Default constructor
-    public Movie() {
-    }
-
-    // Constructor for essential fields
-    public Movie(Integer movieId, String title, String overview, String releaseDate, String posterPath) {
-        this.movieId = movieId;
-        this.title = title;
-        this.overview = overview;
-        this.releaseDate = releaseDate;
-        this.posterPath = posterPath;
-    }
-
-    // Constructor for all fields
-    public Movie(Integer movieId, String title, String overview, String releaseDate, String posterPath, String genres, String budget, String revenue, String runtime, String voteAverage) {
-        this.movieId = movieId;
+    public MovieDTO(String id, String title, String overview, String releaseDate, String posterPath, String genres, String budget, String revenue, String runtime, String voteAverage) {
+        this.id = id;
         this.title = title;
         this.overview = overview;
         this.releaseDate = releaseDate;
@@ -50,31 +26,16 @@ public class Movie {
         this.voteAverage = voteAverage;
     }
 
-    // Getters and Setters
-    public Integer getId() {
+    public MovieDTO() {
+
+    }
+
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
-    }
-
-    public Integer getMovieId() {
-        return movieId;
-    }
-
-    public void setMovieId(Integer movieId) {
-        this.movieId = movieId;
-    }
-
-    // Helper method to convert Movie to MovieDTO
-    public MovieDTO toMovieDTO() {
-        MovieDTO dto = new MovieDTO();
-        dto.setId(String.valueOf(this.movieId));
-        // Populate other fields by fetching details from the API if needed
-        dto.setGenres(this.genres);
-        dto.setOverview(this.overview);
-        return dto;
     }
 
     public String getTitle() {
@@ -148,8 +109,9 @@ public class Movie {
     public void setVoteAverage(String voteAverage) {
         this.voteAverage = voteAverage;
     }
-
     public String getFormattedGenres() {
         return String.join(", ", this.genres);
     }
+
 }
+

@@ -1,6 +1,6 @@
 package com.nat.CineBuddy.controllers;
 
-import com.nat.CineBuddy.models.Movie;
+import com.nat.CineBuddy.dto.MovieDTO;
 import com.nat.CineBuddy.services.TMDbService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,13 +16,10 @@ public class HomeController {
         this.tmDbService = tmDbService;
     }
 
-
     @GetMapping("/")
     public String trendingMovies(Model model) {
-        List<Movie> movies = tmDbService.getTrendingMovies();
+        List<MovieDTO> movies = tmDbService.getTrendingMovies();  // Use MovieDTO here
         model.addAttribute("movies", movies);
         return "index";
     }
-
 }
-

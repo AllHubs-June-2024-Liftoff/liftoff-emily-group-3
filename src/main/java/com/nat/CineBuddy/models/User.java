@@ -13,22 +13,29 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
     @Column(nullable = false, unique = true)
     @NotEmpty(message="Username is required")
     private String username;
+
     @NotEmpty(message="Email is required")
     @Email(message="Invalid email address")
     @Column(nullable = false, unique = true)
     private String email;
+
     @Column(nullable = false)
     @JsonIgnore
     private String password;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JsonIgnore
     private Set<Role> roles;
+
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     @JsonIgnore
     private Profile profile;
+
+    public User() {}
 
     public Integer getId() {
         return id;
