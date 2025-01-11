@@ -1,6 +1,9 @@
 form {
     margin:0;
 }
+.w-60 {
+  width: 60%;
+}
 .watchparty-list-thumb{
     height:200px;
 }

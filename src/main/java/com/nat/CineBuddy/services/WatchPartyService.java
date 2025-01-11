@@ -4,7 +4,6 @@ import com.nat.CineBuddy.models.Profile;
 import com.nat.CineBuddy.models.WatchParty;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface WatchPartyService {
     public boolean createWatchParty(WatchParty watchParty);
@@ -13,7 +12,6 @@ public interface WatchPartyService {
     public boolean updateWatchParty(Integer watchPartyId, WatchParty watchParty);
     public boolean deleteWatchParty(Integer watchPartyId);
     public boolean leaveWatchParty(Integer watchPartyId, Profile removeProfile);
-//    Optional<WatchParty> findById(Integer id);
-
-
+    public void removeMovie(Integer watchPartyId, Integer movieId);
+    public void removeMember(Integer watchPartyId, Integer memberId);
 }
