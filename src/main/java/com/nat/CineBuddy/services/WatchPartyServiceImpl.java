@@ -86,4 +86,23 @@ public class WatchPartyServiceImpl implements WatchPartyService{
         }
     }
 
+    public void removeMovie(Integer watchPartyId, Integer movieId){
+        Optional<WatchParty> storedWatchParty = watchPartyRepository.findById(watchPartyId);
+        if(storedWatchParty.isPresent()){
+            WatchParty watchParty = storedWatchParty.get();
+            watchParty.getMovies().remove(movieId);
+            watchPartyRepository.save(watchParty);
+        }
+    }
+
+    public void removeMember(Integer watchPartyId, Integer memberId){
+        Optional<WatchParty> storedWatchParty = watchPartyRepository.findById(watchPartyId);
+        if(storedWatchParty.isPresent()){
+            WatchParty watchParty = storedWatchParty.get();
+            Profile storedProfile = profileService.getProfileById(memberId);
+            watchParty.getMembers().remove(storedProfile);
+            watchPartyRepository.save(watchParty);
+        }
+    }
+
 }

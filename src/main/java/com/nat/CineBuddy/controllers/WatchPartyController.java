@@ -1,6 +1,7 @@
 package com.nat.CineBuddy.controllers;
 
 import com.nat.CineBuddy.dto.MovieDTO;
+import com.nat.CineBuddy.models.Profile;
 import com.nat.CineBuddy.models.WatchParty;
 import com.nat.CineBuddy.services.ProfileService;
 import com.nat.CineBuddy.services.TMDbService;
@@ -136,4 +137,15 @@ public class WatchPartyController {
         return "redirect:/movie-details/"+movieId;
     }
 
+    @GetMapping("/{watchPartyId}/movies/remove/{movieId}")
+    public String removeMovieFromWatchParty(@PathVariable Integer watchPartyId, @PathVariable Integer movieId){
+        watchPartyService.removeMovie(watchPartyId, movieId);
+        return "redirect:/watchparty/"+watchPartyId;
+    }
+
+    @PostMapping("/{watchPartyId}/members/remove")
+    public String removeMemberFromWatchParty(@PathVariable Integer watchPartyId, @RequestParam("profileId") Integer profileId){
+        watchPartyService.removeMember(watchPartyId,profileId);
+        return "redirect:/watchparty/"+watchPartyId;
+    }
 }
