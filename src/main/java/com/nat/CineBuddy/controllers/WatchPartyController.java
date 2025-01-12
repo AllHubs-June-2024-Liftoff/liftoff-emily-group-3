@@ -43,14 +43,20 @@ public class WatchPartyController {
     @GetMapping("/{watchPartyId}")
     public String viewWatchParty(@PathVariable Integer watchPartyId, Model model){
         WatchParty watchParty = watchPartyService.viewWatchParty(watchPartyId);
-        List<MovieDTO> movies = new ArrayList<>();
-        for(Integer movieId : watchParty.getMovies()){
-            movies.add(tmDbService.getMovieDetails(movieId.toString()));
+        Profile profile = userService.getCurrentUser().getProfile();
+        if(watchParty.getMembers().contains(profile) || watchParty.getLeader().equals(profile)){
+            List<MovieDTO> movies = new ArrayList<>();
+            for(Integer movieId : watchParty.getMovies()){
+                movies.add(tmDbService.getMovieDetails(movieId.toString()));
+            }
+            model.addAttribute("watchparty",watchParty);
+            model.addAttribute("profile", profile);
+            model.addAttribute("movies",movies);
+            return "watchparty/details";
         }
-        model.addAttribute("watchparty",watchParty);
-        model.addAttribute("profile", userService.getCurrentUser().getProfile());
-        model.addAttribute("movies",movies);
-        return "watchparty/details";
+        else{
+            return "watchparty";
+        }
     }
 
     @GetMapping("/host")
@@ -132,7 +138,7 @@ public class WatchPartyController {
     }
 
     @PostMapping("/add/{movieId}")
-    public String addMovieToWatchParty(@PathVariable Integer movieId, @RequestParam("watchpartyOption") List<Integer> watchPartyIds){
+    public String addMovieToWatchParty(@PathVariable Integer movieId, @RequestParam(name = "watchpartyOption", required = false) List<Integer> watchPartyIds){
         watchPartyService.addMovieToList(movieId, watchPartyIds);
         return "redirect:/movie-details/"+movieId;
     }
