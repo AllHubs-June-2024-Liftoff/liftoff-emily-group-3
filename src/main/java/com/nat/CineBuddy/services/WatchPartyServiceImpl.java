@@ -16,6 +16,8 @@ public class WatchPartyServiceImpl implements WatchPartyService{
     private WatchPartyRepository watchPartyRepository;
     @Autowired
     private ProfileService profileService;
+    @Autowired
+    private UserService userService;
 
     public boolean createWatchParty(WatchParty watchParty){
         watchPartyRepository.save(watchParty);
@@ -23,13 +25,15 @@ public class WatchPartyServiceImpl implements WatchPartyService{
     }
 
     public void addMovieToList(Integer movieId, List<Integer> watchPartyIds){
-        for (Integer watchPartyId : watchPartyIds){
-            Optional<WatchParty> storedWatchParty = watchPartyRepository.findById(watchPartyId);
-            if(storedWatchParty.isPresent()){
-                WatchParty watchParty = storedWatchParty.get();
-                if(!watchParty.getMovies().contains(movieId)){
-                    watchParty.getMovies().add(movieId);
-                    watchPartyRepository.save(watchParty);
+        if(watchPartyIds != null && !watchPartyIds.isEmpty()) {
+            for (Integer watchPartyId : watchPartyIds) {
+                Optional<WatchParty> storedWatchParty = watchPartyRepository.findById(watchPartyId);
+                if (storedWatchParty.isPresent()) {
+                    WatchParty watchParty = storedWatchParty.get();
+                    if (!watchParty.getMovies().contains(movieId)) {
+                        watchParty.getMovies().add(movieId);
+                        watchPartyRepository.save(watchParty);
+                    }
                 }
             }
         }
@@ -62,18 +66,23 @@ public class WatchPartyServiceImpl implements WatchPartyService{
         }
         else{
             WatchParty watchPartyToRemove = storedWatchParty.get();
-            for (Profile memberToRemove : watchPartyToRemove.getMembers()){
-                memberToRemove.getJoinedGroups().remove(watchPartyToRemove);
-                profileService.updateProfile(memberToRemove.getId(), memberToRemove);
+            if(watchPartyToRemove.getLeader().equals(userService.getCurrentUser().getProfile())){
+                for (Profile memberToRemove : watchPartyToRemove.getMembers()){
+                    memberToRemove.getJoinedGroups().remove(watchPartyToRemove);
+                    profileService.updateProfile(memberToRemove.getId(), memberToRemove);
+                }
+                watchPartyRepository.delete(watchPartyToRemove);
+                return true;
             }
-            watchPartyRepository.delete(watchPartyToRemove);
-            return true;
+            else{
+                return false;
+            }
         }
     }
 
     public boolean leaveWatchParty(Integer watchPartyId, Profile removeProfile){
         Optional<WatchParty> storedWatchParty = watchPartyRepository.findById(watchPartyId);
-        if(!storedWatchParty.isPresent()){
+        if(!storedWatchParty.isPresent() || !removeProfile.equals(userService.getCurrentUser().getProfile())){
             return false;
         }
         else{
@@ -99,9 +108,11 @@ public class WatchPartyServiceImpl implements WatchPartyService{
         Optional<WatchParty> storedWatchParty = watchPartyRepository.findById(watchPartyId);
         if(storedWatchParty.isPresent()){
             WatchParty watchParty = storedWatchParty.get();
-            Profile storedProfile = profileService.getProfileById(memberId);
-            watchParty.getMembers().remove(storedProfile);
-            watchPartyRepository.save(watchParty);
+            if(watchParty.getLeader().equals(userService.getCurrentUser().getProfile())) {
+                Profile storedProfile = profileService.getProfileById(memberId);
+                watchParty.getMembers().remove(storedProfile);
+                watchPartyRepository.save(watchParty);
+            }
         }
     }
 
