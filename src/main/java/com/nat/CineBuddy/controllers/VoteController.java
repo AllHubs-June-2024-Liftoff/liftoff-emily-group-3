@@ -1,5 +1,6 @@
 package com.nat.CineBuddy.controllers;
 
+import com.nat.CineBuddy.models.Profile;
 import com.nat.CineBuddy.models.WatchParty;
 import com.nat.CineBuddy.models.Vote;
 import com.nat.CineBuddy.models.WatchParty;
@@ -7,6 +8,7 @@ import com.nat.CineBuddy.services.WatchPartyService;
 import com.nat.CineBuddy.services.VoteService;
 import com.nat.CineBuddy.services.WatchPartyService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -25,9 +27,9 @@ public class VoteController {
      * Cast a vote for a movie in a group.
      */
     @PostMapping("/{watchPartyId}/vote")
-    public String castVote(@PathVariable Integer watchPartyId, @RequestParam Integer userId, @RequestParam Integer movieId) {
+    public String castVote(@PathVariable Integer watchPartyId, @RequestParam Integer movieId) {
         WatchParty watchParty = watchPartyService.viewWatchParty(watchPartyId); // Using existing method instead of findById.
-        boolean success = voteService.castVote(watchParty, userId, movieId); // Cast vote
+        boolean success = voteService.castVote(watchParty, movieId); // Cast vote
 
         return success ? "Vote cast successfully!" : "You have already voted for this movie.";
     }
@@ -52,4 +54,7 @@ public class VoteController {
         WatchParty watchParty = watchPartyService.viewWatchParty(watchPartyId);
         return "The most voted movie is: " + voteService.getMostVotedMovie(watchParty);
     }
+
+
+
 }

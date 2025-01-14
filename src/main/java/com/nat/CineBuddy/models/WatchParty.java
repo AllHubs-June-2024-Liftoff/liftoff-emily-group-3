@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotEmpty;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Entity
 public class WatchParty {
@@ -100,5 +101,17 @@ public class WatchParty {
             ", movieChoice=" + movieChoice +
             ", members=" + (members != null ? members.size() : 0) + // Avoid circular reference
         '}';
+    }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        WatchParty that = (WatchParty) o;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

@@ -14,7 +14,8 @@ public class Vote {
     @ManyToOne
     private WatchParty watchParty;// Links the votes to a watchParty
 
-    private Integer userId; // The ID of the user who voted
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Profile profile; // The ID of the user who voted
 
     private Integer movieId; // The ID of the movie the user voted for
 
@@ -37,12 +38,12 @@ public class Vote {
         this.watchParty = watchParty;
     }
 
-    public Integer getUserId() {
-        return userId;
+    public Profile getProfile() {
+        return profile;
     }
 
-    public void setUserId(Integer userId) {
-        this.userId = userId;
+    public void setProfile(Profile profile) {
+        this.profile = profile;
     }
 
     public Integer getMovieId() {

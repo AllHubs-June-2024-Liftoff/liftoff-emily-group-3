@@ -1,5 +1,6 @@
 package com.nat.CineBuddy.services;
 
+import com.nat.CineBuddy.models.Profile;
 import com.nat.CineBuddy.models.WatchParty;
 import com.nat.CineBuddy.models.Vote;
 import com.nat.CineBuddy.models.WatchParty;
@@ -17,19 +18,23 @@ public class VoteService {
     @Autowired
     private VoteRepository voteRepository;
 
+    @Autowired
+    private UserService userService;
+
+
     /**
      * Cast a vote for a movie.
      *
      * @param watchParty   The group where the vote is being cast.
-     * @param userId  The ID of the user casting the vote.
      * @param movieId The ID of the movie being voted for.
      * @return True if the vote is successfully cast, false if the user already voted.
      */
-    public boolean castVote(WatchParty watchParty, Integer userId, Integer movieId) {
+    public boolean castVote(WatchParty watchParty, Integer movieId) {
         // Check if the user has already voted in this WatchParty
         List<Vote> existingVotes = voteRepository.findByWatchParty(watchParty);
+        Profile profile = userService.getCurrentUser().getProfile();
         for (Vote vote : existingVotes) {
-            if (vote.getUserId().equals(userId)) {
+            if (vote.getProfile() != null && vote.getProfile().equals(profile)) {
                 return false; // User has already voted
             }
         }
@@ -37,7 +42,7 @@ public class VoteService {
         // Save the new vote
         Vote vote = new Vote();
         vote.setWatchParty(watchParty);
-        vote.setUserId(userId);
+        vote.setProfile(profile);
         vote.setMovieId(movieId);
         voteRepository.save(vote);
 
