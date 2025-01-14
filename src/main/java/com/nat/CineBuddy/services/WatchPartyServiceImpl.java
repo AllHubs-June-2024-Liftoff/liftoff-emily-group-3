@@ -84,6 +84,14 @@ public class WatchPartyServiceImpl implements WatchPartyService{
             profileService.updateProfile(removeProfile.getId(),removeProfile);
             return true;
         }
+
     }
+
+
+//    @Override
+//    public Optional<WatchParty> findById(Integer id) {
+//        return watchPartyRepository.findById(id);
+//    }
+
 
 }
