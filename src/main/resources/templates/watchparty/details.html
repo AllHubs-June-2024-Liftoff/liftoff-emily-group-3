@@ -11,6 +11,8 @@
     <link rel="stylesheet" href="https://unpkg.com/flickity@2/dist/flickity.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <link rel="stylesheet" th:href="@{/css/search-results-styles.css}">
+    <script src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js" integrity="sha384-GNFwBvfVxBkLMJpYMOABq3c+d3KnQxudP/mGPkzpZSTYykLBNsZEnG2D9G/X/+7D" crossorigin="anonymous" async></script>
 </head>
 <body>
 
@@ -90,6 +92,23 @@
                     </li>
                 </th:block>
             </ul>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <h3 th:text="${watchparty.name} + ' Members Top Rated Movies'"></h3>
+        <div class="row bg-white mt-2 py-2" data-masonry='{"percentPosition": true }' th:if="${topRatedMovies?.size() > 0}">
+            <div class="col-md-4 mb-4" th:each="movie : ${topRatedMovies}">
+                <a th:href="@{/movie-details/{id}(id=${movie.id})}" class="movie-card-link">
+                    <div class="movie-card">
+                        <img th:src="@{'https://image.tmdb.org/t/p/w500' + ${movie.posterPath}}" alt="Poster" class="img-thumbnail">
+                        <div class="movie-info">
+                            <h3 th:text="${movie.title}"></h3>
+                            <p th:text="${movie.overview}"></p>
+                        </div>
+                    </div>
+                </a>
+            </div>
         </div>
     </div>
 

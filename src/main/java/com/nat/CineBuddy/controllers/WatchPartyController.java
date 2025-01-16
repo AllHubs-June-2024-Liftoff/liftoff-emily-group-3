@@ -44,16 +44,17 @@ public class WatchPartyController {
     @GetMapping("/{watchPartyId}")
     public String viewWatchParty(@PathVariable Integer watchPartyId, Model model){
         WatchParty watchParty = watchPartyService.getWatchParty(watchPartyId);
-        List<MovieDTO> topRatedMovies = watchPartyService.getTopRatedMovies(watchParty);
         Profile profile = userService.getCurrentUser().getProfile();
         if(watchParty.getMembers().contains(profile) || watchParty.getLeader().equals(profile)){
             List<MovieDTO> movies = new ArrayList<>();
             for(Integer movieId : watchParty.getMovies()){
                 movies.add(tmDbService.getMovieDetails(movieId.toString()));
             }
+            List<MovieDTO> topRatedMovies = watchPartyService.getTopRatedMovies(watchParty);
             model.addAttribute("watchparty",watchParty);
             model.addAttribute("profile", profile);
             model.addAttribute("movies",movies);
+            model.addAttribute("topRatedMovies",topRatedMovies);
             return "watchparty/details";
         }
         else{
