@@ -80,4 +80,13 @@ public class VoteService {
 
         return voteCounts;
     }
+
+    /**
+     *
+     * @param watchParty Passing in watchParty to get all votes.
+     * @return All vote objects associated with the watchparty
+     */
+    public List<Vote> getAllVotes (WatchParty watchParty) {
+        return voteRepository.findByWatchParty(watchParty);
+    }
 }

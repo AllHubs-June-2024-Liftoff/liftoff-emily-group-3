@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -54,6 +55,19 @@ public class VoteController {
         WatchParty watchParty = watchPartyService.viewWatchParty(watchPartyId);
         return "The most voted movie is: " + voteService.getMostVotedMovie(watchParty);
     }
+
+    /**
+     *
+     * @param watchPartyId Getting current watchparty.
+     * @return Returning all votes for that watchparty.
+     */
+
+    @PostMapping("/{watchPartyId}/all")
+    public List<Vote> getAllVotes(@PathVariable Integer watchPartyId) {
+        WatchParty watchParty = watchPartyService.viewWatchParty(watchPartyId);
+        return voteService.getAllVotes(watchParty);
+    }
+
 
 
 
