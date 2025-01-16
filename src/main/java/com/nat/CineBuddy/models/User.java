@@ -40,6 +40,11 @@ public class User {
     public Integer getId() {
         return id;
     }
+
+    public void setId(Integer id) {
+        this.id = id; //Added to test for VoteService
+    }
+
     public String getUsername() {
         return username;
     }

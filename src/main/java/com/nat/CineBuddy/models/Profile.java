@@ -26,9 +26,18 @@ public class Profile {
     @JsonIgnore
     private List<WatchParty> hostedGroups;
 
+    @OneToMany(mappedBy = "profile", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JsonIgnore
+    private List<Vote> votes;
+
+
     public Integer getId() {
         return id;
     }
+
+    public void setId(Integer id) {
+        this.id = id;
+    } //Added for VoteService Test.
 
     public String getName() {
         return name;
@@ -97,4 +106,19 @@ public class Profile {
                 ", hostedGroups=" + hostedGroups +
                 '}';
     }
+
+    //Added for VoteService Test treats two profile objects with same id the same.
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Profile profile = (Profile) o;
+        return id != null && id.equals(profile.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : 0;
+    }
+
 }
