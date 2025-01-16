@@ -8,9 +8,7 @@ import com.nat.CineBuddy.repositories.WatchPartyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -126,12 +124,11 @@ public class WatchPartyServiceImpl implements WatchPartyService{
     }
 
     public List<MovieDTO> getTopRatedMovies(WatchParty watchParty){
-        List<MovieDTO> topRatedMovies = new ArrayList<>();
+        Set<MovieDTO> topRatedMovies = new HashSet<>();
         for(Profile member : watchParty.getMembers()){
-            List<MovieDTO> tempList = Stream.concat(topRatedMovies.stream(),profileService.getTopRatedMovies(member).stream()).distinct().collect(Collectors.toList());
-            topRatedMovies = tempList;
+            topRatedMovies.addAll(profileService.getTopRatedMovies(member));
         }
-        return topRatedMovies;
+        return new ArrayList<>(topRatedMovies);
     }
 
 }

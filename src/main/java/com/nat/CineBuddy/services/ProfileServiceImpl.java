@@ -83,9 +83,12 @@ public class ProfileServiceImpl implements ProfileService{
 
     public List<MovieDTO> getTopRatedMovies(Profile profile){
         List<MovieDTO> topRatedMovies = new ArrayList<>();
-        List<String> tempData = List.of("2","3","4","5","6","7","8","9");
+        List<String> tempData = List.of("2","3","400","5","6","700","8","9");
         for(String movieId : tempData){
-            topRatedMovies.add(tmDbService.getMovieDetails(movieId));
+            List<MovieDTO> tempMovie = tmDbService.getSimilarMovieRecommendations(movieId);
+            if(tempMovie != null){
+                topRatedMovies.addAll(tempMovie);
+            }
         }
         return topRatedMovies;
     }
