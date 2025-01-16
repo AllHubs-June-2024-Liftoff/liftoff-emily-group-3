@@ -8,6 +8,9 @@
     <title>CineBuddy | Watch Party</title>
     <th:block th:replace="~{fragments :: head}"></th:block>
     <link rel="stylesheet" th:href="@{/css/watch-party-votes.css}">
+    <link rel="stylesheet" href="https://unpkg.com/flickity@2/dist/flickity.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
 </head>
 <body>
 
@@ -65,8 +68,15 @@
                         </div>
                         <div class="d-flex flex-column ms-auto gap-1">
                             <a class="btn btn-primary btn-sm" th:href="@{/movie-details/{id}(id=${movie.id})}">Details</a>
-                            <a class="btn btn-success btn-sm" href="#">Submit Vote</a><!--Ready for official route-->
-                            <a class="btn btn-warning btn-sm" href="#">Remove Vote</a><!--Ready for official route-->
+
+                            <form method="POST" th:action="'/watchparty/' + ${watchPartyId} + '/votes/cast'">
+                                <input type="hidden" name="movieId" th:value="${movie.id}" />
+                                <input class="btn btn-success btn-sm w-100" type="submit" value="Submit Vote" />
+                            </form>
+                            <form method="POST" th:action="'/watchparty/' + ${watchPartyId} + '/votes/retract'">
+                                <input type="hidden" name="movieId" th:value="${movie.id}" />
+                                <input class="btn btn-warning btn-sm w-100" type="submit" value="Retract Vote" />
+                            </form>
                             <a class="btn btn-danger btn-sm"
                                th:href="'/watchparty/' + ${watchPartyId} + '/movies/remove/' + ${movie.id}">
                                 Delete Movie
