@@ -119,4 +119,14 @@ public class VoteService {
         return true;
 
     }
+
+    /**
+     *
+     * @param watchParty pass in watchParty object.
+     * Utilize watchParty object to set our most voted movie.
+     */
+    public void finalizeVotes(WatchParty watchParty){
+        Integer mostVotedMovie = getMostVotedMovie(watchParty);
+        watchParty.setMovieChoice(mostVotedMovie);
+    }
 }

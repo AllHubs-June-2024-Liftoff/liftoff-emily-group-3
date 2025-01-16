@@ -85,6 +85,20 @@ public class VoteController {
 
     }
 
+    /**
+     *
+     * @param watchPartyId get watchpartyId
+     * call watchPartyService to get current watchparty by Id.
+     * call voteService.finalizeVotes and pass in watchparty object.
+     * @return String and the selected movie by calling .getMovieChoice().
+     */
+    @PostMapping("/{watchPartyId}/finalize")
+    public String finalizeVotes (@PathVariable Integer watchPartyId) {
+        WatchParty watchParty = watchPartyService.viewWatchParty(watchPartyId);
+        voteService.finalizeVotes(watchParty);
+        return "Votes finalized. The selected movie is: " + watchParty.getMovieChoice();
+    }
+
 
 
 
