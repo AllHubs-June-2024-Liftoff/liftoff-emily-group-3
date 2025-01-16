@@ -68,6 +68,23 @@ public class VoteController {
         return voteService.getAllVotes(watchParty);
     }
 
+    /**
+     *
+     * @param watchPartyId to get spacific watchparty
+     * @return String that displays if vote was deleted successfully or if profile has not voted.
+     * Returning string will change to boolean if needed.
+     */
+
+    @PostMapping("/{watchPartyId}/retract")
+    public String retractVote(@PathVariable Integer watchPartyId) {
+        WatchParty watchparty = watchPartyService.viewWatchParty(watchPartyId);
+        boolean success = voteService.retractVote(watchparty);
+
+        return success ? "Vote retracted successfully!" : "You have not voted yet.";
+
+
+    }
+
 
 
 

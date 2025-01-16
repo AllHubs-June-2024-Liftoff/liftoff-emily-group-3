@@ -89,4 +89,34 @@ public class VoteService {
     public List<Vote> getAllVotes (WatchParty watchParty) {
         return voteRepository.findByWatchParty(watchParty);
     }
+
+    /**
+     *
+     * @param watchParty object passed in.
+     * @return any vote that matches the profile.
+     */
+    public boolean hasAlreadyVoted (WatchParty watchParty) {
+        Profile profile = userService.getCurrentUser().getProfile();
+        return getAllVotes(watchParty).stream().anyMatch(vote -> vote.getProfile().equals(profile));
+    }
+
+
+    /**
+     *
+     * @param watchParty object passed in.  Gets profile
+     * @return false if no votes, if votes delete all.
+     */
+    public boolean retractVote (WatchParty watchParty) {
+        Profile profile = userService.getCurrentUser().getProfile();
+        List<Vote> userVotes = getAllVotes(watchParty).stream()
+                .filter(vote -> vote.getProfile().equals(profile)).toList();
+
+        if(userVotes.isEmpty()){
+            return false;
+        }
+
+        voteRepository.deleteAll(userVotes);
+        return true;
+
+    }
 }
