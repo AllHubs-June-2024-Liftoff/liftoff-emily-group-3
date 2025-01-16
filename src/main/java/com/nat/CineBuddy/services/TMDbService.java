@@ -136,7 +136,6 @@ public class TMDbService {
         try {
             JsonNode response = restTemplate.getForObject(url, JsonNode.class);
             if ("actor".equalsIgnoreCase(filter) && response != null && response.has("results")) {
-                // Get movies where the actor appears
                 return parseActorMovies(response.get("results"));
             }
             return response != null && response.has("results") ? parseMovies(response.get("results")) : Collections.emptyList();
@@ -146,7 +145,6 @@ public class TMDbService {
         }
     }
 
-    // Helper method to parse actor-related movies
     private List<MovieDTO> parseActorMovies(JsonNode nodes) {
         return StreamSupport.stream(nodes.spliterator(), false)
                 .flatMap(node -> node.has("known_for") ? parseMovies(node.get("known_for")).stream() : Stream.empty())
