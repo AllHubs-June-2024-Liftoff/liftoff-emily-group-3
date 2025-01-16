@@ -1,5 +1,6 @@
 package com.nat.CineBuddy.services;
 
+import com.nat.CineBuddy.dto.MovieDTO;
 import com.nat.CineBuddy.models.Profile;
 import com.nat.CineBuddy.models.User;
 import com.nat.CineBuddy.repositories.ProfileRepository;
@@ -11,6 +12,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
@@ -20,6 +22,8 @@ public class ProfileServiceImpl implements ProfileService{
 
     @Autowired
     private ProfileRepository profileRepository;
+    @Autowired
+    private TMDbService tmDbService;
 
     public boolean createProfile(User user,String name){
         Optional<Profile> optionalProfile = profileRepository.findByUser(user);
@@ -75,6 +79,15 @@ public class ProfileServiceImpl implements ProfileService{
 
     public void saveAll(List<Profile> profiles){
         profileRepository.saveAll(profiles);
+    }
+
+    public List<MovieDTO> getTopRatedMovies(Profile profile){
+        List<MovieDTO> topRatedMovies = new ArrayList<>();
+        List<String> tempData = List.of("2","3","4","5","6","7","8","9");
+        for(String movieId : tempData){
+            topRatedMovies.add(tmDbService.getMovieDetails(movieId));
+        }
+        return topRatedMovies;
     }
 
     public void logoutUser(HttpServletRequest request, HttpServletResponse response) {

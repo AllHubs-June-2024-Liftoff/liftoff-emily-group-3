@@ -1,13 +1,19 @@
 package com.nat.CineBuddy.services;
 
+import com.nat.CineBuddy.dto.MovieDTO;
 import com.nat.CineBuddy.models.Profile;
+import com.nat.CineBuddy.models.Vote;
 import com.nat.CineBuddy.models.WatchParty;
 import com.nat.CineBuddy.repositories.WatchPartyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class WatchPartyServiceImpl implements WatchPartyService{
@@ -18,6 +24,9 @@ public class WatchPartyServiceImpl implements WatchPartyService{
     private ProfileService profileService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private VoteService voteService;
+
 
     public boolean createWatchParty(WatchParty watchParty){
         watchPartyRepository.save(watchParty);
@@ -39,7 +48,7 @@ public class WatchPartyServiceImpl implements WatchPartyService{
         }
     }
 
-    public WatchParty viewWatchParty(Integer id){
+    public WatchParty getWatchParty(Integer id){
         return watchPartyRepository.findById(id).orElseGet(WatchParty::new);
     }
 
@@ -114,6 +123,15 @@ public class WatchPartyServiceImpl implements WatchPartyService{
                 watchPartyRepository.save(watchParty);
             }
         }
+    }
+
+    public List<MovieDTO> getTopRatedMovies(WatchParty watchParty){
+        List<MovieDTO> topRatedMovies = new ArrayList<>();
+        for(Profile member : watchParty.getMembers()){
+            List<MovieDTO> tempList = Stream.concat(topRatedMovies.stream(),profileService.getTopRatedMovies(member).stream()).distinct().collect(Collectors.toList());
+            topRatedMovies = tempList;
+        }
+        return topRatedMovies;
     }
 
 }

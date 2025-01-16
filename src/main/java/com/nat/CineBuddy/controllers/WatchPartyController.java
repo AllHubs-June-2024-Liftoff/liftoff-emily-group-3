@@ -2,11 +2,9 @@ package com.nat.CineBuddy.controllers;
 
 import com.nat.CineBuddy.dto.MovieDTO;
 import com.nat.CineBuddy.models.Profile;
+import com.nat.CineBuddy.models.Vote;
 import com.nat.CineBuddy.models.WatchParty;
-import com.nat.CineBuddy.services.ProfileService;
-import com.nat.CineBuddy.services.TMDbService;
-import com.nat.CineBuddy.services.UserService;
-import com.nat.CineBuddy.services.WatchPartyService;
+import com.nat.CineBuddy.services.*;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -32,6 +30,9 @@ public class WatchPartyController {
     private WatchPartyService watchPartyService;
 
     @Autowired
+    private VoteService voteService;
+
+    @Autowired
     private TMDbService tmDbService;
 
     @GetMapping
@@ -42,7 +43,8 @@ public class WatchPartyController {
 
     @GetMapping("/{watchPartyId}")
     public String viewWatchParty(@PathVariable Integer watchPartyId, Model model){
-        WatchParty watchParty = watchPartyService.viewWatchParty(watchPartyId);
+        WatchParty watchParty = watchPartyService.getWatchParty(watchPartyId);
+        List<MovieDTO> topRatedMovies = watchPartyService.getTopRatedMovies(watchParty);
         Profile profile = userService.getCurrentUser().getProfile();
         if(watchParty.getMembers().contains(profile) || watchParty.getLeader().equals(profile)){
             List<MovieDTO> movies = new ArrayList<>();
@@ -84,7 +86,7 @@ public class WatchPartyController {
     @GetMapping("/{watchPartyId}/update")
     public String updateWatchPartyForm(@PathVariable Integer watchPartyId, Model model){
         model.addAttribute("user",userService.getCurrentUser());
-        model.addAttribute("watchparty", watchPartyService.viewWatchParty(watchPartyId));
+        model.addAttribute("watchparty", watchPartyService.getWatchParty(watchPartyId));
         return "watchparty/update";
     }
 
@@ -152,6 +154,12 @@ public class WatchPartyController {
     @PostMapping("/{watchPartyId}/members/remove")
     public String removeMemberFromWatchParty(@PathVariable Integer watchPartyId, @RequestParam("profileId") Integer profileId){
         watchPartyService.removeMember(watchPartyId,profileId);
+        return "redirect:/watchparty/"+watchPartyId;
+    }
+
+    @PostMapping("/{watchPartyId}/votes/cast")
+    public String castVote(@PathVariable Integer watchPartyId, @RequestParam("movieId") Integer movieId){
+        voteService.castVote(watchPartyService.getWatchParty(watchPartyId), movieId);
         return "redirect:/watchparty/"+watchPartyId;
     }
 }
