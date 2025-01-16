@@ -37,15 +37,15 @@
     <div th:if="${movies.size() == 0}">
         <p>No results found.</p>
     </div>
-    <div class="row" th:if="${movies.size() > 0}">
-        <div class="col-md-4 mb-4" th:each="movie : ${movies}">
+
+    <!-- Masonry layout container -->
+    <div class="masonry-container" th:if="${movies.size() > 0}">
+        <div class="movie-card" th:each="movie : ${movies}">
             <a th:href="@{/movie-details/{id}(id=${movie.id})}" class="movie-card-link">
-                <div class="movie-card">
-                    <img th:src="@{'https://image.tmdb.org/t/p/w500' + ${movie.posterPath}}" alt="Poster" class="img-thumbnail">
-                    <div class="movie-info">
-                        <h3 th:text="${movie.title}"></h3>
-                        <p th:text="${movie.overview}"></p>
-                    </div>
+                <img th:src="@{'https://image.tmdb.org/t/p/w500' + ${movie.posterPath}}" alt="Poster">
+                <div class="movie-info">
+                    <h3 th:text="${movie.title}"></h3>
+                    <p th:text="${movie.overview}"></p>
                 </div>
             </a>
         </div>
