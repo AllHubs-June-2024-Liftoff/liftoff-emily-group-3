@@ -23,10 +23,11 @@
                 <button class="btn btn-primary">See Reviews</button>
             </a>
             <!-- Updated form with dynamic watchListId -->
-            <form method="post" th:action="@{/watchlists/{watchListId}/add-movie(watchListId=${watchListId})}">
-                <input type="hidden" name="movieId" value="${movie.id}">
+            <form method="post" th:action="@{/watchlist/{watchListId}/add-movie(watchListId=${watchListId})}">
+                <input type="hidden" name="movieId" th:value="${movie.id}">
                 <button type="submit" class="btn btn-success">Add to WatchList</button>
             </form>
+
             <a sec:authorize="isAuthenticated()" th:href="'/watchparty/add/' + ${movie.id}" class="btn btn-warning">Add to WatchParty</a>
         </div>
         <img th:src="@{'https://image.tmdb.org/t/p/w500' + ${movie.posterPath}}" alt="Movie Poster"/>

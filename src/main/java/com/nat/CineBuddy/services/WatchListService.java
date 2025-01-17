@@ -28,6 +28,9 @@ public class WatchListService {
     }
 
     public Optional<WatchList> getWatchListById(Integer id) {
+        if (id == null) {
+            return Optional.empty();
+        }
         return watchListRepository.findById(id);
     }
 

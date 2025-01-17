@@ -15,7 +15,7 @@
 </ul>
 
 <h3>Add a Movie</h3>
-<form th:action="@{/watchlists/{id}/add-movie(id=${watchList.id})}" method="post">
+<form th:action="@{/watchlist/{id}/add-movie(id=${watchList.id})}" method="post">
   <label for="movieId">Movie ID:</label>
   <input type="text" id="movieId" name="movieId" placeholder="Enter Movie ID" required />
   <button type="submit">Add Movie</button>
