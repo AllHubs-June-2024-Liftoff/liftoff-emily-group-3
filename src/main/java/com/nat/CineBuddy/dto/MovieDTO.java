@@ -1,5 +1,7 @@
 package com.nat.CineBuddy.dto;
 
+import java.util.Objects;
+
 public class MovieDTO {
 
     private String id;
@@ -113,5 +115,17 @@ public class MovieDTO {
         return String.join(", ", this.genres);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MovieDTO movieDTO = (MovieDTO) o;
+        return Objects.equals(id, movieDTO.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
+    }
 }
 
