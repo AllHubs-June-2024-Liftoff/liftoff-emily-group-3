@@ -1,14 +1,9 @@
 package com.nat.CineBuddy.controllers;
 
-import com.nat.CineBuddy.models.Profile;
-import com.nat.CineBuddy.models.WatchParty;
-import com.nat.CineBuddy.models.Vote;
 import com.nat.CineBuddy.models.WatchParty;
 import com.nat.CineBuddy.services.WatchPartyService;
 import com.nat.CineBuddy.services.VoteService;
-import com.nat.CineBuddy.services.WatchPartyService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -28,7 +23,7 @@ public class VoteController {
      */
     @PostMapping("/{watchPartyId}/vote")
     public String castVote(@PathVariable Integer watchPartyId, @RequestParam Integer movieId) {
-        WatchParty watchParty = watchPartyService.viewWatchParty(watchPartyId); // Using existing method instead of findById.
+        WatchParty watchParty = watchPartyService.getWatchParty(watchPartyId); // Using existing method instead of findById.
         boolean success = voteService.castVote(watchParty, movieId); // Cast vote
 
         return success ? "Vote cast successfully!" : "You have already voted for this movie.";
@@ -40,7 +35,7 @@ public class VoteController {
     @GetMapping("/{watchPartyId}/votes")
     public Map<Integer, Integer> getVoteCounts(@PathVariable Integer watchPartyId) {
         // Use viewWatchParty to fetch the WatchParty entity
-        WatchParty watchParty = watchPartyService.viewWatchParty(watchPartyId);
+        WatchParty watchParty = watchPartyService.getWatchParty(watchPartyId);
         return voteService.getAllVoteCounts(watchParty);
     }
 
@@ -51,7 +46,7 @@ public class VoteController {
     @GetMapping("/{watchPartyId}/results")
     public String getMostVotedMovie(@PathVariable Integer watchPartyId) {
         // Use viewWatchParty to fetch the WatchParty entity
-        WatchParty watchParty = watchPartyService.viewWatchParty(watchPartyId);
+        WatchParty watchParty = watchPartyService.getWatchParty(watchPartyId);
         return "The most voted movie is: " + voteService.getMostVotedMovie(watchParty);
     }
 

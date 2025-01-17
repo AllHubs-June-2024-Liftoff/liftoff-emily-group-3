@@ -30,13 +30,13 @@ public class ProfileController {
     @GetMapping("profile")
     public String index(Model model){
         model.addAttribute("user",userService.getCurrentUser());
-        return "user/index";
+        return "profile/index";
     }
 
     @GetMapping("profile/update")
     public String userProfileUpdateForm(Model model){
         model.addAttribute("profile",userService.getCurrentUser().getProfile());
-        return "user/update";
+        return "profile/update";
     }
 
     @PostMapping("profile/update")
@@ -71,16 +71,16 @@ public class ProfileController {
             com.nat.CineBuddy.models.User searchedUser = possibleUser.get();
             if(!searchedUser.getProfile().getHidden()){
                 model.addAttribute("user",searchedUser);
-                return "user/index";
+                return "profile/index";
             }
             else{
                 model.addAttribute("search",userName);
-                return "user/notFound";
+                return "profile/notFound";
             }
         }
         else{
             model.addAttribute("search",userName);
-            return "user/notFound";
+            return "profile/notFound";
         }
     }
 
