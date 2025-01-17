@@ -80,7 +80,7 @@ public class ProfileServiceImpl implements ProfileService{
 
     public List<MovieDTO> getTopRatedMovies(Profile profile){
         Set<MovieDTO> topRatedMovies = new HashSet<>();
-        List<String> tempData = List.of("2","3","400","5","6","700","8","9");
+        List<String> tempData = List.of("762509","402431","400","60375","6","700","8","9");
         for(String movieId : tempData){
             MovieDTO tempMovie = tmDbService.getMovieDetails(movieId);
             if(tempMovie != null){
