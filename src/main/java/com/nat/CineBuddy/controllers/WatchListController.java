@@ -42,7 +42,7 @@ public class WatchListController {
             throw new IllegalStateException("No profile found for the current user.");
         }
         watchListService.createWatchList(name, currentProfile);
-        return "redirect:/profile";
+        return "redirect:/profile/index";
     }
 
     @GetMapping("/movie-details/{id}")
@@ -50,7 +50,7 @@ public class WatchListController {
         MovieDTO movie = tmdbService.getMovieDetails(id);
         model.addAttribute("movie", movie);
         model.addAttribute("watchListId", watchListId);
-        return "movie-details";
+        return "movies/movie-details";
     }
 
 
