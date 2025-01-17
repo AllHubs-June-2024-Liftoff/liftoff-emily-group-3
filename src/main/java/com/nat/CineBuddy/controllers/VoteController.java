@@ -1,5 +1,7 @@
 package com.nat.CineBuddy.controllers;
 
+import com.nat.CineBuddy.models.Profile;
+import com.nat.CineBuddy.models.Vote;
 import com.nat.CineBuddy.models.WatchParty;
 import com.nat.CineBuddy.services.UserService;
 import com.nat.CineBuddy.services.WatchPartyService;
@@ -63,7 +65,7 @@ public class VoteController {
 
     @PostMapping("/{watchPartyId}/all")
     public List<Vote> getAllVotes(@PathVariable Integer watchPartyId) {
-        WatchParty watchParty = watchPartyService.viewWatchParty(watchPartyId);
+        WatchParty watchParty = watchPartyService.getWatchParty(watchPartyId);
         return voteService.getAllVotes(watchParty);
     }
 
@@ -76,7 +78,7 @@ public class VoteController {
 
     @PostMapping("/{watchPartyId}/retract")
     public String retractVote(@PathVariable Integer watchPartyId) {
-        WatchParty watchparty = watchPartyService.viewWatchParty(watchPartyId);
+        WatchParty watchparty = watchPartyService.getWatchParty(watchPartyId);
         boolean success = voteService.retractVote(watchparty);
 
         return success ? "Vote retracted successfully!" : "You have not voted yet.";
@@ -93,14 +95,21 @@ public class VoteController {
      */
     @PostMapping("/{watchPartyId}/finalize")
     public String finalizeVotes (@PathVariable Integer watchPartyId) {
-        WatchParty watchParty = watchPartyService.viewWatchParty(watchPartyId);
+        WatchParty watchParty = watchPartyService.getWatchParty(watchPartyId);
         voteService.finalizeVotes(watchParty);
         return "Votes finalized. The selected movie is: " + watchParty.getMovieChoice();
     }
 
+    /**
+     *
+     * @param watchPartyId Use spacific wtchparty and profile of creator to delete all votes
+     * @return If they are the leader then the votes will get deleted from the database.
+     * If not they will get a message.
+     */
+
     @PostMapping("/{watchPartyId}/deleteAll")
     public String deleteAllVotes(@PathVariable Integer watchPartyId) {
-        WatchParty watchParty = watchPartyService.viewWatchParty(watchPartyId);
+        WatchParty watchParty = watchPartyService.getWatchParty(watchPartyId);
         Profile currentUserProfile = userService.getCurrentUser().getProfile();
 
         //Making sure only the creator of the watchparty can delete the votes.
