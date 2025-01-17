@@ -12,10 +12,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class ProfileServiceImpl implements ProfileService{
@@ -82,15 +79,15 @@ public class ProfileServiceImpl implements ProfileService{
     }
 
     public List<MovieDTO> getTopRatedMovies(Profile profile){
-        List<MovieDTO> topRatedMovies = new ArrayList<>();
+        Set<MovieDTO> topRatedMovies = new HashSet<>();
         List<String> tempData = List.of("2","3","400","5","6","700","8","9");
         for(String movieId : tempData){
-            List<MovieDTO> tempMovie = tmDbService.getSimilarMovieRecommendations(movieId);
+            MovieDTO tempMovie = tmDbService.getMovieDetails(movieId);
             if(tempMovie != null){
-                topRatedMovies.addAll(tempMovie);
+                topRatedMovies.add(tempMovie);
             }
         }
-        return topRatedMovies;
+        return new ArrayList<>(topRatedMovies);
     }
 
     public void logoutUser(HttpServletRequest request, HttpServletResponse response) {
