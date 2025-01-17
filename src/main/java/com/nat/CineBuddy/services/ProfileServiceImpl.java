@@ -1,5 +1,6 @@
 package com.nat.CineBuddy.services;
 
+import com.nat.CineBuddy.dto.MovieDTO;
 import com.nat.CineBuddy.models.Profile;
 import com.nat.CineBuddy.models.User;
 import com.nat.CineBuddy.repositories.ProfileRepository;
@@ -11,15 +12,15 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Service;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class ProfileServiceImpl implements ProfileService{
 
     @Autowired
     private ProfileRepository profileRepository;
+    @Autowired
+    private TMDbService tmDbService;
 
     public boolean createProfile(User user,String name){
         Optional<Profile> optionalProfile = profileRepository.findByUser(user);
@@ -75,6 +76,18 @@ public class ProfileServiceImpl implements ProfileService{
 
     public void saveAll(List<Profile> profiles){
         profileRepository.saveAll(profiles);
+    }
+
+    public List<MovieDTO> getTopRatedMovies(Profile profile){
+        Set<MovieDTO> topRatedMovies = new HashSet<>();
+        List<String> tempData = List.of("762509","402431","400","60375","6","700","8","9");
+        for(String movieId : tempData){
+            MovieDTO tempMovie = tmDbService.getMovieDetails(movieId);
+            if(tempMovie != null){
+                topRatedMovies.add(tempMovie);
+            }
+        }
+        return new ArrayList<>(topRatedMovies);
     }
 
     public void logoutUser(HttpServletRequest request, HttpServletResponse response) {

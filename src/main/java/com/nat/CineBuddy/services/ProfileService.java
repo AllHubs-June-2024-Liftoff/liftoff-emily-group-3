@@ -1,5 +1,6 @@
 package com.nat.CineBuddy.services;
 
+import com.nat.CineBuddy.dto.MovieDTO;
 import com.nat.CineBuddy.models.Profile;
 import com.nat.CineBuddy.models.Role;
 import com.nat.CineBuddy.models.User;
@@ -25,4 +26,6 @@ public interface ProfileService {
     public Iterable<Profile> searchAllPublicProfiles(String search);
 
     public void saveAll(List<Profile> profiles);
+
+    public List<MovieDTO> getTopRatedMovies(Profile profile);
 }
