@@ -1,12 +1,10 @@
 package com.nat.CineBuddy.controllers;
 
+import com.nat.CineBuddy.dto.MovieDTO;
 import com.nat.CineBuddy.models.Profile;
+import com.nat.CineBuddy.models.Vote;
 import com.nat.CineBuddy.models.WatchParty;
-import com.nat.CineBuddy.services.ProfileService;
-import com.nat.CineBuddy.services.UserService;
-import com.nat.CineBuddy.services.WatchPartyService;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import com.nat.CineBuddy.services.*;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -31,6 +29,12 @@ public class WatchPartyController {
     @Autowired
     private WatchPartyService watchPartyService;
 
+    @Autowired
+    private VoteService voteService;
+
+    @Autowired
+    private TMDbService tmDbService;
+
     @GetMapping
     public String index(Model model){
         model.addAttribute("user",userService.getCurrentUser());
@@ -39,9 +43,23 @@ public class WatchPartyController {
 
     @GetMapping("/{watchPartyId}")
     public String viewWatchParty(@PathVariable Integer watchPartyId, Model model){
-        model.addAttribute("watchparty",watchPartyService.viewWatchParty(watchPartyId));
-        model.addAttribute("profile", userService.getCurrentUser().getProfile());
-        return "watchparty/details";
+        WatchParty watchParty = watchPartyService.getWatchParty(watchPartyId);
+        Profile profile = userService.getCurrentUser().getProfile();
+        if(watchParty.getMembers().contains(profile) || watchParty.getLeader().equals(profile)){
+            List<MovieDTO> movies = new ArrayList<>();
+            for(Integer movieId : watchParty.getMovies()){
+                movies.add(tmDbService.getMovieDetails(movieId.toString()));
+            }
+            List<MovieDTO> topRatedMovies = watchPartyService.getTopRatedMovies(watchParty);
+            model.addAttribute("watchparty",watchParty);
+            model.addAttribute("profile", profile);
+            model.addAttribute("movies",movies);
+            model.addAttribute("topRatedMovies",topRatedMovies);
+            return "watchparty/details";
+        }
+        else{
+            return "watchparty";
+        }
     }
 
     @GetMapping("/host")
@@ -69,7 +87,7 @@ public class WatchPartyController {
     @GetMapping("/{watchPartyId}/update")
     public String updateWatchPartyForm(@PathVariable Integer watchPartyId, Model model){
         model.addAttribute("user",userService.getCurrentUser());
-        model.addAttribute("watchparty", watchPartyService.viewWatchParty(watchPartyId));
+        model.addAttribute("watchparty", watchPartyService.getWatchParty(watchPartyId));
         return "watchparty/update";
     }
 
@@ -123,9 +141,26 @@ public class WatchPartyController {
     }
 
     @PostMapping("/add/{movieId}")
-    public String addMovieToWatchParty(@PathVariable Integer movieId, @RequestParam("watchpartyOption") List<Integer> watchPartyIds){
+    public String addMovieToWatchParty(@PathVariable Integer movieId, @RequestParam(name = "watchpartyOption", required = false) List<Integer> watchPartyIds){
         watchPartyService.addMovieToList(movieId, watchPartyIds);
         return "redirect:/movie-details/"+movieId;
     }
 
+    @GetMapping("/{watchPartyId}/movies/remove/{movieId}")
+    public String removeMovieFromWatchParty(@PathVariable Integer watchPartyId, @PathVariable Integer movieId){
+        watchPartyService.removeMovie(watchPartyId, movieId);
+        return "redirect:/watchparty/"+watchPartyId;
+    }
+
+    @PostMapping("/{watchPartyId}/members/remove")
+    public String removeMemberFromWatchParty(@PathVariable Integer watchPartyId, @RequestParam("profileId") Integer profileId){
+        watchPartyService.removeMember(watchPartyId,profileId);
+        return "redirect:/watchparty/"+watchPartyId;
+    }
+
+    @PostMapping("/{watchPartyId}/votes/cast")
+    public String castVote(@PathVariable Integer watchPartyId, @RequestParam("movieId") Integer movieId){
+        voteService.castVote(watchPartyService.getWatchParty(watchPartyId), movieId);
+        return "redirect:/watchparty/"+watchPartyId;
+    }
 }
