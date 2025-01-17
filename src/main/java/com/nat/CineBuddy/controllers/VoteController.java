@@ -4,6 +4,7 @@ import com.nat.CineBuddy.models.Profile;
 import com.nat.CineBuddy.models.WatchParty;
 import com.nat.CineBuddy.models.Vote;
 import com.nat.CineBuddy.models.WatchParty;
+import com.nat.CineBuddy.services.UserService;
 import com.nat.CineBuddy.services.WatchPartyService;
 import com.nat.CineBuddy.services.VoteService;
 import com.nat.CineBuddy.services.WatchPartyService;
@@ -23,6 +24,9 @@ public class VoteController {
 
     @Autowired
     private WatchPartyService watchPartyService;
+
+    @Autowired
+    private UserService userService;
 
     /**
      * Cast a vote for a movie in a group.
@@ -97,6 +101,21 @@ public class VoteController {
         WatchParty watchParty = watchPartyService.viewWatchParty(watchPartyId);
         voteService.finalizeVotes(watchParty);
         return "Votes finalized. The selected movie is: " + watchParty.getMovieChoice();
+    }
+
+    @PostMapping("/{watchPartyId}/deleteAll")
+    public String deleteAllVotes(@PathVariable Integer watchPartyId) {
+        WatchParty watchParty = watchPartyService.viewWatchParty(watchPartyId);
+        Profile currentUserProfile = userService.getCurrentUser().getProfile();
+
+        //Making sure only the creator of the watchparty can delete the votes.
+        if(!watchParty.getLeader().equals(currentUserProfile)) {
+            return "You are not authorized to delete votes for this watchparty.";
+        }
+
+        boolean success = voteService.deleteAllVotes(watchParty);
+        return success ? "All votes for this watch party have been deleted successfully." : "No votes found to delete.";
+
     }
 
 
