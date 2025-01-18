@@ -5,6 +5,7 @@ import com.nat.CineBuddy.models.WatchParty;
 import com.nat.CineBuddy.models.Vote;
 import com.nat.CineBuddy.models.WatchParty;
 import com.nat.CineBuddy.repositories.VoteRepository;
+import com.nat.CineBuddy.repositories.WatchPartyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +24,9 @@ public class VoteService {
 
     @Autowired
     private WatchPartyService watchPartyService;
+
+    @Autowired
+    private WatchPartyRepository watchPartyRepository;
 
 
     /**
@@ -131,6 +135,9 @@ public class VoteService {
     public void finalizeVotes(WatchParty watchParty){
         Integer mostVotedMovie = getMostVotedMovie(watchParty);
         watchParty.setMovieChoice(mostVotedMovie);
+
+        //Save the watchparty
+        watchPartyRepository.save(watchParty);
 
     }
 
