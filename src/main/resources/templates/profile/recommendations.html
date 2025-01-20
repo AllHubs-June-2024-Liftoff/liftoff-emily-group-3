@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Recommendations</title>
+    <link rel="stylesheet" th:href="@{/css/recommendations.css}">
+</head>
+<body>
+
+
+<div th:replace="~{fragments :: page-nav}"></div>
+
+<!-- Recommendations Content -->
+<div class="container">
+    <h1>Your Recommended Movies</h1>
+
+    <div class="grid">
+        <!-- Movie cards dynamically rendered from Thymeleaf -->
+        <div class="grid-item" th:each="movie : ${recommendedMovies}">
+            <a th:href="@{/movie-details/{id}(id=${movie.movieId})}">
+                <img th:src="@{'https://image.tmdb.org/t/p/w500' + ${movie.posterPath}}" alt="Movie Poster">
+                <h5 th:text="${movie.title}"></h5>
+            </a>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
