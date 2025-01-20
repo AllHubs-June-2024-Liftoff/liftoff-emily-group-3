@@ -75,7 +75,7 @@
                                 <input type="hidden" name="movieId" th:value="${movie.id}" />
                                 <input class="btn btn-success btn-sm w-100" type="submit" value="Submit Vote" />
                             </form>
-                            <form method="POST" th:action="'/watchparty/' + ${watchPartyId} + '/votes/retract'">
+                            <form method="POST" th:action="'/votes/' + ${watchPartyId} + '/retract'">
                                 <input type="hidden" name="movieId" th:value="${movie.id}" />
                                 <input class="btn btn-warning btn-sm w-100" type="submit" value="Retract Vote" />
                             </form>
