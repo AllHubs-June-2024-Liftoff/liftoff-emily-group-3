@@ -26,6 +26,6 @@ public class RecommendedMovieController {
     public String getRecommendations(Model model) {
         List<RecommendedMovie> recommendations = recommendationService.getRecommendationsForCurrentUser();
         model.addAttribute("recommendedMovies", recommendations);
-        return "recommendations";
+        return "profile/recommendations";
     }
 }
