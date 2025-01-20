@@ -3,13 +3,21 @@
     margin-top: 20px;
 }
 
-/* Movie card styling */
+/* Masonry layout container */
+.masonry-container {
+    column-count: 3; /* Number of columns */
+    column-gap: 15px; /* Spacing between columns */
+}
+
 .movie-card {
+    display: inline-block; /* Prevent breaking between columns */
     background-color: #fff;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 15px;
     overflow: hidden;
     transition: transform 0.2s ease-in-out;
+    break-inside: avoid; /* Prevent breaking within columns */
 }
 
 .movie-card:hover {
@@ -52,34 +60,24 @@
 /* Styles for Results title */
 .results-title {
     font-family: 'Poppins', sans-serif;
-    font-size: 2rem; /* Bigger font size */
+    font-size: 2rem;
     font-weight: 600;
-    color: #333; /* Dark gray text color */
-    text-align: left; /* Align text to the left */
-    background-color: #fff; /* White background box */
-    padding: 10px 15px; /* Padding inside the box */
-    border-radius: 8px; /* Rounded corners */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow effect */
-    margin-bottom: 20px; /* Space below the title */
+    color: #333;
+    text-align: left;
+    background-color: #fff;
+    padding: 10px 15px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
 }
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
+    .masonry-container {
+        column-count: 1; /* One column for smaller screens */
+    }
+
     .movie-card {
-        flex-direction: column; /* Stack poster and text vertically */
-        align-items: center;
-    }
-
-    .movie-card img {
-        margin-right: 0; /* Remove right margin */
-        margin-bottom: 10px; /* Add space below poster */
-    }
-
-    .movie-card h3 {
-        text-align: center; /* Center align title */
-    }
-
-    .movie-card p {
-        text-align: center; /* Center align description */
+        margin-bottom: 20px;
     }
 }

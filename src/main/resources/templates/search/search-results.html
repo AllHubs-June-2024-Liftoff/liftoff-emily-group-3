@@ -12,6 +12,7 @@
     <link rel="stylesheet" th:href="@{/css/styles.css}">
     <!-- Google Font: Poppins -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js" integrity="sha384-GNFwBvfVxBkLMJpYMOABq3c+d3KnQxudP/mGPkzpZSTYykLBNsZEnG2D9G/X/+7D" crossorigin="anonymous" async></script>
 </head>
 
 <body>
@@ -37,7 +38,7 @@
     <div th:if="${movies.size() == 0}">
         <p>No results found.</p>
     </div>
-    <div class="row" th:if="${movies.size() > 0}">
+    <div class="row" data-masonry='{"percentPosition": true }' th:if="${movies.size() > 0}">
         <div class="col-md-4 mb-4" th:each="movie : ${movies}">
             <a th:href="@{/movie-details/{id}(id=${movie.id})}" class="movie-card-link">
                 <div class="movie-card">
