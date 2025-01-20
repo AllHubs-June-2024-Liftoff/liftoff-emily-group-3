@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Create A WatchList</title>
+</head>
+<body>
+<div th:replace="~{fragments :: page-nav}"></div>
+<h1 style="text-align: center;">Create A WatchList</h1>
+<form th:action="@{/watchlist/create}" method="post" style="text-align: center;">
+    <label for="name">Name your WatchList:</label>
+    <input type="text" id="name" name="name" required>
+    <button type="submit">Submit</button>
+</form>
+</body>
+</html>

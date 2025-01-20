@@ -1,9 +1,10 @@
 package com.nat.CineBuddy.models;
 
-import com.nat.CineBuddy.dto.MovieDTO;
-import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nat.CineBuddy.dto.MovieDTO;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,14 +14,16 @@ public class WatchList {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @NotNull
     private String name;
 
     @ElementCollection
     @Lob
-    private List<String> movies = new ArrayList<>(); // Store JSON strings
+    private List<String> movieIds = new ArrayList<>(); // Storing movie IDs instead of full JSON
 
     @ManyToOne
     @JoinColumn(name = "profile_id")
+    @NotNull
     private Profile profile;
 
     public WatchList() {}
@@ -46,35 +49,12 @@ public class WatchList {
         this.name = name;
     }
 
-    public List<String> getMovies() {
-        return movies;
+    public List<String> getMovieIds() {
+        return movieIds;
     }
 
-    public void setMovies(List<String> movies) {
-        this.movies = movies;
-    }
-
-    public void addMovie(MovieDTO movie) {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            String json = mapper.writeValueAsString(movie);
-            this.movies.add(json);
-        } catch (Exception e) {
-            throw new RuntimeException("Error serializing MovieDTO", e);
-        }
-    }
-
-    public List<MovieDTO> getMoviesAsDTOs() {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            List<MovieDTO> movieDTOs = new ArrayList<>();
-            for (String json : movies) {
-                movieDTOs.add(mapper.readValue(json, MovieDTO.class));
-            }
-            return movieDTOs;
-        } catch (Exception e) {
-            throw new RuntimeException("Error deserializing JSON to MovieDTO", e);
-        }
+    public void setMovieIds(List<String> movieIds) {
+        this.movieIds = movieIds;
     }
 
     public Profile getProfile() {
@@ -83,5 +63,13 @@ public class WatchList {
 
     public void setProfile(Profile profile) {
         this.profile = profile;
+    }
+
+    public void addMovie(String movieId) {
+        this.movieIds.add(movieId);
+    }
+
+    public void removeMovie(String movieId) {
+        this.movieIds.remove(movieId);
     }
 }

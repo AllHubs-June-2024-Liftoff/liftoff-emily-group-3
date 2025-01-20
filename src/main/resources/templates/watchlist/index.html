@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>My WatchLists</title>
+</head>
+<body>
+<div th:replace="~{fragments :: page-nav}"></div>
+<h1 style="text-align: center;">My WatchLists</h1>
+<a th:href="@{/watchlist/create}" style="display: block; text-align: center; margin-bottom: 20px;">Create A WatchList</a>
+<div style="display: flex; flex-wrap: wrap; justify-content: center;">
+  <div th:if="${#lists.isEmpty(watchLists)}" style="text-align: center;">
+    <p>You currently have no Watch Lists. Create one to get started!</p>
+  </div>
+  <div th:each="watchList : ${watchLists}" style="margin: 10px; border: 1px solid #ccc; padding: 10px; width: 200px;">
+    <h2 th:text="${watchList.name}"></h2>
+    <p th:text="${watchList.description}"></p>
+    <a th:href="@{/watchlist/{id}(id=${watchList.id})}" style="display: block; text-align: center;">View WatchList</a>
+  </div>
+</div>
+</body>
+</html>

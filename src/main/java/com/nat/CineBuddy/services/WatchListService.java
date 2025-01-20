@@ -6,20 +6,23 @@ import com.nat.CineBuddy.models.WatchList;
 import com.nat.CineBuddy.models.Profile;
 import com.nat.CineBuddy.dto.MovieDTO;
 import com.nat.CineBuddy.repositories.WatchListRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class WatchListService {
 
     private final WatchListRepository watchListRepository;
-    private final ObjectMapper objectMapper = new ObjectMapper(); // For JSON serialization/deserialization
+    private final TMDbService tmdbService;
 
-    public WatchListService(WatchListRepository watchListRepository) {
+    @Autowired
+    public WatchListService(WatchListRepository watchListRepository, TMDbService tmdbService) {
         this.watchListRepository = watchListRepository;
+        this.tmdbService = tmdbService;
     }
 
     public WatchList createWatchList(String name, Profile profile) {
@@ -28,39 +31,37 @@ public class WatchListService {
     }
 
     public Optional<WatchList> getWatchListById(Integer id) {
-        if (id == null) {
-            return Optional.empty();
-        }
-        return watchListRepository.findById(id);
+        return id == null ? Optional.empty() : watchListRepository.findById(id);
     }
 
     public void deleteWatchList(Integer id) {
         watchListRepository.deleteById(id);
     }
 
-    public WatchList save(WatchList watchList) {
-        return watchListRepository.save(watchList);
+    public void addMovieToWatchList(WatchList watchList, String movieId) {
+        if (!watchList.getMovieIds().contains(movieId)) {
+            watchList.getMovieIds().add(movieId);
+            watchListRepository.save(watchList);
+        }
     }
 
-    public void addMovieToWatchList(WatchList watchList, MovieDTO movie) {
-        try {
-            String movieJson = objectMapper.writeValueAsString(movie);
-            watchList.getMovies().add(movieJson);
+    public void removeMovieFromWatchList(WatchList watchList, String movieId) {
+        if (watchList.getMovieIds().contains(movieId)) {
+            watchList.getMovieIds().remove(movieId);
             watchListRepository.save(watchList);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException("Failed to serialize MovieDTO to JSON", e);
         }
     }
 
     public List<MovieDTO> getMoviesFromWatchList(WatchList watchList) {
-        List<MovieDTO> movies = new ArrayList<>();
-        for (String movieJson : watchList.getMovies()) {
-            try {
-                movies.add(objectMapper.readValue(movieJson, MovieDTO.class));
-            } catch (JsonProcessingException e) {
-                throw new RuntimeException("Failed to deserialize JSON to MovieDTO", e);
-            }
-        }
-        return movies;
+        return watchList.getMovieIds().stream()
+                .map(tmdbService::getMovieDetails)
+                .collect(Collectors.toList());
     }
+
+    public List<WatchList> getWatchListsByProfile(Profile profile) {
+        return watchListRepository.findByProfile(profile);
+    }
+
 }
+
+
