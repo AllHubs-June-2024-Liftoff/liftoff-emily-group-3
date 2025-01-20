@@ -64,37 +64,37 @@
             </div>
 
             <ul class="list-group">
-                <th:block th:if="${movies?.size() > 0}" th:each="movie : ${movies}">
-                    <li class="list-group-item d-flex align-items-center">
-                        <img th:src="@{'https://image.tmdb.org/t/p/w500' + ${movie.posterPath}}" alt="Poster" class="watchparty-list-thumb">
-                        <div class="w-50 ms-4">
-                            <h4 th:text="${movie.title}"></h4>
-                            <p th:text="${#strings.abbreviate(movie.overview, 300)}"></p>
-                        </div>
-                        <div class="d-flex flex-column ms-auto gap-1">
-                            <a class="btn btn-primary btn-sm" th:href="@{/movie-details/{id}(id=${movie.id})}">Details</a>
+            <th:block th:if="${movies?.size() > 0}" th:each="movie : ${movies}">
+                <li class="list-group-item d-flex align-items-center">
+                    <img th:src="@{'https://image.tmdb.org/t/p/w500' + ${movie.posterPath}}" alt="Poster" class="watchparty-list-thumb">
+                    <div class="w-50 ms-4">
+                        <h4 th:text="${movie.title}"></h4>
+                        <p th:text="${#strings.abbreviate(movie.overview, 300)}"></p>
+                    </div>
+                    <div class="d-flex flex-column ms-auto gap-1">
+                        <a class="btn btn-primary btn-sm" th:href="@{/movie-details/{id}(id=${movie.id})}">Details</a>
 
-                            <form method="POST" th:action="'/votes/' + ${watchPartyId} + '/vote'" th:if="${profile.movieVotedForInWatchParty(watchparty).equals('-1')}">
-                                <input type="hidden" name="movieId" th:value="${movie.id}" />
-                                <input class="btn btn-success btn-sm w-100" type="submit" value="Submit Vote" />
-                            </form>
-                            <form method="POST" th:action="'/votes/' + ${watchPartyId} + '/retract'" th:if="${profile.movieVotedForInWatchParty(watchparty).equals(movie.id)}">
-                                <input type="hidden" name="movieId" th:value="${movie.id}" />
-                                <input class="btn btn-warning btn-sm w-100" type="submit" value="Retract Vote" />
-                            </form>
-                            <a class="btn btn-danger btn-sm" th:if="${watchparty.leader.equals(profile)}"
-                               th:href="'/watchparty/' + ${watchPartyId} + '/movies/remove/' + ${movie.id}">
-                                Delete Movie
-                            </a>
-                        </div>
-                    </li>
-                </th:block>
-                <th:block th:unless="${movies?.size() > 0}">
-                    <li class="list-group-item d-flex align-items-center">
-                        List Empty - Add Movies
-                    </li>
-                </th:block>
-            </ul>
+                        <form method="POST" th:action="'/votes/' + ${watchPartyId} + '/vote'" th:if="${profile.movieVotedForInWatchParty(watchparty).equals('-1')}">
+                            <input type="hidden" name="movieId" th:value="${movie.id}" />
+                            <input class="btn btn-success btn-sm w-100" type="submit" value="Submit Vote" />
+                        </form>
+                        <form method="POST" th:action="'/votes/' + ${watchPartyId} + '/retract'" th:if="${profile.movieVotedForInWatchParty(watchparty).equals(movie.id)}">
+                            <input type="hidden" name="movieId" th:value="${movie.id}" />
+                            <input class="btn btn-warning btn-sm w-100" type="submit" value="Retract Vote" />
+                        </form>
+                        <a class="btn btn-danger btn-sm" th:if="${watchparty.leader.equals(profile)}"
+                           th:href="'/watchparty/' + ${watchPartyId} + '/movies/remove/' + ${movie.id}">
+                            Delete Movie
+                        </a>
+                    </div>
+                </li>
+            </th:block>
+            <th:block th:unless="${movies?.size() > 0}">
+                <li class="list-group-item d-flex align-items-center">
+                    List Empty - Add Movies
+                </li>
+            </th:block>
+        </ul>
         </div>
     </div>
 

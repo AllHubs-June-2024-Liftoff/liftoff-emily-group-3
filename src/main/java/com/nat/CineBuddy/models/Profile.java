@@ -136,10 +136,9 @@ public class Profile {
     public String movieVotedForInWatchParty(WatchParty watchParty){
         for(Vote vote: this.votes){
             if(vote.getWatchParty().equals(watchParty)){
-                return String.valueOf(vote.getMovieId());
+               return String.valueOf(vote.getMovieId());
             }
         }
         return "-1";
     }
-
 }
