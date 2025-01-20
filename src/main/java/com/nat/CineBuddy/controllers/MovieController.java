@@ -6,6 +6,7 @@ import com.nat.CineBuddy.models.Movie;
 import com.nat.CineBuddy.models.Review;
 import com.nat.CineBuddy.repositories.MovieRepository;
 import com.nat.CineBuddy.repositories.ReviewRepository;
+import com.nat.CineBuddy.services.RecommendationService;
 import com.nat.CineBuddy.services.TMDbService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -36,6 +37,9 @@ public class MovieController {
     @Autowired
     private MovieRepository movieRepository;
 
+    @Autowired
+    private RecommendationService recommendationService;
+
     @PostMapping("/submit-review")
     public String submitReview(@RequestParam String movieId, @RequestParam int rating,
                                @RequestParam String review, Principal principal, Model model) {
@@ -49,6 +53,8 @@ public class MovieController {
         newReview.setDateCreated(LocalDateTime.now());
 
         reviewRepository.save(newReview);
+
+        recommendationService.updateRecommendations(movieId);
 
         // Fetch all reviews for the movie
         List<Review> reviews = reviewRepository.findByMovieId(movieId);
