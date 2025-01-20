@@ -22,8 +22,8 @@ public class VoteService {
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private WatchPartyService watchPartyService;
+//    @Autowired
+//    private WatchPartyService watchPartyService;
 
     @Autowired
     private WatchPartyRepository watchPartyRepository;
