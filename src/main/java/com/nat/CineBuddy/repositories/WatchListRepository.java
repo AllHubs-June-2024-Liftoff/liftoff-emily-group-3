@@ -9,5 +9,4 @@ import java.util.List;
 
 @Repository
 public interface WatchListRepository extends CrudRepository<WatchList, Integer> {
-    List<WatchList> findByProfile(Profile profile);
 }

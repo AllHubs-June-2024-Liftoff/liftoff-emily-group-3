@@ -4,107 +4,114 @@ import com.nat.CineBuddy.dto.MovieDTO;
 import com.nat.CineBuddy.models.Profile;
 import com.nat.CineBuddy.models.User;
 import com.nat.CineBuddy.models.WatchList;
-import com.nat.CineBuddy.services.ProfileService;
-import com.nat.CineBuddy.services.TMDbService;
-import com.nat.CineBuddy.services.WatchListService;
+import com.nat.CineBuddy.models.WatchParty;
+import com.nat.CineBuddy.services.*;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
 @RequestMapping("/watchlist")
 public class WatchListController {
 
-    private final WatchListService watchListService;
-    private final ProfileService profileService;
+    @Autowired
+    private ProfileService profileService;
 
     @Autowired
-    public WatchListController(WatchListService watchListService, ProfileService profileService) {
-        this.watchListService = watchListService;
-        this.profileService = profileService;
+    private UserService userService;
+
+    @Autowired
+    private WatchListService watchListService;
+
+    @Autowired
+    private VoteService voteService;
+
+    @Autowired
+    private TMDbService tmDbService;
+
+    @GetMapping
+    public String index(Model model){
+        model.addAttribute("user",userService.getCurrentUser());
+        return "watchlist/index";
     }
+
+    @GetMapping("/{watchListId}")
+    public String viewWatchList(@PathVariable Integer watchListId, Model model){
+        WatchList watchList = watchListService.getWatchList(watchListId);
+        Profile profile = userService.getCurrentUser().getProfile();
+        List<MovieDTO> movies = new ArrayList<>();
+            for(Integer movieId : watchList.getMovies()){
+                movies.add(tmDbService.getMovieDetails(movieId.toString()));
+            }
+            model.addAttribute("watchlist",watchList);
+            model.addAttribute("profile", profile);
+            model.addAttribute("movies",movies);
+            return "watchlist/individual";
+
+        }
+
+
 
     @GetMapping("/create")
     public String showCreateWatchListForm(Model model) {
+        model.addAttribute("user",userService.getCurrentUser());
         model.addAttribute("watchList", new WatchList());
         return "watchlist/create";
     }
 
     @PostMapping("/create")
-    public String createWatchList(@RequestParam String name) {
-        Profile currentProfile = getCurrentUserProfile();
-        if (currentProfile == null) {
-            throw new IllegalStateException("No profile found for the current user.");
+    public String createWatchList(@Valid @ModelAttribute("watchlist") WatchList watchList, BindingResult result, Errors errors){
+        if(!errors.hasErrors() && !result.hasErrors()){
+            if(watchList.getMovies() == null){
+                watchList.setMovies(new ArrayList<Integer>());
+            }
+            watchListService.createWatchList(watchList);
+            return "redirect:/watchlist";
         }
-        watchListService.createWatchList(name, currentProfile);
-        return "redirect:/profile/index";
+        else{
+            return "redirect:/watchlist/create";
+        }
     }
 
-    @GetMapping("/index")
-    public String listAllWatchLists(Model model) {
-        Profile currentProfile = getCurrentUserProfile();
-        if (currentProfile == null) {
-            throw new IllegalStateException("No profile found for the current user.");
+    @GetMapping("/{watchListId}/delete")
+    public String deleteWatchList(@PathVariable Integer watchListId){
+        boolean success = watchListService.deleteWatchList(watchListId);
+        if(success){
+            return "redirect:/watchlist";
         }
-        List<WatchList> watchLists = watchListService.getWatchListsByProfile(currentProfile);
-        model.addAttribute("watchLists", watchLists);
-        return "watchlist/index";
+        else{
+            return "redirect:/watchlist/"+watchListId;
+        }
     }
 
 
-    @GetMapping("/{id}")
-    public String viewWatchList(@PathVariable Integer id, Model model) {
-        WatchList watchList = watchListService.getWatchListById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid WatchList ID: " + id));
-
-        List<MovieDTO> movies = watchListService.getMoviesFromWatchList(watchList);
-        model.addAttribute("watchList", watchList);
-        model.addAttribute("movies", movies);
-        return "watchlist/index";
+    @GetMapping("/add/{movieId}")
+    public String addMovieToWatchList(@PathVariable Integer movieId, Model model){
+        model.addAttribute("movieId",movieId);
+        model.addAttribute("user",userService.getCurrentUser());
+        return "watchlist/add-movie";
     }
 
-    @PostMapping("/{watchListId}/add-movie")
-    public String addMovieToWatchList(@PathVariable Integer watchListId, @RequestParam String movieId) {
-        if (watchListId == null || watchListId == 0) {
-            throw new IllegalArgumentException("A valid WatchList ID must be provided.");
-        }
-
-        WatchList watchList = watchListService.getWatchListById(watchListId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid WatchList ID: " + watchListId));
-
-        watchListService.addMovieToWatchList(watchList, movieId);
-        return "redirect:/watchlist/" + watchListId;
+    @PostMapping("/add/{movieId}")
+    public String addMovieToWatchList(@PathVariable Integer movieId, @RequestParam(name = "watchListOption", required = false) List<Integer> watchListIds){
+        watchListService.addMovieToList(movieId, watchListIds);
+        return "redirect:/movie-details/"+movieId;
     }
 
-    @PostMapping("/{watchListId}/remove-movie")
-    public String removeMovieFromWatchList(@PathVariable Integer watchListId, @RequestParam String movieId) {
-        if (watchListId == null || watchListId == 0) {
-            throw new IllegalArgumentException("A valid WatchList ID must be provided.");
-        }
-
-        WatchList watchList = watchListService.getWatchListById(watchListId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid WatchList ID: " + watchListId));
-
-        watchListService.removeMovieFromWatchList(watchList, movieId);
-        return "redirect:/watchlist/" + watchListId;
+    @GetMapping("/{watchListId}/movies/remove/{movieId}")
+    public String removeMovieFromWatchList(@PathVariable Integer watchListId, @PathVariable Integer movieId){
+        watchListService.removeMovie(watchListId, movieId);
+        return "redirect:/watchlist/"+watchListId;
     }
 
-    private Profile getCurrentUserProfile() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !authentication.isAuthenticated()) {
-            return null;
-        }
-        Object principal = authentication.getPrincipal();
-        if (principal instanceof User) {
-            User user = (User) principal;
-            return profileService.getProfileById(user.getId());
-        }
-        return null;
-    }
 }
 

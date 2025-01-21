@@ -4,9 +4,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nat.CineBuddy.dto.MovieDTO;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 public class WatchList {
@@ -14,23 +16,21 @@ public class WatchList {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @NotNull
+    @Column(nullable = false)
+    @NotEmpty(message="Please enter your Watch List name")
     private String name;
 
-    @ElementCollection
-    @Lob
-    private List<String> movieIds = new ArrayList<>(); // Storing movie IDs instead of full JSON
-
-    @ManyToOne
-    @JoinColumn(name = "profile_id")
-    @NotNull
+    @ManyToOne(fetch = FetchType.EAGER)
     private Profile profile;
+    private static List<Integer> movies;
 
     public WatchList() {}
 
-    public WatchList(String name, Profile profile) {
+    public WatchList(Integer id, String name, Profile profile, List<Integer> movies) {
+        this.id = id;
         this.name = name;
         this.profile = profile;
+        this.movies = movies;
     }
 
     public Integer getId() {
@@ -41,20 +41,12 @@ public class WatchList {
         this.id = id;
     }
 
-    public String getName() {
+    public @NotEmpty(message = "Please enter your Watch List name") String getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(@NotEmpty(message = "Please enter your Watch List name") String name) {
         this.name = name;
-    }
-
-    public List<String> getMovieIds() {
-        return movieIds;
-    }
-
-    public void setMovieIds(List<String> movieIds) {
-        this.movieIds = movieIds;
     }
 
     public Profile getProfile() {
@@ -65,11 +57,34 @@ public class WatchList {
         this.profile = profile;
     }
 
-    public void addMovie(String movieId) {
-        this.movieIds.add(movieId);
+    public static List<Integer> getMovies() {
+        return movies;
     }
 
-    public void removeMovie(String movieId) {
-        this.movieIds.remove(movieId);
+    public static void setMovies(List<Integer> movies) {
+        WatchList.movies = movies;
+    }
+
+    @Override
+    public String toString() {
+        return "WatchList{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", movies=" + movies +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        WatchList that = (WatchList) o;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }
+
