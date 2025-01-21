@@ -30,6 +30,11 @@ public class WatchListServiceImpl implements WatchListService {
         return true;
     }
 
+    @Override
+    public List<WatchList> getWatchListsByUser(String username) {
+        Profile profile = userService.getCurrentUser().getProfile();
+        return watchListRepository.findByProfile(profile);
+    }
 
     public void addMovieToList(Integer movieId, List<Integer> watchListIds) {
         if (watchListIds != null && !watchListIds.isEmpty()) {
@@ -51,19 +56,6 @@ public class WatchListServiceImpl implements WatchListService {
         return watchListRepository.findById(id).orElseGet(WatchList::new);
     }
 
-    public boolean updateWatchList(Integer watchListId, WatchList watchList){
-        Optional<WatchList> storedWatchList = watchListRepository.findById(watchListId);
-        if(!storedWatchList.isPresent()){
-            return false;
-        }
-        else{
-            WatchList updatedWatchList = storedWatchList.get();
-            updatedWatchList.setName(watchList.getName());
-            updatedWatchList.setMovies(watchList.getMovies());
-            watchListRepository.save(updatedWatchList);
-            return true;
-        }
-    }
 
     public boolean deleteWatchList(Integer watchListId){
         Optional<WatchList> storedWatchList = watchListRepository.findById(watchListId);

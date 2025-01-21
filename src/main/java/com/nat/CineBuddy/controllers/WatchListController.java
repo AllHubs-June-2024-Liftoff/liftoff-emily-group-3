@@ -44,6 +44,15 @@ public class WatchListController {
         return "watchlist/index";
     }
 
+    @GetMapping("/watchlist")
+    public String displayWatchLists(Model model) {
+        String currentUser = userService.getCurrentUser().getUsername();
+        List<WatchList> watchLists = watchListService.getWatchListsByUser(currentUser);
+        model.addAttribute("watchLists", watchLists);
+        return "watchlist/index";
+    }
+
+
     @GetMapping("/{watchListId}")
     public String viewWatchList(@PathVariable Integer watchListId, Model model){
         WatchList watchList = watchListService.getWatchList(watchListId);
@@ -58,8 +67,6 @@ public class WatchListController {
             return "watchlist/individual";
 
         }
-
-
 
     @GetMapping("/create")
     public String showCreateWatchListForm(Model model) {
@@ -79,7 +86,6 @@ public class WatchListController {
         }
     }
 
-
     @GetMapping("/{watchListId}/delete")
     public String deleteWatchList(@PathVariable Integer watchListId){
         boolean success = watchListService.deleteWatchList(watchListId);
@@ -90,7 +96,6 @@ public class WatchListController {
             return "redirect:/watchlist/"+watchListId;
         }
     }
-
 
     @GetMapping("/add/{movieId}")
     public String addMovieToWatchList(@PathVariable Integer movieId, Model model){

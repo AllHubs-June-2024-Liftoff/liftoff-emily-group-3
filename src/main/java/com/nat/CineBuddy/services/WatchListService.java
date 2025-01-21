@@ -8,7 +8,8 @@ public interface WatchListService {
     public boolean createWatchList(WatchList watchList);
     public void addMovieToList(Integer movieId, List<Integer> watchListIds);
     public WatchList getWatchList (Integer id);
-    public boolean updateWatchList(Integer watchListId, WatchList watchList);
     public boolean deleteWatchList(Integer watchListId);
     public void removeMovie(Integer watchListId, Integer movieId);
+    List<WatchList> getWatchListsByUser(String username);
+
 }

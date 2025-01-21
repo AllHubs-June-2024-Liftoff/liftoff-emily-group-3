@@ -1,9 +1,12 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+
+<html xmlns:th="http://www.thymeleaf.org/" lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CineBuddy | Watch List</title>
+  <link rel="stylesheet" th:href="@{/css/watch-list-styles.css}">
   <th:block th:replace="~{fragments :: head}"></th:block>
 </head>
 <body>
@@ -12,16 +15,20 @@
 
 <div class="container">
   <h2>My Watch Lists</h2>
-<a th:href="@{/watchlist/create}" style="display: block; text-align: center; margin-bottom: 20px;">Create A WatchList</a>
-<div style="display: flex; flex-wrap: wrap; justify-content: center;">
-  <div th:if="${#lists.isEmpty(watchLists)}" style="text-align: center;">
-    <p>You currently have no Watch Lists. Create one to get started!</p>
-  </div>
-  <div th:each="watchList : ${watchLists}" style="margin: 10px; border: 1px solid #ccc; padding: 10px; width: 200px;">
-    <h2 th:text="${watchList.name}"></h2>
-    <p th:text="${watchList.description}"></p>
-    <a th:href="@{/watchlist/{id}(id=${watchList.id})}" style="display: block; text-align: center;">View WatchList</a>
+  <a th:href="@{/watchlist/create}" class="btn btn-primary">Create a Watch List</a>
+
+  <div class="watchlist-container">
+    <div th:if="${watchLists == null or #lists.isEmpty(watchLists)}" class="empty-message">
+      <p>You currently have no Watch Lists. Create one to get started!</p>
+    </div>
+
+    <div th:each="watchList : ${watchLists}" class="watchlist-card">
+      <h3 th:text="${watchList.name}"></h3>
+      <p th:text="${watchList.description}"></p>
+      <a th:href="@{/watchlist/{id}(id=${watchList.id})}" class="btn btn-secondary">View Watch List</a>
+    </div>
   </div>
 </div>
+
 </body>
 </html>
