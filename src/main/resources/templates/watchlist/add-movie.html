@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org/" lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CineBuddy | Watch List</title>
+    <th:block th:replace="~{fragments :: head}"></th:block>
+</head>
+<body>
+
+<div th:replace="~{fragments :: page-nav}"></div>
+
+<div class="container">
+    <h2>My Watch Lists</h2>
+    <form method="POST">
+        <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
+
+        <ul class="list-group">
+            <th:block th:each="watchlist : ${user.getProfile()}">
+                <li class="list-group-item d-flex justify-content-between align-items-center watch-list-checkbox" >
+                    <input type="checkbox" name="watchlistOption" th:id="'watchlistOption-' + ${watchlist.id}" th:value="${watchlist.id}" aria-hidden="false">
+                    <label class="flex-fill" th:for="'watchlistOption-' + ${watchlist.id}" th:text="'Watch List: ' + ${watchlist.name}"></label>
+                </li>
+            </th:block>
+
+            <th:block th:each="watchlist : ${user.getProfile().getWatchLists()}">
+                <li class="list-group-item d-flex justify-content-between align-items-center watch-list-checkbox" >
+                    <input type="checkbox" name="watchlistOption" th:id="'watchlistOption-' + ${watchlist.id}" th:value="${watchlist.id}" aria-hidden="false">
+                    <label class="flex-fill" th:for="'watchlistOption-' + ${watchlist.id}" th:text="'Watch List: ' + ${watchlist.name}"></label>
+                </li>
+            </th:block>
+        </ul>
+
+        <input type="submit" value="Add Movie to Your Watch List" />
+    </form>
+</div>
+</body>
+</html>

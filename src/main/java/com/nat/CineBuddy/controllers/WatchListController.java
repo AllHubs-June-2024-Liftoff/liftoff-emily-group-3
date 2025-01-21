@@ -69,18 +69,16 @@ public class WatchListController {
     }
 
     @PostMapping("/create")
-    public String createWatchList(@Valid @ModelAttribute("watchlist") WatchList watchList, BindingResult result, Errors errors){
-        if(!errors.hasErrors() && !result.hasErrors()){
-            if(watchList.getMovies() == null){
-                watchList.setMovies(new ArrayList<Integer>());
-            }
+    public String createWatchList(@Valid @ModelAttribute("watchList") WatchList watchList, BindingResult result, Errors errors) {
+        if (!errors.hasErrors() && !result.hasErrors()) {
+            watchList.setProfile(userService.getCurrentUser().getProfile());
             watchListService.createWatchList(watchList);
             return "redirect:/watchlist";
-        }
-        else{
+        } else {
             return "redirect:/watchlist/create";
         }
     }
+
 
     @GetMapping("/{watchListId}/delete")
     public String deleteWatchList(@PathVariable Integer watchListId){

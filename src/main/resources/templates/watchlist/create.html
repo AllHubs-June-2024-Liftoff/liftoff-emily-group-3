@@ -1,11 +1,17 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Create A WatchList</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CineBuddy | Watch List</title>
+    <th:block th:replace="~{fragments :: head}"></th:block>
 </head>
 <body>
+
 <div th:replace="~{fragments :: page-nav}"></div>
-<h1 style="text-align: center;">Create A WatchList</h1>
+
+<div class="container">
+    <h2>Create A Watch List</h2>
 <form th:action="@{/watchlist/create}" method="post" style="text-align: center;">
     <label for="name">Name your WatchList:</label>
     <input type="text" id="name" name="name" required>

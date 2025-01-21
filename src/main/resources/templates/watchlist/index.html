@@ -1,11 +1,17 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <title>My WatchLists</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CineBuddy | Watch List</title>
+  <th:block th:replace="~{fragments :: head}"></th:block>
 </head>
 <body>
+
 <div th:replace="~{fragments :: page-nav}"></div>
-<h1 style="text-align: center;">My WatchLists</h1>
+
+<div class="container">
+  <h2>My Watch Lists</h2>
 <a th:href="@{/watchlist/create}" style="display: block; text-align: center; margin-bottom: 20px;">Create A WatchList</a>
 <div style="display: flex; flex-wrap: wrap; justify-content: center;">
   <div th:if="${#lists.isEmpty(watchLists)}" style="text-align: center;">

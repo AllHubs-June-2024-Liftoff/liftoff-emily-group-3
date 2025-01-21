@@ -17,12 +17,14 @@ public class WatchList {
     private Integer id;
 
     @Column(nullable = false)
-    @NotEmpty(message="Please enter your Watch List name")
+    @NotEmpty(message = "Please enter your Watch List name")
     private String name;
 
     @ManyToOne(fetch = FetchType.EAGER)
     private Profile profile;
-    private static List<Integer> movies;
+
+    @ElementCollection
+    private List<Integer> movies = new ArrayList<>();
 
     public WatchList() {}
 
@@ -41,11 +43,11 @@ public class WatchList {
         this.id = id;
     }
 
-    public @NotEmpty(message = "Please enter your Watch List name") String getName() {
+    public String getName() {
         return name;
     }
 
-    public void setName(@NotEmpty(message = "Please enter your Watch List name") String name) {
+    public void setName(String name) {
         this.name = name;
     }
 
@@ -57,12 +59,12 @@ public class WatchList {
         this.profile = profile;
     }
 
-    public static List<Integer> getMovies() {
+    public List<Integer> getMovies() {
         return movies;
     }
 
-    public static void setMovies(List<Integer> movies) {
-        WatchList.movies = movies;
+    public void setMovies(List<Integer> movies) {
+        this.movies = movies;
     }
 
     @Override
@@ -87,4 +89,5 @@ public class WatchList {
         return Objects.hash(id);
     }
 }
+
 

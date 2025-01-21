@@ -24,15 +24,17 @@ public class WatchListServiceImpl implements WatchListService {
     @Autowired
     private ProfileService profileService;
 
-    public boolean createWatchList(WatchList watchList){
+    public boolean createWatchList(WatchList watchList) {
+        watchList.setProfile(userService.getCurrentUser().getProfile());
         watchListRepository.save(watchList);
         return true;
     }
 
-    public void addMovieToList(Integer movieId, List<Integer> watchListIds){
-        if(watchListIds != null && !watchListIds.isEmpty()) {
-            for (Integer watchPartyId : watchListIds) {
-                Optional<WatchList> storedWatchList = watchListRepository.findById(watchPartyId);
+
+    public void addMovieToList(Integer movieId, List<Integer> watchListIds) {
+        if (watchListIds != null && !watchListIds.isEmpty()) {
+            for (Integer watchListId : watchListIds) {
+                Optional<WatchList> storedWatchList = watchListRepository.findById(watchListId);
                 if (storedWatchList.isPresent()) {
                     WatchList watchList = storedWatchList.get();
                     if (!watchList.getMovies().contains(movieId)) {
@@ -43,6 +45,7 @@ public class WatchListServiceImpl implements WatchListService {
             }
         }
     }
+
 
     public WatchList getWatchList(Integer id){
         return watchListRepository.findById(id).orElseGet(WatchList::new);
