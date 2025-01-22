@@ -22,11 +22,11 @@ public class VoteService {
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private WatchPartyService watchPartyService;
-
-    @Autowired
-    private WatchPartyRepository watchPartyRepository;
+//    @Autowired
+//    private WatchPartyService watchPartyService;
+//
+//    @Autowired
+//    private WatchPartyRepository watchPartyRepository;
 
 
     /**
@@ -131,13 +131,10 @@ public class VoteService {
      *
      * @param watchParty pass in watchParty object.
      * Utilize watchParty object to set our most voted movie.
+     * @return most voted movie.
      */
-    public void finalizeVotes(WatchParty watchParty){
-        Integer mostVotedMovie = getMostVotedMovie(watchParty);
-        watchParty.setMovieChoice(mostVotedMovie);
-
-        //Save the watchparty
-        watchPartyRepository.save(watchParty);
+    public Integer finalizeVotes(WatchParty watchParty) {
+        return getMostVotedMovie(watchParty);
 
     }
 
@@ -146,16 +143,14 @@ public class VoteService {
      * @param watchParty take watchparty as object for spacific watchparty.
      * @return true if votes exist and all votes are deleted in voteRepository.
      */
-    public boolean deleteAllVotes(WatchParty watchParty){
+    public boolean deleteAllVotes (WatchParty watchParty){
         List<Vote> allVotes = voteRepository.findByWatchParty(watchParty);
 
-        if(allVotes.isEmpty()){
+        if (allVotes.isEmpty()) {
             return false; //No votes to delete
         }
 
         voteRepository.deleteAll(allVotes);
         return true;
     }
-
-
 }
