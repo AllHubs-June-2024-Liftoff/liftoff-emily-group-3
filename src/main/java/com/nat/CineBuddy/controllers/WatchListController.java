@@ -64,7 +64,7 @@ public class WatchListController {
             model.addAttribute("watchlist",watchList);
             model.addAttribute("profile", profile);
             model.addAttribute("movies",movies);
-            return "watchlist/individual";
+            return "watchlist";
 
         }
 

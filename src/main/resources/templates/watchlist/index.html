@@ -22,11 +22,11 @@
       <p>You currently have no Watch Lists. Create one to get started!</p>
     </div>
 
-    <div th:each="watchList : ${watchLists}" class="watchlist-card">
-      <h3 th:text="${watchList.name}"></h3>
-      <p th:text="${watchList.description}"></p>
+    <th:block th:each="watchList : ${user.profile.watchLists}" class="watchlist-card">
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+        <div th:text="${watchlist.name}"></div>
       <a th:href="@{/watchlist/{id}(id=${watchList.id})}" class="btn btn-secondary">View Watch List</a>
-    </div>
+    </th:block>
   </div>
 </div>
 
