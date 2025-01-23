@@ -6,6 +6,7 @@ import com.nat.CineBuddy.models.Movie;
 import com.nat.CineBuddy.models.Review;
 import com.nat.CineBuddy.repositories.MovieRepository;
 import com.nat.CineBuddy.repositories.ReviewRepository;
+import com.nat.CineBuddy.services.BadgeService;
 import com.nat.CineBuddy.services.TMDbService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,9 +25,11 @@ import java.util.Optional;
 @Controller
 public class MovieController {
     private final TMDbService tmDbService;
+    private final BadgeService badgeService;
 
-    public MovieController(TMDbService tmDbService) {
+    public MovieController(TMDbService tmDbService, BadgeService badgeService) {
         this.tmDbService = tmDbService;
+        this.badgeService = badgeService;
     }
 
 
@@ -39,6 +42,7 @@ public class MovieController {
     @PostMapping("/submit-review")
     public String submitReview(@RequestParam String movieId, @RequestParam int rating,
                                @RequestParam String review, Principal principal, Model model) {
+
         if (principal == null) {
             return "redirect:/login";
         }        Review newReview = new Review();
@@ -49,6 +53,8 @@ public class MovieController {
         newReview.setDateCreated(LocalDateTime.now());
 
         reviewRepository.save(newReview);
+
+        badgeService.awardBadge(principal.getName(), "First Review");
 
         // Fetch all reviews for the movie
         List<Review> reviews = reviewRepository.findByMovieId(movieId);
