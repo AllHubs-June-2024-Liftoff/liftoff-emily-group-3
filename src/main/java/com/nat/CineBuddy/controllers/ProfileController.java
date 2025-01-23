@@ -1,8 +1,11 @@
 package com.nat.CineBuddy.controllers;
 
+import com.nat.CineBuddy.dto.MovieDTO;
+import com.nat.CineBuddy.models.Badge;
 import com.nat.CineBuddy.models.Profile;
-import com.nat.CineBuddy.services.ProfileService;
-import com.nat.CineBuddy.services.UserService;
+import com.nat.CineBuddy.models.Review;
+import com.nat.CineBuddy.repositories.ReviewRepository;
+import com.nat.CineBuddy.services.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -16,10 +19,18 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.security.Principal;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
 public class ProfileController {
+
+    private final TMDbService tmDbService;
+    private final ReviewRepository reviewRepository;
+    private final ReviewService reviewService;
+
+
 
     @Autowired
     private ProfileService profileService;
@@ -27,9 +38,28 @@ public class ProfileController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private BadgeService badgeService;
+
+    public ProfileController(TMDbService tmDbService, ReviewRepository reviewRepository, ReviewService reviewService, BadgeService badgeService) {
+        this.tmDbService = tmDbService;
+        this.reviewRepository = reviewRepository;
+        this.reviewService = reviewService;
+        this.badgeService = badgeService;
+    }
+
     @GetMapping("profile")
-    public String index(Model model){
+    public String index(Model model, Principal principal){
         model.addAttribute("user",userService.getCurrentUser());
+        List<Review> userReviews = reviewRepository.findByUsername(principal.getName());
+        List<Badge> badges = badgeService.getUserBadges(principal.getName());
+
+        for (Review review : userReviews) {
+            MovieDTO movieDTO = tmDbService.getMovieDetails(review.getMovieId());  // Get movie details by ID
+            review.setMovieTitle(movieDTO.getTitle());  // Set movie title
+        }
+        model.addAttribute("reviews", userReviews);
+        model.addAttribute("badges", badges);
         return "user/index";
     }
 

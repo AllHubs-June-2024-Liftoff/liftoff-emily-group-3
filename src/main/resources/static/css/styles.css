@@ -167,5 +167,19 @@
       text-align: left;
     }
 
+.badges-section {
+    margin-top: 20px;
+}
+.badge {
+    background-color: black;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    color: white;
+}
+
+
+
 
    }

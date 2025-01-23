@@ -22,12 +22,37 @@
             </div>
             <div class="pt-3 border-bottom">
                 <h6 th:text="${user.getProfile().getName()} + '\'s Watchlist' "></h6>
+                <div class="movie-reviews" id="reviews-display">
+
+                    <div th:each="review : ${reviews}">
+                        <div class="review">
+                            <a th:href="@{/movie-details/{id}(id=${review.movieId})}" th:text="${review.movieTitle}"></a>
+                            <p> (Rating:
+                                <span th:each="star : ${#numbers.sequence(1, review.rating)}" class="star-filled">&#9733;</span>)
+                            </p>
+                            <p th:text="${review.content}"></p>
+                            <hr/>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="col-md-8">
             <h2 th:text="${user.getProfile().getName()} + '!'" class="border-bottom"></h2>
-            <p th:text="${user.getProfile.getBio()}"></p>
+            <p th:text="${user.getProfile().getBio()}"></p>
             <div>Favorite Movies? Maybe like from own watchlist or ratings</div>
+            <div class="badges-section">
+                <h3>Your Badges</h3>
+                <div th:if="${badges.isEmpty()}">
+                    <p>No badges yet. Start earning by participating!</p>
+                </div>
+                <div class="badge" th:each="badge : ${badges}">
+                    <p th:text="${badge.badgeName}"></p>
+                </div>
+            </div>
+
+
+            <!-- User Reviews Section -->
         </div>
     </div>
 </div>
