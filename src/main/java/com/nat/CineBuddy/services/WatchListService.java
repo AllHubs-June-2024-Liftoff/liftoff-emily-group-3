@@ -10,6 +10,6 @@ public interface WatchListService {
     public WatchList getWatchList (Integer id);
     public boolean deleteWatchList(Integer watchListId);
     public void removeMovie(Integer watchListId, Integer movieId);
-    List<WatchList> getWatchListsByUser(String username);
+    List<WatchList> getWatchListsByProfile();
 
 }

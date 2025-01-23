@@ -33,26 +33,21 @@ public class WatchListController {
     private WatchListService watchListService;
 
     @Autowired
-    private VoteService voteService;
-
-    @Autowired
     private TMDbService tmDbService;
 
     @GetMapping
     public String index(Model model){
         String currentUser = userService.getCurrentUser().getUsername();
-        List<WatchList> watchLists = watchListService.getWatchListsByUser(currentUser);
+        List<WatchList> watchLists = watchListService.getWatchListsByProfile();
         model.addAttribute("watchLists", watchLists);
         model.addAttribute("user", userService.getCurrentUser());
-
         return "watchlist/index";
     }
 
 
     @GetMapping("/watchlist")
     public String displayWatchLists(Model model) {
-        String currentUser = userService.getCurrentUser().getUsername();
-        List<WatchList> watchLists = watchListService.getWatchListsByUser(currentUser);
+        List<WatchList> watchLists = watchListService.getWatchListsByProfile();
         model.addAttribute("watchLists", watchLists);
         return "watchlist/index";
     }
@@ -62,19 +57,20 @@ public class WatchListController {
     public String viewWatchList(@PathVariable Integer watchListId, Model model) {
         WatchList watchList = watchListService.getWatchList(watchListId);
         Profile profile = userService.getCurrentUser().getProfile();
-
-        // Null check for movies list
         List<MovieDTO> movies = new ArrayList<>();
         if (watchList.getMovies() != null) {
             for (Integer movieId : watchList.getMovies()) {
                 movies.add(tmDbService.getMovieDetails(movieId.toString()));
             }
-        }
 
-        model.addAttribute("watchlist", watchList);
-        model.addAttribute("profile", profile);
-        model.addAttribute("movies", movies);
-        return "watchlist/individual";
+            model.addAttribute("watchlist", watchList);
+            model.addAttribute("profile", profile);
+            model.addAttribute("movies", movies);
+            return "watchlist/individual";
+        }
+        else {
+            return "watchlist";
+        }
     }
 
 
@@ -117,9 +113,7 @@ public class WatchListController {
     @PostMapping("/add/{movieId}")
     public String addMovieToWatchList(@PathVariable Integer movieId,
                                       @RequestParam(name = "watchListChoice", required = false) List<Integer> watchListIds) {
-        if (watchListIds != null && !watchListIds.isEmpty()) {
-            watchListService.addMovieToList(movieId, watchListIds);
-        }
+        watchListService.addMovieToList(movieId, watchListIds);
         return "redirect:/movie-details/" + movieId;
     }
 

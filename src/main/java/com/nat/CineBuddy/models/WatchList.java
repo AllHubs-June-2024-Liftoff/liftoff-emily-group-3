@@ -21,6 +21,7 @@ public class WatchList {
     private String name;
 
     @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "profile_id")
     private Profile profile;
     private List<Integer> movies;
 
@@ -31,7 +32,7 @@ public class WatchList {
         this.id = id;
         this.name = name;
         this.profile = profile;
-        this.movies = (movies != null) ? movies : new ArrayList<>();
+        this.movies = movies;
     }
 
     public Integer getId() {
@@ -63,12 +64,9 @@ public class WatchList {
     }
 
     public void setMovies(List<Integer> movies) {
-        if (movies == null) {
-            this.movies = new ArrayList<>();
-        } else {
-            this.movies = movies;
-        }
+        this.movies = movies;
     }
+
 
     @Override
     public String toString() {

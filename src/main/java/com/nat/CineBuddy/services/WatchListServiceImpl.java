@@ -31,13 +31,14 @@ public class WatchListServiceImpl implements WatchListService {
         return true;
     }
 
-    @Override
-    public List<WatchList> getWatchListsByUser(String username) {
+    public List<WatchList> getWatchListsByProfile() {
         Profile profile = userService.getCurrentUser().getProfile();
+        if (profile == null) {
+            throw new IllegalStateException("No profile found for the current user");
+        }
         return watchListRepository.findByProfile(profile);
     }
 
-    @Transactional
     public void addMovieToList(Integer movieId, List<Integer> watchListIds) {
         if (watchListIds != null && !watchListIds.isEmpty()) {
             for (Integer watchListId : watchListIds) {
