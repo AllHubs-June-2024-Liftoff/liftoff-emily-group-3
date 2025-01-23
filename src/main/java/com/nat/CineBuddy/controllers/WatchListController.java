@@ -59,19 +59,24 @@ public class WatchListController {
 
 
     @GetMapping("/{watchListId}")
-    public String viewWatchList(@PathVariable Integer watchListId, Model model){
+    public String viewWatchList(@PathVariable Integer watchListId, Model model) {
         WatchList watchList = watchListService.getWatchList(watchListId);
         Profile profile = userService.getCurrentUser().getProfile();
+
+        // Null check for movies list
         List<MovieDTO> movies = new ArrayList<>();
-            for(Integer movieId : watchList.getMovies()){
+        if (watchList.getMovies() != null) {
+            for (Integer movieId : watchList.getMovies()) {
                 movies.add(tmDbService.getMovieDetails(movieId.toString()));
             }
-            model.addAttribute("watchlist",watchList);
-            model.addAttribute("profile", profile);
-            model.addAttribute("movies",movies);
-            return "watchlist";
-
         }
+
+        model.addAttribute("watchlist", watchList);
+        model.addAttribute("profile", profile);
+        model.addAttribute("movies", movies);
+        return "watchlist/individual";
+    }
+
 
     @GetMapping("/create")
     public String showCreateWatchListForm(Model model) {
@@ -110,10 +115,14 @@ public class WatchListController {
     }
 
     @PostMapping("/add/{movieId}")
-    public String addMovieToWatchList(@PathVariable Integer movieId, @RequestParam(name = "watchListOption", required = false) List<Integer> watchListIds){
-        watchListService.addMovieToList(movieId, watchListIds);
-        return "redirect:/movie-details/"+movieId;
+    public String addMovieToWatchList(@PathVariable Integer movieId,
+                                      @RequestParam(name = "watchListChoice", required = false) List<Integer> watchListIds) {
+        if (watchListIds != null && !watchListIds.isEmpty()) {
+            watchListService.addMovieToList(movieId, watchListIds);
+        }
+        return "redirect:/movie-details/" + movieId;
     }
+
 
     @GetMapping("/{watchListId}/movies/remove/{movieId}")
     public String removeMovieFromWatchList(@PathVariable Integer watchListId, @PathVariable Integer movieId){

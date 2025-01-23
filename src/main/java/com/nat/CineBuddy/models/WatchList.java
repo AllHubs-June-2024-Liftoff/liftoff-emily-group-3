@@ -22,9 +22,8 @@ public class WatchList {
 
     @ManyToOne(fetch = FetchType.EAGER)
     private Profile profile;
+    private List<Integer> movies;
 
-    @ElementCollection
-    private List<Integer> movies = new ArrayList<>();
 
     public WatchList() {}
 
@@ -32,7 +31,7 @@ public class WatchList {
         this.id = id;
         this.name = name;
         this.profile = profile;
-        this.movies = movies;
+        this.movies = (movies != null) ? movies : new ArrayList<>();
     }
 
     public Integer getId() {
@@ -64,7 +63,11 @@ public class WatchList {
     }
 
     public void setMovies(List<Integer> movies) {
-        this.movies = movies;
+        if (movies == null) {
+            this.movies = new ArrayList<>();
+        } else {
+            this.movies = movies;
+        }
     }
 
     @Override

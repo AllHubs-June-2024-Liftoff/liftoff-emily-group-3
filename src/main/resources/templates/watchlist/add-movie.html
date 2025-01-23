@@ -18,17 +18,10 @@
         <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
 
         <ul class="list-group">
-            <th:block th:each="watchlist : ${user.getProfile()}">
-                <li class="list-group-item d-flex justify-content-between align-items-center watch-list-checkbox" >
-                    <input type="checkbox" name="watchlistOption" th:id="'watchlistOption-' + ${watchlist.id}" th:value="${watchlist.id}" aria-hidden="false">
-                    <label class="flex-fill" th:for="'watchlistOption-' + ${watchlist.id}" th:text="'Watch List: ' + ${watchlist.name}"></label>
-                </li>
-            </th:block>
-
             <th:block th:each="watchlist : ${user.getProfile().getWatchLists()}">
                 <li class="list-group-item d-flex justify-content-between align-items-center watch-list-checkbox" >
-                    <input type="checkbox" name="watchlistOption" th:id="'watchlistOption-' + ${watchlist.id}" th:value="${watchlist.id}" aria-hidden="false">
-                    <label class="flex-fill" th:for="'watchlistOption-' + ${watchlist.id}" th:text="'Watch List: ' + ${watchlist.name}"></label>
+                    <input type="checkbox" name="watchListChoice" th:id="'watchListChoice-' + ${watchlist.id}" th:value="${watchlist.id}" aria-hidden="false">
+                    <label class="flex-fill" th:for="'watchListChoice-' + ${watchlist.id}" th:text="'Watch List: ' + ${watchlist.name}"></label>
                 </li>
             </th:block>
         </ul>

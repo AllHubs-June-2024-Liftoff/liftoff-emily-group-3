@@ -5,6 +5,7 @@ import com.nat.CineBuddy.models.Profile;
 import com.nat.CineBuddy.dto.MovieDTO;
 import com.nat.CineBuddy.models.WatchParty;
 import com.nat.CineBuddy.repositories.WatchListRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,6 +37,7 @@ public class WatchListServiceImpl implements WatchListService {
         return watchListRepository.findByProfile(profile);
     }
 
+    @Transactional
     public void addMovieToList(Integer movieId, List<Integer> watchListIds) {
         if (watchListIds != null && !watchListIds.isEmpty()) {
             for (Integer watchListId : watchListIds) {
@@ -46,6 +48,7 @@ public class WatchListServiceImpl implements WatchListService {
                         watchList.getMovies().add(movieId);
                         watchListRepository.save(watchList);
                     }
+
                 }
             }
         }
