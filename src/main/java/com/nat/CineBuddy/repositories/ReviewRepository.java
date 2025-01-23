@@ -10,5 +10,6 @@ import java.util.List;
 public interface ReviewRepository extends CrudRepository<Review, Integer> {
     List<Review> findByMovieId(String movieId);
     List<Review> findByUsername(String username);
+    int countByUsernameAndRating(String username, int rating);
 
 }

@@ -18,6 +18,12 @@
       margin-bottom: 20px;
     }
 
+    hr {
+        background-color: black;
+        height: 2px;
+        border: none;
+    }
+
     /* Carousel container background */
     .gallery {
       background: #EEE;

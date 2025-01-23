@@ -53,7 +53,7 @@ public class MovieController {
 
         reviewRepository.save(newReview);
 
-        badgeService.awardBadge(principal.getName(), "First Review");
+        badgeService.awardBadge(principal.getName());
 
         // Fetch all reviews for the movie
         List<Review> reviews = reviewRepository.findByMovieId(movieId);

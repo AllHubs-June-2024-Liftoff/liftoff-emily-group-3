@@ -43,6 +43,10 @@ p {
   padding-left: 12px;
 }
 
+small {
+   padding-left: 12px;
+}
+
 .movie-stats {
   text-align: center;
   font-weight: bold;
