@@ -48,8 +48,16 @@
                     <p>No badges yet. Start earning by participating!</p>
                 </div>
                 <div class="badge-container" th:each="badge : ${badges}">
-                    <span class="badge badge-pill badge-success" th:text="${badge.badgeName}"></span>
+    <span class="badge badge-pill"
+          th:classappend="${badge.badgeName == 'First Review' ? 'badge-success' : (badge.badgeName == 'Hater' ? 'badge-danger' : 'badge-primary')}"
+          data-toggle="tooltip"
+          data-placement="right"
+          th:title="${badge.badgeName == 'First Review' ? 'Awarded for submitting your first review!'
+                : (badge.badgeName == 'Hater' ? 'Given for submitting 3 or more 1-star reviews.'
+                : 'Special badge for active participation.')}"
+          th:text="${badge.badgeName}"></span>
                 </div>
+
             </div>
 
 
@@ -57,5 +65,16 @@
         </div>
     </div>
 </div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-toggle="tooltip"]'));
+      tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl, {
+          placement: 'right'
+        });
+      });
+    });
+</script>
+
 </body>
 </html>
