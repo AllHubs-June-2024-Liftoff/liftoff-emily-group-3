@@ -25,8 +25,8 @@
                     <div th:each="review : ${reviews}">
                         <div class="review">
                             <a th:href="@{/movie-details/{id}(id=${review.movieId})}" th:text="${review.movieTitle}"></a>
-                            <p> (Rating:
-                                <span th:each="star : ${#numbers.sequence(1, review.rating)}" class="star-filled">&#9733;</span>)
+                            <p>
+                                <span th:each="star : ${#numbers.sequence(1, review.rating)}" class="star-filled">&#9733;</span>
                             </p>
                             <p th:text="${review.content}"></p>
                             <hr/>
