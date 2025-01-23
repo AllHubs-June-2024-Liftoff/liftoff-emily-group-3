@@ -1,7 +1,5 @@
 <!DOCTYPE html>
-
 <html xmlns:th="http://www.thymeleaf.org/" lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,25 +8,34 @@
   <th:block th:replace="~{fragments :: head}"></th:block>
 </head>
 <body>
-
 <div th:replace="~{fragments :: page-nav}"></div>
 
 <div class="container">
   <h2>My Watch Lists</h2>
-  <a th:href="@{/watchlist/create}" class="btn btn-primary">Create a Watch List</a>
+  <a th:href="@{/watchlist/create}" class="btn btn-primary">Create a New Watch List</a>
 
   <div class="watchlist-container">
     <div th:if="${watchLists == null or #lists.isEmpty(watchLists)}" class="empty-message">
       <p>You currently have no Watch Lists. Create one to get started!</p>
     </div>
 
-    <th:block th:each="watchList : ${user.profile.watchLists}" class="watchlist-card">
-      <li class="list-group-item d-flex justify-content-between align-items-center">
-        <div th:text="${watchlist.name}"></div>
-      <a th:href="@{/watchlist/{id}(id=${watchList.id})}" class="btn btn-secondary">View Watch List</a>
+    <th:block th:each="watchList : ${watchLists}">
+      <a th:href="@{/watchlist/{id}(id=${watchList.id})}" class="watchlist-card">
+        <h3 th:text="${watchList.name}" class="watchlist-title"></h3>
+        <div class="movies-container">
+          <th:block th:each="movie : ${watchList.movies}">
+            <div class="movie-item">
+              <img th:src="@{${movie.posterPath}}" alt="Movie Poster" class="movie-poster">
+              <div class="movie-details">
+                <h4 th:text="${movie.title}" class="movie-title"></h4>
+                <p th:text="${movie.description}" class="movie-description"></p>
+              </div>
+            </div>
+          </th:block>
+        </div>
+      </a>
     </th:block>
   </div>
 </div>
-
 </body>
 </html>

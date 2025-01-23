@@ -40,9 +40,14 @@ public class WatchListController {
 
     @GetMapping
     public String index(Model model){
-        model.addAttribute("user",userService.getCurrentUser());
+        String currentUser = userService.getCurrentUser().getUsername();
+        List<WatchList> watchLists = watchListService.getWatchListsByUser(currentUser);
+        model.addAttribute("watchLists", watchLists);
+        model.addAttribute("user", userService.getCurrentUser());
+
         return "watchlist/index";
     }
+
 
     @GetMapping("/watchlist")
     public String displayWatchLists(Model model) {
