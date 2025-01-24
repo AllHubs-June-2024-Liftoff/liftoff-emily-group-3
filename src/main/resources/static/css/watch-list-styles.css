@@ -26,6 +26,28 @@ html {
     color: #333;
 }
 
+.create-form {
+    background-color: #fff;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    float: right;
+    font-weight: bold;
+    font-size: 1.5rem;
+
+}
+
+.add-movie-form {
+    background-color: #fff;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    float: down;
+    font-weight: bold;
+    font-size: 1rem;
+
+}
+
 /* Create button styling */
 .create-button {
     background-color: #ffad33;
