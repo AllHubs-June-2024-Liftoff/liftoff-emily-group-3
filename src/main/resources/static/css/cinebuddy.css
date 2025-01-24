@@ -7,3 +7,18 @@ form {
 .watchparty-list-thumb{
     height:200px;
 }
+.selectableMember{
+    cursor: pointer;
+}
+.selectableMember:hover{
+    border: 2px solid green;
+    border-radius: 8px;
+}
+.cursor-pointer{
+    cursor: pointer;
+}
+.memberSearch{
+    min-height: 10vh;
+    max-height: 30vh;
+    overflow-y: auto;
+}

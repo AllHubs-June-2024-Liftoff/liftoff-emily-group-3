@@ -106,15 +106,25 @@ public class Profile {
         this.hostedGroups = hostedGroups;
     }
 
+    public List<Vote> getVotes() {
+        return votes;
+    }
+
+    public void setVotes(List<Vote> votes) {
+        this.votes = votes;
+    }
+
     @Override
     public String toString() {
         return "Profile{" +
-                "name='" + name + '\'' +
+                "id=" + id +
+                ", name='" + name + '\'' +
                 ", bio='" + bio + '\'' +
                 ", image='" + image + '\'' +
                 ", hidden=" + hidden +
                 ", joinedGroups=" + joinedGroups +
                 ", hostedGroups=" + hostedGroups +
+                ", votes=" + votes +
                 '}';
     }
 

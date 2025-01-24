@@ -11,9 +11,10 @@ public interface WatchPartyService {
     public void addMovieToList(Integer movieId, List<Integer> watchPartyIds);
     public WatchParty getWatchParty(Integer id);
     public boolean updateWatchParty(Integer watchPartyId, WatchParty watchParty);
-    public boolean deleteWatchParty(Integer watchPartyId);
+    public boolean deleteWatchParty(Integer watchPartyId, Profile leader);
     public boolean leaveWatchParty(Integer watchPartyId, Profile removeProfile);
     public void removeMovie(Integer watchPartyId, Integer movieId);
-    public void removeMember(Integer watchPartyId, Integer memberId);
+    public void removeMember(Integer watchPartyId, Integer memberId, Profile leader);
     public List<MovieDTO> getTopRatedMovies(WatchParty watchParty);
+    public void removeFromAll(Profile profile);
 }

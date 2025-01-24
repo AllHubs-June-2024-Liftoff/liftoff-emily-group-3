@@ -20,4 +20,6 @@ public interface UserService {
     boolean updateUser(User user, Integer userId);
 
     public User getCurrentUser();
+
+    public boolean areFieldsUnique(String field);
 }
