@@ -23,7 +23,7 @@ public class WatchList {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "profile_id")
     private Profile profile;
-    private List<Integer> movies;
+    private List<Integer> movies = new ArrayList<>();
 
 
     public WatchList() {}

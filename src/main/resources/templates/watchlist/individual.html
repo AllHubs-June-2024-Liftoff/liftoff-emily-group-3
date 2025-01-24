@@ -1,19 +1,33 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org/" lang="en">
 <head>
-    <title>WatchList Details</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CineBuddy | Watchlist</title>
+    <link rel="stylesheet" th:href="@{/css/watch-list-styles.css}">
+    <th:block th:replace="~{fragments :: head}"></th:block>
 </head>
 <body>
 <div th:replace="~{fragments :: page-nav}"></div>
-<h1 th:text="${watchList.name}" style="text-align: center;"></h1>
-<a th:href="@{/search-menu}" style="display: block; text-align: center; margin-bottom: 20px;">Add Movies to WatchList</a>
-<div style="display: flex; flex-direction: column; align-items: center;">
-    <div th:each="movie : ${movies}" style="margin: 10px; border: 1px solid #ccc; padding: 10px; width: 300px;">
-        <img th:src="${movie.posterPath}" alt="Movie Poster" style="width: 100%;">
-        <h2 th:text="${movie.title}" style="text-align: center;"></h2>
-        <p th:text="${movie.description}" style="text-align: center;"></p>
-        <a th:href="@{/movie-details/{id}(id=${movie.id})}" style="display: block; text-align: center;">View Details</a>
+
+<div class="container">
+    <header class="watchlist-header">
+        <h1 class="watchlist-title" th:text="${watchlist.name}"></h1>
+        <a href="/search-menu" class="add-movies-btn">Add Movies to WatchList</a>
+    </header>
+
+    <div class="watchlist-grid">
+        <div th:each="movie : ${movies}" class="movie-card">
+            <a th:href="@{/movie-details/{id}(id=${movie.id})}" class="movie-card-link">
+                <img th:src="${movie.posterPath}" alt="Movie Poster">
+                <div class="movie-info">
+                    <h3 th:text="${movie.title}"></h3>
+                    <p th:text="${movie.overview}"></p>
+                </div>
+            </a>
+        </div>
     </div>
 </div>
+
 </body>
 </html>

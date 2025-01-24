@@ -11,30 +11,25 @@
 <div th:replace="~{fragments :: page-nav}"></div>
 
 <div class="container">
-  <h2>My Watch Lists</h2>
-  <a th:href="@{/watchlist/create}" class="btn btn-primary">Create a New Watch List</a>
+  <header>
+    <div class="title-card">
+      <h1>My Watch Lists</h1>
+    </div>
+    <a href="/watchlist/create" class="create-button">Create a New Watch List</a>
+  </header>
 
   <div class="watchlist-container">
     <div th:if="${watchLists == null or #lists.isEmpty(watchLists)}" class="empty-message">
       <p>You currently have no Watch Lists. Create one to get started!</p>
     </div>
 
-    <th:block th:each="watchList : ${watchLists}">
-      <a th:href="@{/watchlist/{id}(id=${watchList.id})}" class="watchlist-card">
-        <h3 th:text="${watchList.name}" class="watchlist-title"></h3>
-        <div class="movies-container">
-          <th:block th:each="movie : ${watchList.movies}">
-            <div class="movie-item">
-              <img th:src="@{${movie.posterPath}}" alt="Movie Poster" class="movie-poster">
-              <div class="movie-details">
-                <h4 th:text="${movie.title}" class="movie-title"></h4>
-                <p th:text="${movie.description}" class="movie-description"></p>
-              </div>
-            </div>
-          </th:block>
-        </div>
-      </a>
-    </th:block>
+    <main th:if="${watchLists != null and !#lists.isEmpty(watchLists)}">
+      <div class="watchlist-grid">
+        <a th:each="watchlist : ${watchLists}" th:href="@{/watchlist/{watchListId}(watchListId=${watchlist.id})}" class="watchlist-card">
+          <h2 th:text="${watchlist.name}"></h2>
+        </a>
+      </div>
+    </main>
   </div>
 </div>
 </body>

@@ -9,6 +9,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -45,6 +46,11 @@ public class WatchListServiceImpl implements WatchListService {
                 Optional<WatchList> storedWatchList = watchListRepository.findById(watchListId);
                 if (storedWatchList.isPresent()) {
                     WatchList watchList = storedWatchList.get();
+
+                    if (watchList.getMovies() == null) {
+                        watchList.setMovies(new ArrayList<>());
+                    }
+
                     if (!watchList.getMovies().contains(movieId)) {
                         watchList.getMovies().add(movieId);
                         watchListRepository.save(watchList);
