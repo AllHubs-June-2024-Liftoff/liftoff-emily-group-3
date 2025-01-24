@@ -1,5 +1,5 @@
 /* General styles */
-body {
+html {
     background-color: #add8e6; /* Light blue background */
     font-family: 'Poppins', sans-serif;
     margin: 0;
@@ -28,7 +28,7 @@ body {
 
 /* Create button styling */
 .create-button {
-    background-color: #fdfd96; /* Pale yellow */
+    background-color: #ffad33;
     color: #333;
     text-decoration: none;
     padding: 12px 20px;
@@ -40,7 +40,7 @@ body {
 }
 
 .create-button:hover {
-    background-color: #ffecb3; /* Slightly darker pale yellow */
+    background-color: #ff9900;
 }
 
 /* Watchlist container */
@@ -73,8 +73,10 @@ body {
 }
 
 .watchlist-card h2 {
+    font-family: 'Poppins', sans-serif;
     font-size: 1.5rem;
-    color: #000; /* Black text */
+    font-weight: 600;
+    color: #333;
     margin: 0;
 }
 
@@ -84,3 +86,71 @@ body {
     text-align: center;
     color: #333;
 }
+
+.movie-card {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.2s ease-in-out;
+}
+
+.movie-card:hover {
+    transform: scale(1.05);
+}
+
+.movie-card img {
+    width: 100%;
+    height: auto;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Movie info container (for title and description) */
+.movie-info {
+    padding: 15px;
+}
+
+.movie-info h3 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.25rem;
+    margin-bottom: 10px;
+}
+
+.movie-info p {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+/* Link styling for the movie card */
+.movie-card-link {
+    text-decoration: none;
+    color: inherit;
+}
+
+.movie-card-link:hover {
+    text-decoration: none;
+    color: inherit;
+}
+
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .movie-card {
+        flex-direction: column; /* Stack poster and text vertically */
+        align-items: center;
+    }
+
+    .movie-card img {
+        margin-right: 0; /* Remove right margin */
+        margin-bottom: 10px; /* Add space below poster */
+    }
+
+    .movie-card h3 {
+        text-align: center; /* Center align title */
+    }
+
+    .movie-card p {
+        text-align: center; /* Center align description */
+    }
+
+

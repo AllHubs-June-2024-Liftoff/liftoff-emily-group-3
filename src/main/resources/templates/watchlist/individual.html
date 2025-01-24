@@ -3,31 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CineBuddy | Watchlist</title>
-    <link rel="stylesheet" th:href="@{/css/watch-list-styles.css}">
+    <title>CineBuddy | Watch List</title>
+    <!-- Flickity CSS -->
     <th:block th:replace="~{fragments :: head}"></th:block>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/flickity@2/dist/flickity.min.css">
+    <link rel="stylesheet" th:href="@{/css/watch-list-styles.css}">
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <!-- Google Font: Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js" integrity="sha384-GNFwBvfVxBkLMJpYMOABq3c+d3KnQxudP/mGPkzpZSTYykLBNsZEnG2D9G/X/+7D" crossorigin="anonymous" async></script>
 </head>
 <body>
 <div th:replace="~{fragments :: page-nav}"></div>
 
 <div class="container">
     <header class="watchlist-header">
-        <h1 class="watchlist-title" th:text="${watchlist.name}"></h1>
-        <a href="/search-menu" class="add-movies-btn">Add Movies to WatchList</a>
+        <h1 class="title-card" th:text="${watchlist.name}"></h1>
+        <a href="/search-menu" class="create-button">Add Movies to WatchList</a>
     </header>
 
-    <div class="watchlist-grid">
-        <div th:each="movie : ${movies}" class="movie-card">
+    <div class="row" data-masonry='{"percentPosition": true }' th:if="${movies.size() > 0}">
+        <div class="col-md-4 mb-4" th:each="movie : ${movies}">
             <a th:href="@{/movie-details/{id}(id=${movie.id})}" class="movie-card-link">
-                <img th:src="${movie.posterPath}" alt="Movie Poster">
-                <div class="movie-info">
-                    <h3 th:text="${movie.title}"></h3>
-                    <p th:text="${movie.overview}"></p>
+                <div class="movie-card">
+                    <img th:src="@{'https://image.tmdb.org/t/p/w500' + ${movie.posterPath}}" alt="Poster" class="img-thumbnail">
+                    <div class="movie-info">
+                        <h3 th:text="${movie.title}"></h3>
+                        <p th:text="${movie.overview}"></p>
+                    </div>
                 </div>
             </a>
         </div>
     </div>
-</div>
 
 </body>
 </html>
