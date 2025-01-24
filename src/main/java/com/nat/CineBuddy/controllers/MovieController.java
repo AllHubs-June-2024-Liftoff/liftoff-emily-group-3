@@ -54,7 +54,7 @@ public class MovieController {
 
         reviewRepository.save(newReview);
 
-        recommendationService.updateRecommendations(movieId);
+//        recommendationService.updateRecommendations(movieId);
 
         // Fetch all reviews for the movie
         List<Review> reviews = reviewRepository.findByMovieId(movieId);

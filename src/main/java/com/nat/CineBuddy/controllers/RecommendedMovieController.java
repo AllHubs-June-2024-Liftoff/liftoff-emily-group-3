@@ -1,5 +1,7 @@
 package com.nat.CineBuddy.controllers;
 
+import com.nat.CineBuddy.dto.MovieDTO;
+import com.nat.CineBuddy.models.Profile;
 import com.nat.CineBuddy.models.RecommendedMovie;
 import com.nat.CineBuddy.services.RecommendationService;
 import com.nat.CineBuddy.services.UserService;
@@ -24,7 +26,8 @@ public class RecommendedMovieController {
      */
     @GetMapping("/recommendations")
     public String getRecommendations(Model model) {
-        List<RecommendedMovie> recommendations = recommendationService.getRecommendationsForCurrentUser();
+        Profile profile = userService.getCurrentUser().getProfile();
+        List<MovieDTO> recommendations = recommendationService.getRecommendationsBasedOnWatchlistAndReviews(profile);
         model.addAttribute("recommendedMovies", recommendations);
         return "profile/recommendations";
     }

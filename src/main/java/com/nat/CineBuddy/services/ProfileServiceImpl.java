@@ -21,6 +21,14 @@ public class ProfileServiceImpl implements ProfileService{
     private ProfileRepository profileRepository;
     @Autowired
     private TMDbService tmDbService;
+    @Autowired
+    private RecommendationService recommendationService;
+
+    @Override
+    public List<MovieDTO> getRecommendedMovies(Profile profile) {
+        // Delegate to the RecommendationService to get recommendations
+        return recommendationService.getRecommendationsBasedOnWatchlistAndReviews(profile);
+    }
 
     public boolean createProfile(User user,String name){
         Optional<Profile> optionalProfile = profileRepository.findByUser(user);
@@ -97,4 +105,5 @@ public class ProfileServiceImpl implements ProfileService{
             logoutHandler.logout(request, response, authentication);  // Log out the user
         }
     }
+
 }

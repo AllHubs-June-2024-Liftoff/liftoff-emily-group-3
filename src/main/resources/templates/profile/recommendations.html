@@ -16,10 +16,15 @@
 <div class="container">
     <h1>Your Recommended Movies</h1>
 
-    <div class="grid">
-        <!-- Movie cards dynamically rendered from Thymeleaf -->
+    <!-- Show a message if no recommendations are available -->
+    <div th:if="${recommendedMovies.isEmpty()}">
+        <p>No recommended movies found. Start adding movies to your watchlist or reviewing movies to get recommendations!</p>
+    </div>
+
+    <!-- Render recommended movies in a grid -->
+    <div class="grid" th:if="${!recommendedMovies.isEmpty()}">
         <div class="grid-item" th:each="movie : ${recommendedMovies}">
-            <a th:href="@{/movie-details/{id}(id=${movie.movieId})}">
+            <a th:href="@{/movie-details/{id}(id=${movie.id})}">
                 <img th:src="@{'https://image.tmdb.org/t/p/w500' + ${movie.posterPath}}" alt="Movie Poster">
                 <h5 th:text="${movie.title}"></h5>
             </a>
