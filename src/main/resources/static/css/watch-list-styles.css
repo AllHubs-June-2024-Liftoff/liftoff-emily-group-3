@@ -65,6 +65,43 @@ html {
     background-color: #ff9900;
 }
 
+.add-movie-button {
+    background-color: #ffad33;
+    color: #333;
+    text-decoration: none;
+    padding: 12px 30px;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    float: center;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease-in-out;
+    margin: 20px
+}
+
+.add-movie-button:hover {
+    background-color: #ff9900;
+}
+
+.delete-button {
+    background-color: #d2143a;
+    color: #fff;
+    text-decoration: none;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    float: right;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease-in-out;
+}
+
+.delete-button:hover {
+    background-color: #a30f2d;
+}
+
 .submit-button, .add-movie-button {
     background-color: #ffad33;
     color: #333;
@@ -209,6 +246,8 @@ html {
     font-size: 1rem;
     font-weight: bold;
 }
+
+
 
 
 

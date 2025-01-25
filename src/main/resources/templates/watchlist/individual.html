@@ -20,8 +20,13 @@
 <div class="container">
     <header class="watchlist-header">
         <h1 class="title-card" th:text="${watchlist.name}"></h1>
-        <a href="/search-menu" class="create-button">Add Movies to WatchList</a>
-        <button class="delete-watchlist-btn" onclick="confirmDeleteWatchlist()">Delete Watch List</button>
+        <a
+                onclick="return confirm('Are you sure you want to delete this Watch List?');"
+                class="delete-button"
+                th:href="'/watchlist/' + ${watchListId} + '/delete'">Delete Watch List
+        </a>
+        <a href="/search-menu" class="add-movie-button">Add Movies to WatchList</a><div class="d-flex justify-content-center">
+    </div>
     </header>
 
     <div class="row" data-masonry='{"percentPosition": true }' th:if="${movies.size() > 0}">
@@ -29,145 +34,19 @@
                 <div class="movie-card">
                     <img th:src="@{'https://image.tmdb.org/t/p/w500' + ${movie.posterPath}}" alt="Poster" class="img-thumbnail">
                     <div class="movie-info">
-                        <a th:href="@{/movie-details/{id}(id=${movie.id})}" class="btn btn-primary">View Details</a>
-                        <button class="btn btn-danger btn-sm float-end"
-                                onclick="openRemoveMovieModal('[[${watchlist.id}]]', '[[${movie.id}]]')">
+                        <a th:href="@{/movie-details/{id}(id=${movie.id})}" class="btn btn-primary btn-sm">View Details</a>
+                        <a
+                           onclick="return confirm('Are you sure you want to remove this movie?');"
+                           class="btn btn-danger btn-sm float-end"
+                           th:href="'/watchlist/' + ${watchListId} + '/movies/remove/' + ${movie.id}">
                             X
-                        </button>
+                        </a>
                         <h3 th:text="${movie.title}"></h3>
                         <p th:text="${movie.overview}"></p>
                     </div>
                 </div>
         </div>
     </div>
-
-    <!-- Confirmation Popups -->
-    <div id="removeMovieModal" class="modal">
-        <div class="modal-content">
-            <p>Do you want to remove this movie?</p>
-            <button id="cancelRemoveMovie">Cancel</button>
-            <button id="confirmRemoveMovie">Remove</button>
-        </div>
-    </div>
-
-    <div id="deleteWatchlistModal" class="modal">
-        <div class="modal-content">
-            <p>Are you sure you want to delete this Watch List?</p>
-            <button id="cancelDeleteWatchlist">Cancel</button>
-            <a th:href="@{/watchlist/{id}/delete(id=${watchlist.id})}" id="confirmDeleteWatchlist">Delete</a>
-        </div>
-    </div>
-
-    <script>
-        // Variables to store selected movie and watchlist IDs
-        let selectedMovieId = null;
-        let selectedWatchListId = null;
-        let watchListId = [[${watchlist.id}]];
-
-        // Open the "Remove Movie" modal and store the movie/watchlist IDs
-        function openRemoveMovieModal(watchlistId, movieId) {
-            selectedWatchListId = watchlistId;
-            selectedMovieId = movieId;
-
-            console.log(`Opening modal for Watchlist ID: ${watchlistId}, Movie ID: ${movieId}`);
-
-            // Display the modal
-            const modal = document.getElementById('removeMovieModal');
-            modal.style.display = 'block';
-        }
-
-        // Close the "Remove Movie" modal without taking action
-        document.getElementById('cancelRemoveMovie').onclick = function () {
-            const modal = document.getElementById('removeMovieModal');
-            modal.style.display = 'none';
-
-            // Clear stored IDs
-            selectedMovieId = null;
-            selectedWatchListId = null;
-        };
-
-        // Remove the movie and reload the page
-        document.getElementById('confirmRemoveMovie').onclick = function () {
-    if (selectedMovieId && selectedWatchListId) {
-        const url = `/watchlist/${selectedWatchListId}/movies/remove/${selectedMovieId}`;
-        console.log(`Sending request to URL: ${url}`);
-
-        fetch(url, { method: 'GET', redirect: 'follow' })
-            .then(response => {
-                if (response.redirected) {
-                    window.location.href = response.url;  // Follow the redirect manually
-                } else if (response.ok) {
-                    window.location.reload();
-                } else {
-                    alert('Failed to remove movie. Please try again.');
-                }
-            })
-            .catch(error => {
-                console.error('Error removing movie:', error);
-                alert('An error occurred. Please try again.');
-            });
-    }
-};
-        function confirmDeleteWatchlist() {
-            document.getElementById('deleteWatchlistModal').style.display = 'block';
-        }
-
-        document.getElementById('cancelDeleteWatchlist').onclick = function () {
-            document.getElementById('deleteWatchlistModal').style.display = 'none';
-        }
-    </script>
-    </script>
-
-
-    <style>
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.4);
-        }
-
-        .modal-content {
-            background-color: white;
-            margin: 15% auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 30%;
-            text-align: center;
-            border-radius: 10px;
-        }
-
-        .modal button, .modal a {
-            margin: 10px;
-            padding: 10px 20px;
-            cursor: pointer;
-            border: none;
-            border-radius: 5px;
-        }
-
-        #confirmRemoveMovie, #confirmDeleteWatchlist {
-            background-color: #dc3545;
-            color: white;
-        }
-
-        #cancelRemoveMovie, #cancelDeleteWatchlist {
-            background-color: #6c757d;
-            color: white;
-        }
-
-        .delete-watchlist-btn {
-            margin-left: 20px;
-            padding: 10px 20px;
-            background-color: #f8d775;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-    </style>
 </div>
 </body>
 </html>

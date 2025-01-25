@@ -29,7 +29,7 @@
                 <th:block th:each="watchlist : ${user.getProfile().getWatchLists()}">
                     <li class="list-group-item d-flex justify-content-start align-items-center watch-list-checkbox">
                         <input type="checkbox" name="watchListChoice" th:id="'watchListChoice-' + ${watchlist.id}" th:value="${watchlist.id}" aria-hidden="false">
-                        <label th:for="'watchListChoice-' + ${watchlist.id}" th:text="'       ' + ${watchlist.name}"></label>
+                        <label th:for="'watchListChoice-' + ${watchlist.id}" th:text="${watchlist.name}"></label>
                     </li>
                 </th:block>
             </ul>
