@@ -62,6 +62,7 @@
         // Variables to store selected movie and watchlist IDs
         let selectedMovieId = null;
         let selectedWatchListId = null;
+        let watchListId = [[${watchlist.id}]];
 
         // Open the "Remove Movie" modal and store the movie/watchlist IDs
         function openRemoveMovieModal(watchlistId, movieId) {
@@ -87,31 +88,34 @@
 
         // Remove the movie and reload the page
         document.getElementById('confirmRemoveMovie').onclick = function () {
-            if (selectedMovieId && selectedWatchListId) {
-                const url = `/watchlist/${selectedWatchListId}/movies/remove/${selectedMovieId}`;
-                console.log(`Sending request to URL: ${url}`);
-                fetch(url, { method: 'GET' })
-                    .then(response => {
-                        if (response.ok) {
-                            window.location.reload(); // Reload the page after successful removal
-                        } else {
-                            alert('Failed to remove movie. Please try again.');
-                        }
-                    });
-            }
-        };
+    if (selectedMovieId && selectedWatchListId) {
+        const url = `/watchlist/${selectedWatchListId}/movies/remove/${selectedMovieId}`;
+        console.log(`Sending request to URL: ${url}`);
 
-        // Open the "Delete Watchlist" modal
+        fetch(url, { method: 'GET', redirect: 'follow' })
+            .then(response => {
+                if (response.redirected) {
+                    window.location.href = response.url;  // Follow the redirect manually
+                } else if (response.ok) {
+                    window.location.reload();
+                } else {
+                    alert('Failed to remove movie. Please try again.');
+                }
+            })
+            .catch(error => {
+                console.error('Error removing movie:', error);
+                alert('An error occurred. Please try again.');
+            });
+    }
+};
         function confirmDeleteWatchlist() {
-            const modal = document.getElementById('deleteWatchlistModal');
-            modal.style.display = 'block';
+            document.getElementById('deleteWatchlistModal').style.display = 'block';
         }
 
-        // Close the "Delete Watchlist" modal
         document.getElementById('cancelDeleteWatchlist').onclick = function () {
-            const modal = document.getElementById('deleteWatchlistModal');
-            modal.style.display = 'none';
-        };
+            document.getElementById('deleteWatchlistModal').style.display = 'none';
+        }
+    </script>
     </script>
 
 
@@ -145,12 +149,12 @@
             border-radius: 5px;
         }
 
-        #confirmRemoveMovie {
+        #confirmRemoveMovie, #confirmDeleteWatchlist {
             background-color: #dc3545;
             color: white;
         }
 
-        #cancelRemoveMovie {
+        #cancelRemoveMovie, #cancelDeleteWatchlist {
             background-color: #6c757d;
             color: white;
         }
