@@ -55,6 +55,7 @@ public class WatchPartyController {
             model.addAttribute("profile", profile);
             model.addAttribute("movies",movies);
             model.addAttribute("topRatedMovies",topRatedMovies);
+            model.addAttribute("votes",voteService.getAllVotes(watchParty));
             return "watchparty/details";
         }
         else{

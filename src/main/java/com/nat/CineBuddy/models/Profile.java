@@ -132,4 +132,14 @@ public class Profile {
         return id != null ? id.hashCode() : 0;
     }
 
+    /*Searches profile votes to determine if the user has voted in a watchparty.*/
+    public String movieVotedForInWatchParty(WatchParty watchParty){
+        for(Vote vote: this.votes){
+            if(vote.getWatchParty().equals(watchParty)){
+                return String.valueOf(vote.getMovieId());
+            }
+        }
+        return "-1";
+    }
+
 }
