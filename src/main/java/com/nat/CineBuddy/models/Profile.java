@@ -30,6 +30,17 @@ public class Profile {
     @JsonIgnore
     private List<Vote> votes;
 
+    @OneToMany(mappedBy = "profile", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    private List<WatchList> watchLists;
+
+    public List<WatchList> getWatchLists() {
+        return watchLists;
+    }
+
+    public void setWatchLists(List<WatchList> watchLists) {
+        this.watchLists = watchLists;
+    }
+
 
     public Integer getId() {
         return id;

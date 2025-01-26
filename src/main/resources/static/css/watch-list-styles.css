@@ -1,0 +1,254 @@
+html {
+    background-color: #add8e6;
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    padding: 40px;
+}
+
+.title-card {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: inline-block;
+    margin-bottom: 20px;
+}
+
+.title-card h1 {
+    margin: 0;
+    font-size: 2rem;
+    color: #333;
+}
+
+.create-form {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    float: right;
+    font-weight: bold;
+    font-size: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.add-movie-form {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-weight: bold;
+    font-size: 1rem;
+    margin-top: 40px;
+}
+
+.create-button {
+    background-color: #ffad33;
+    color: #333;
+    text-decoration: none;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    float: right;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease-in-out;
+}
+
+.create-button:hover {
+    background-color: #ff9900;
+}
+
+.add-movie-button {
+    background-color: #ffad33;
+    color: #333;
+    text-decoration: none;
+    padding: 12px 30px;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    float: center;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease-in-out;
+    margin: 20px
+}
+
+.add-movie-button:hover {
+    background-color: #ff9900;
+}
+
+.delete-button {
+    background-color: #d2143a;
+    color: #fff;
+    text-decoration: none;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    float: right;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease-in-out;
+}
+
+.delete-button:hover {
+    background-color: #a30f2d;
+}
+
+.submit-button, .add-movie-button {
+    background-color: #ffad33;
+    color: #333;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: bold;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease-in-out;
+    cursor: pointer;
+    display: inline-block;
+    width: 100%; /* Full width button */
+    text-align: center;
+    float: down;
+}
+
+.submit-button:hover, .add-movie-button:hover {
+    background-color: #ff9900;
+}
+
+.watchlist-container {
+    margin-top: 40px;
+}
+
+.watchlist-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+
+.watchlist-card {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    text-align: center;
+    text-decoration: none;
+    transition: transform 0.2s ease-in-out;
+    width: 250px;
+}
+
+.watchlist-card:hover {
+    transform: scale(1.05);
+}
+
+.watchlist-card h2 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #333;
+    margin: 0;
+}
+
+.empty-message p {
+    font-size: 1.2rem;
+    text-align: center;
+    color: #333;
+}
+
+.movie-card {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.2s ease-in-out;
+}
+
+.movie-card:hover {
+    transform: scale(1.05);
+}
+
+.movie-card img {
+    width: 100%;
+    height: auto;
+    border-bottom: 1px solid #ddd;
+}
+
+.movie-info {
+    padding: 15px;
+}
+
+.movie-info h3 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.25rem;
+    margin-bottom: 10px;
+}
+
+.movie-info p {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.movie-card-link {
+    text-decoration: none;
+    color: inherit;
+}
+
+.movie-card-link:hover {
+    text-decoration: none;
+    color: inherit;
+}
+
+
+@media (max-width: 768px) {
+    .movie-card {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .movie-card img {
+        margin-right: 0;
+        margin-bottom: 10px;
+    }
+
+    .movie-card h3 {
+        text-align: center;
+    }
+
+    .movie-card p {
+        text-align: center;
+    }
+
+/* Custom star checkbox styling */
+.watch-list-checkbox input[type="checkbox"] {
+    appearance: none;
+    width: 30px;
+    height: 30px;
+    background: #ccc; /* Neutral star color */
+    clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%,
+                       50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.watch-list-checkbox input[type="checkbox"]:checked {
+    background: #ffcc00; /* Highlighted star color */
+}
+
+.watch-list-checkbox label {
+    margin-left: 10px;
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+
+
+
+
+
