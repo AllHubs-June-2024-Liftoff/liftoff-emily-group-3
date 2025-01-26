@@ -21,7 +21,8 @@ public class SearchController {
     @GetMapping("/search")
     public String searchResults(
             @RequestParam(value = "query", required = false) String query,
-            @RequestParam(value = "filter", required = false) String filter,
+            @RequestParam(value = "searchBy", required = false, defaultValue = "title") String searchBy,
+            @RequestParam(value = "sortBy", required = false, defaultValue = "relevance") String sortBy,
             Model model) {
 
         if (query == null || query.isEmpty()) {
@@ -29,7 +30,7 @@ public class SearchController {
             return "search/search-results";
         }
 
-        List<MovieDTO> movies = tmDbService.searchMovies(query, filter);
+        List<MovieDTO> movies = tmDbService.searchMovies(query, searchBy, sortBy);
         model.addAttribute("movies", movies);
         return "search/search-results";
     }

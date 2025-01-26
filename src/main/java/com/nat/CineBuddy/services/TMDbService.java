@@ -125,25 +125,45 @@ public class TMDbService {
     private String getJsonField(JsonNode node, String fieldName, String defaultValue) {
         return node.has(fieldName) ? node.get(fieldName).asText() : defaultValue;
     }
-    public List<MovieDTO> searchMovies(String query, String filter) {
-        String endpoint = "/search/movie";
-        if ("actor".equalsIgnoreCase(filter)) {
-            endpoint = "/search/person";
+    public List<MovieDTO> searchMovies(String query, String searchBy, String sortBy) {
+        String endpoint;
+
+        switch (searchBy.toLowerCase()) {
+            case "actor":
+                endpoint = "/search/person";
+                break;
+            case "genre":
+                endpoint = "/discover/movie&with_genres=" + query;
+                break;
+            default:
+                endpoint = "/search/movie";
         }
 
         String url = BASE_URL + endpoint + "?api_key=" + apiKey + "&query=" + query;
 
         try {
             JsonNode response = restTemplate.getForObject(url, JsonNode.class);
-            if ("actor".equalsIgnoreCase(filter) && response != null && response.has("results")) {
-                return parseActorMovies(response.get("results"));
+            List<MovieDTO> movies;
+
+            if ("actor".equalsIgnoreCase(searchBy) && response != null && response.has("results")) {
+                movies = parseActorMovies(response.get("results"));
+            } else {
+                movies = response != null && response.has("results") ? parseMovies(response.get("results")) : Collections.emptyList();
             }
-            return response != null && response.has("results") ? parseMovies(response.get("results")) : Collections.emptyList();
+
+            // Sort results if required
+            if ("top-rated".equalsIgnoreCase(sortBy)) {
+                movies.sort((m1, m2) -> Double.compare(Double.parseDouble(m2.getVoteAverage()), Double.parseDouble(m1.getVoteAverage())));
+            }
+
+            return movies;
+
         } catch (Exception e) {
             System.err.println("Error searching movies: " + e.getMessage());
             return Collections.emptyList();
         }
     }
+
 
     private List<MovieDTO> parseActorMovies(JsonNode nodes) {
         return StreamSupport.stream(nodes.spliterator(), false)

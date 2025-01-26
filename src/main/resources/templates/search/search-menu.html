@@ -17,5 +17,38 @@
 
 <body>
 <div th:replace="~{fragments :: page-nav}"></div>
+<div class="container">
+    <div class="results-title">CineSearch</div>
+
+    <form th:action="@{/search}" method="get" class="row g-3">
+        <!-- Search Input -->
+        <div class="col-md-8">
+            <input type="text" class="form-control" name="query" placeholder="Search for movies, actors, or genres..." required>
+        </div>
+
+        <!-- Search By Selection -->
+        <div class="col-md-4">
+            <select class="form-select" name="searchBy">
+                <option value="title" selected>Title</option>
+                <option value="actor">Actor</option>
+                <option value="genre">Genre</option>
+            </select>
+        </div>
+
+        <!-- Sort By Selection -->
+        <div class="col-md-4">
+            <select class="form-select" name="sortBy">
+                <option value="relevance" selected>Sort by: Relevance</option>
+                <option value="top-rated">Sort by: Top Rated</option>
+            </select>
+        </div>
+
+        <!-- Search Button -->
+        <div class="col-md-4">
+            <button type="submit" class="btn cine-search-button">Search</button>
+        </div>
+    </form>
+</div>
+
 </body>
 </html>
