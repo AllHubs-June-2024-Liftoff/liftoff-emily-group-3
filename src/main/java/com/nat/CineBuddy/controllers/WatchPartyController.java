@@ -71,7 +71,7 @@ public class WatchPartyController {
     }
 
     @PostMapping("/host")
-    public String createWatchParty(@Valid @ModelAttribute("watchparty") WatchParty watchParty, BindingResult result, Errors errors){
+    public String createWatchParty(@Valid @ModelAttribute("watchparty") WatchParty watchParty, BindingResult result, Errors errors, Model model){
         if(!errors.hasErrors() && !result.hasErrors()){
             watchParty.setLeader(userService.getCurrentUser().getProfile());
             if(watchParty.getMovies() == null){
@@ -81,7 +81,9 @@ public class WatchPartyController {
             return "redirect:/watchparty";
         }
         else{
-            return "redirect:/watchparty/host";
+            model.addAttribute("user",userService.getCurrentUser());
+            model.addAttribute("watchparty", watchParty);
+            return "watchparty/create";
         }
     }
 
