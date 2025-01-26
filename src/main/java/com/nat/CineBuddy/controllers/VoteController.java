@@ -7,12 +7,13 @@ import com.nat.CineBuddy.services.UserService;
 import com.nat.CineBuddy.services.WatchPartyService;
 import com.nat.CineBuddy.services.VoteService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
 
-@RestController
+@Controller
 @RequestMapping("/votes")
 public class VoteController {
 
@@ -32,8 +33,7 @@ public class VoteController {
     public String castVote(@PathVariable Integer watchPartyId, @RequestParam Integer movieId) {
         WatchParty watchParty = watchPartyService.getWatchParty(watchPartyId); // Using existing method instead of findById.
         boolean success = voteService.castVote(watchParty, movieId); // Cast vote
-
-        return success ? "Vote cast successfully!" : "You have already voted for this movie.";
+        return "redirect:/watchparty/"+watchPartyId; //Return back to the watchparty
     }
 
     /**
@@ -80,8 +80,7 @@ public class VoteController {
     public String retractVote(@PathVariable Integer watchPartyId) {
         WatchParty watchparty = watchPartyService.getWatchParty(watchPartyId);
         boolean success = voteService.retractVote(watchparty);
-
-        return success ? "Vote retracted successfully!" : "You have not voted yet.";
+        return "redirect:/watchparty/"+watchPartyId; //Redirect back to watchparty
 
 
     }
@@ -96,8 +95,9 @@ public class VoteController {
     @PostMapping("/{watchPartyId}/finalize")
     public String finalizeVotes (@PathVariable Integer watchPartyId) {
         WatchParty watchParty = watchPartyService.getWatchParty(watchPartyId);
-        voteService.finalizeVotes(watchParty);
-        return "Votes finalized. The selected movie is: " + watchParty.getMovieChoice();
+        watchParty.setMovieChoice( voteService.finalizeVotes(watchParty));
+        watchPartyService.updateWatchParty(watchPartyId,watchParty);
+        return "redirect:/watchparty/"+watchPartyId;
     }
 
     /**

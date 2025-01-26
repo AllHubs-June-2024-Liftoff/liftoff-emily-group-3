@@ -53,4 +53,14 @@ public class Vote {
     public void setMovieId(Integer movieId) {
         this.movieId = movieId;
     }
+
+    @Override
+    public String toString() {
+        return "Vote{" +
+                "id=" + id +
+                ", watchParty=" + watchParty +
+                ", profile=" + profile +
+                ", movieId=" + movieId +
+                '}';
+    }
 }
