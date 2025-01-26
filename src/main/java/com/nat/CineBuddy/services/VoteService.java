@@ -5,6 +5,7 @@ import com.nat.CineBuddy.models.WatchParty;
 import com.nat.CineBuddy.models.Vote;
 import com.nat.CineBuddy.models.WatchParty;
 import com.nat.CineBuddy.repositories.VoteRepository;
+import com.nat.CineBuddy.repositories.WatchPartyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,12 @@ public class VoteService {
 
     @Autowired
     private UserService userService;
+
+//    @Autowired
+//    private WatchPartyService watchPartyService;
+//
+//    @Autowired
+//    private WatchPartyRepository watchPartyRepository;
 
 
     /**
@@ -79,5 +86,71 @@ public class VoteService {
         }
 
         return voteCounts;
+    }
+
+    /**
+     *
+     * @param watchParty Passing in watchParty to get all votes.
+     * @return All vote objects associated with the watchparty
+     */
+    public List<Vote> getAllVotes (WatchParty watchParty) {
+        return voteRepository.findByWatchParty(watchParty);
+    }
+
+    /**
+     *
+     * @param watchParty object passed in.
+     * @return any vote that matches the profile.
+     */
+    public boolean hasAlreadyVoted (WatchParty watchParty) {
+        Profile profile = userService.getCurrentUser().getProfile();
+        return getAllVotes(watchParty).stream().anyMatch(vote -> vote.getProfile().equals(profile));
+    }
+
+
+    /**
+     *
+     * @param watchParty object passed in.  Gets profile
+     * @return false if no votes, if votes delete all.
+     */
+    public boolean retractVote (WatchParty watchParty) {
+        Profile profile = userService.getCurrentUser().getProfile();
+        List<Vote> userVotes = getAllVotes(watchParty).stream()
+                .filter(vote -> vote.getProfile().equals(profile)).toList();
+
+        if(userVotes.isEmpty()){
+            return false;
+        }
+
+        voteRepository.deleteAll(userVotes);
+        return true;
+
+    }
+
+    /**
+     *
+     * @param watchParty pass in watchParty object.
+     * Utilize watchParty object to set our most voted movie.
+     * @return most voted movie.
+     */
+    public Integer finalizeVotes(WatchParty watchParty) {
+        return getMostVotedMovie(watchParty);
+
+    }
+
+    /**
+     *
+     * @param watchParty take watchparty as object for spacific watchparty.
+     * @return true if votes exist and all votes are deleted in voteRepository.
+     */
+    public boolean deleteAllVotes (WatchParty watchParty){
+        List<Vote> allVotes = voteRepository.findByWatchParty(watchParty);
+
+        if (allVotes.isEmpty()) {
+            return false; //No votes to delete
+        }
+
+        voteRepository.deleteAll(allVotes);
+        return true;
     }
 }

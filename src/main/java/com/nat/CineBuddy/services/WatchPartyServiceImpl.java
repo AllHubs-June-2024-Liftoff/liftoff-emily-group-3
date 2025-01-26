@@ -75,6 +75,7 @@ public class WatchPartyServiceImpl implements WatchPartyService{
                     memberToRemove.getJoinedGroups().remove(watchPartyToRemove);
                     profileService.updateProfile(memberToRemove.getId(), memberToRemove);
                 }
+                voteService.deleteAllVotes(watchPartyToRemove);
                 watchPartyRepository.delete(watchPartyToRemove);
                 return true;
             }
@@ -93,6 +94,7 @@ public class WatchPartyServiceImpl implements WatchPartyService{
             WatchParty watchPartyToRemove = storedWatchParty.get();
             watchPartyToRemove.getMembers().remove(removeProfile);
             removeProfile.getJoinedGroups().remove(watchPartyToRemove);
+            voteService.retractVote(watchPartyToRemove);
             watchPartyRepository.save(watchPartyToRemove);
             profileService.updateProfile(removeProfile.getId(),removeProfile);
             return true;
