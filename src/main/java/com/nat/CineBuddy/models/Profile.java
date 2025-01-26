@@ -30,6 +30,17 @@ public class Profile {
     @JsonIgnore
     private List<Vote> votes;
 
+    @OneToMany(mappedBy = "profile", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    private List<WatchList> watchLists;
+
+    public List<WatchList> getWatchLists() {
+        return watchLists;
+    }
+
+    public void setWatchLists(List<WatchList> watchLists) {
+        this.watchLists = watchLists;
+    }
+
 
     public Integer getId() {
         return id;
@@ -95,15 +106,25 @@ public class Profile {
         this.hostedGroups = hostedGroups;
     }
 
+    public List<Vote> getVotes() {
+        return votes;
+    }
+
+    public void setVotes(List<Vote> votes) {
+        this.votes = votes;
+    }
+
     @Override
     public String toString() {
         return "Profile{" +
-                "name='" + name + '\'' +
+                "id=" + id +
+                ", name='" + name + '\'' +
                 ", bio='" + bio + '\'' +
                 ", image='" + image + '\'' +
                 ", hidden=" + hidden +
                 ", joinedGroups=" + joinedGroups +
                 ", hostedGroups=" + hostedGroups +
+                ", votes=" + votes +
                 '}';
     }
 
@@ -121,4 +142,13 @@ public class Profile {
         return id != null ? id.hashCode() : 0;
     }
 
+    /*Searches profile votes to determine if the user has voted in a watchparty.*/
+    public String movieVotedForInWatchParty(WatchParty watchParty){
+        for(Vote vote: this.votes){
+            if(vote.getWatchParty().equals(watchParty)){
+               return String.valueOf(vote.getMovieId());
+            }
+        }
+        return "-1";
+    }
 }

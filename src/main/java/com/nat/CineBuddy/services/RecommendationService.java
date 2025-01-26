@@ -4,8 +4,10 @@ import com.nat.CineBuddy.dto.MovieDTO;
 import com.nat.CineBuddy.models.Profile;
 import com.nat.CineBuddy.models.Review;
 //import com.nat.CineBuddy.models.WatchList;
+import com.nat.CineBuddy.models.WatchList;
 import com.nat.CineBuddy.repositories.RecommendedMovieRepository;
 import com.nat.CineBuddy.repositories.ReviewRepository;
+import com.nat.CineBuddy.repositories.WatchListRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,8 +28,8 @@ public class RecommendationService {
 //    @Autowired
 //    private UserService userService;
 
-//    @Autowired
-//    private WatchlistRepository watchlistRepository;
+    @Autowired
+    private WatchListRepository watchListRepository;
 
     @Autowired
     private ReviewRepository reviewRepository;
@@ -70,12 +72,15 @@ public class RecommendationService {
      */
     public List<String> getAllWatchlistMovies(Profile profile) {
         //Fetch watchlists by profile.
-        List<WatchList> watchLists = watchlistRepository.findByProfile(profile);
+        List<WatchList> watchLists = watchListRepository.findByProfile(profile);
 
         List<String> allMovieIds = new ArrayList<>();
-        for(WatchList watchList : watchLists){
-            allMovieIds.addAll(watchList.getMovies());
-
+        for (WatchList watchList : watchLists) {
+            // Iterate through each movie in the watchlist
+            for (Integer movieId : watchList.getMovies()) {
+                // Convert each Integer to String and add to allMovieIds
+                allMovieIds.add(movieId.toString());
+            }
         }
         return allMovieIds;
 

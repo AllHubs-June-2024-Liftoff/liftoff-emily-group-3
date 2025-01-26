@@ -55,6 +55,7 @@ public class WatchPartyController {
             model.addAttribute("profile", profile);
             model.addAttribute("movies",movies);
             model.addAttribute("topRatedMovies",topRatedMovies);
+            model.addAttribute("votes",voteService.getAllVotes(watchParty));
             return "watchparty/details";
         }
         else{
@@ -70,7 +71,7 @@ public class WatchPartyController {
     }
 
     @PostMapping("/host")
-    public String createWatchParty(@Valid @ModelAttribute("watchparty") WatchParty watchParty, BindingResult result, Errors errors){
+    public String createWatchParty(@Valid @ModelAttribute("watchparty") WatchParty watchParty, BindingResult result, Errors errors, Model model){
         if(!errors.hasErrors() && !result.hasErrors()){
             watchParty.setLeader(userService.getCurrentUser().getProfile());
             if(watchParty.getMovies() == null){
@@ -80,7 +81,9 @@ public class WatchPartyController {
             return "redirect:/watchparty";
         }
         else{
-            return "redirect:/watchparty/host";
+            model.addAttribute("user",userService.getCurrentUser());
+            model.addAttribute("watchparty", watchParty);
+            return "watchparty/create";
         }
     }
 
@@ -113,7 +116,7 @@ public class WatchPartyController {
 
     @GetMapping("/{watchPartyId}/delete")
     public String deleteWatchParty(@PathVariable Integer watchPartyId){
-        boolean success = watchPartyService.deleteWatchParty(watchPartyId);
+        boolean success = watchPartyService.deleteWatchParty(watchPartyId, userService.getCurrentUser().getProfile());
         if(success){
             return "redirect:/watchparty";
         }
@@ -154,13 +157,13 @@ public class WatchPartyController {
 
     @PostMapping("/{watchPartyId}/members/remove")
     public String removeMemberFromWatchParty(@PathVariable Integer watchPartyId, @RequestParam("profileId") Integer profileId){
-        watchPartyService.removeMember(watchPartyId,profileId);
+        watchPartyService.removeMember(watchPartyId, profileId, userService.getCurrentUser().getProfile());
         return "redirect:/watchparty/"+watchPartyId;
     }
 
     @PostMapping("/{watchPartyId}/votes/cast")
     public String castVote(@PathVariable Integer watchPartyId, @RequestParam("movieId") Integer movieId){
-        voteService.castVote(watchPartyService.getWatchParty(watchPartyId), movieId);
+        voteService.castVote(watchPartyService.getWatchParty(watchPartyId), movieId, userService.getCurrentUser().getProfile());
         return "redirect:/watchparty/"+watchPartyId;
     }
 }

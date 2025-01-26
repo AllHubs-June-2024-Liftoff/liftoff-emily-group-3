@@ -4,6 +4,7 @@ import com.nat.CineBuddy.dto.MovieDTO;
 import com.nat.CineBuddy.models.Profile;
 import com.nat.CineBuddy.models.Vote;
 import com.nat.CineBuddy.models.WatchParty;
+import com.nat.CineBuddy.repositories.ReviewRepository;
 import com.nat.CineBuddy.repositories.WatchPartyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,9 +19,9 @@ public class WatchPartyServiceImpl implements WatchPartyService{
     @Autowired
     private ProfileService profileService;
     @Autowired
-    private UserService userService;
-    @Autowired
     private VoteService voteService;
+    @Autowired
+    private ReviewRepository reviewRepository;
 
 
     public boolean createWatchParty(WatchParty watchParty){
@@ -55,6 +56,9 @@ public class WatchPartyServiceImpl implements WatchPartyService{
         else{
             WatchParty updatedWatchParty = storedWatchParty.get();
             updatedWatchParty.setName(watchParty.getName());
+            if(watchParty.getMovies() == null){
+                watchParty.setMovies(new ArrayList<Integer>());
+            }
             updatedWatchParty.setMovies(watchParty.getMovies());
             updatedWatchParty.setMovieChoice(watchParty.getMovieChoice());
             updatedWatchParty.setMembers(watchParty.getMembers());
@@ -63,18 +67,19 @@ public class WatchPartyServiceImpl implements WatchPartyService{
         }
     }
 
-    public boolean deleteWatchParty(Integer watchPartyId){
+    public boolean deleteWatchParty(Integer watchPartyId, Profile leader){
         Optional<WatchParty> storedWatchParty = watchPartyRepository.findById(watchPartyId);
         if(!storedWatchParty.isPresent()){
             return false;
         }
         else{
             WatchParty watchPartyToRemove = storedWatchParty.get();
-            if(watchPartyToRemove.getLeader().equals(userService.getCurrentUser().getProfile())){
+            if(watchPartyToRemove.getLeader().equals(leader)){
                 for (Profile memberToRemove : watchPartyToRemove.getMembers()){
                     memberToRemove.getJoinedGroups().remove(watchPartyToRemove);
                     profileService.updateProfile(memberToRemove.getId(), memberToRemove);
                 }
+                voteService.deleteAllVotes(watchPartyToRemove);
                 watchPartyRepository.delete(watchPartyToRemove);
                 return true;
             }
@@ -86,13 +91,14 @@ public class WatchPartyServiceImpl implements WatchPartyService{
 
     public boolean leaveWatchParty(Integer watchPartyId, Profile removeProfile){
         Optional<WatchParty> storedWatchParty = watchPartyRepository.findById(watchPartyId);
-        if(!storedWatchParty.isPresent() || !removeProfile.equals(userService.getCurrentUser().getProfile())){
+        if(!storedWatchParty.isPresent()){
             return false;
         }
         else{
             WatchParty watchPartyToRemove = storedWatchParty.get();
             watchPartyToRemove.getMembers().remove(removeProfile);
             removeProfile.getJoinedGroups().remove(watchPartyToRemove);
+            voteService.retractVote(watchPartyToRemove, removeProfile);
             watchPartyRepository.save(watchPartyToRemove);
             profileService.updateProfile(removeProfile.getId(),removeProfile);
             return true;
@@ -108,11 +114,11 @@ public class WatchPartyServiceImpl implements WatchPartyService{
         }
     }
 
-    public void removeMember(Integer watchPartyId, Integer memberId){
+    public void removeMember(Integer watchPartyId, Integer memberId, Profile leader){
         Optional<WatchParty> storedWatchParty = watchPartyRepository.findById(watchPartyId);
         if(storedWatchParty.isPresent()){
             WatchParty watchParty = storedWatchParty.get();
-            if(watchParty.getLeader().equals(userService.getCurrentUser().getProfile())) {
+            if(watchParty.getLeader().equals(leader)) {
                 Profile storedProfile = profileService.getProfileById(memberId);
                 watchParty.getMembers().remove(storedProfile);
                 watchPartyRepository.save(watchParty);
@@ -123,9 +129,22 @@ public class WatchPartyServiceImpl implements WatchPartyService{
     public List<MovieDTO> getTopRatedMovies(WatchParty watchParty){
         Set<MovieDTO> topRatedMovies = new HashSet<>();
         for(Profile member : watchParty.getMembers()){
-            topRatedMovies.addAll(profileService.getTopRatedMovies(member));
+            topRatedMovies.addAll(profileService.getTopRatedMovies(reviewRepository.findByUsernameOrderByRatingDesc(member.getUser().getUsername())));
         }
         return new ArrayList<>(topRatedMovies);
+    }
+
+    public void removeFromAll(Profile profile){
+        Iterator<WatchParty> joinedIterator = new ArrayList<>(profile.getJoinedGroups()).iterator();
+        while (joinedIterator.hasNext()) {
+            WatchParty watchParty = joinedIterator.next();
+            this.leaveWatchParty(watchParty.getId(), profile);
+        }
+        Iterator<WatchParty> hostedIterator = new ArrayList<>(profile.getHostedGroups()).iterator();
+        while (hostedIterator.hasNext()) {
+            WatchParty watchParty = hostedIterator.next();
+            this.deleteWatchParty(watchParty.getId(), profile);
+        }
     }
 
 }

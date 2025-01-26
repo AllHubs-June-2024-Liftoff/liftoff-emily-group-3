@@ -1,6 +1,10 @@
 package com.nat.CineBuddy.controllers;
 
 import com.nat.CineBuddy.models.Profile;
+import com.nat.CineBuddy.models.Review;
+import com.nat.CineBuddy.models.User;
+import com.nat.CineBuddy.repositories.ReviewRepository;
+import com.nat.CineBuddy.security.CBUserDetailsService;
 import com.nat.CineBuddy.services.ProfileService;
 import com.nat.CineBuddy.services.UserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,6 +20,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -27,9 +32,17 @@ public class ProfileController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private ReviewRepository reviewRepository;
+
+    @Autowired
+    private CBUserDetailsService cbUserDetailsService;
+
     @GetMapping("profile")
     public String index(Model model){
+        List<Review> reviews = reviewRepository.findByUsernameOrderByRatingDesc(userService.getCurrentUser().getUsername());
         model.addAttribute("user",userService.getCurrentUser());
+        model.addAttribute("topRated",profileService.getTopRatedMovies(reviews.subList(0, Math.min(10, reviews.size()))));
         return "profile/index";
     }
 
@@ -62,6 +75,47 @@ public class ProfileController {
         profileService.logoutUser(request,response);
         userService.deleteUserById(deleteUser.getId());
         return "redirect:/";
+    }
+
+    @GetMapping("profile/account")
+    public String userAccountUpdateForm(Model model){
+        User Storeduser = userService.getCurrentUser();
+        Storeduser.setPassword("");
+        model.addAttribute("user",Storeduser);
+        return "profile/account";
+    }
+
+    @PostMapping("profile/account")
+    public String userAccountUpdate(@Valid @ModelAttribute("user") User user, BindingResult result, Errors errors, Model model){
+        boolean success = true;
+        com.nat.CineBuddy.models.User updatedUser = userService.getCurrentUser();
+        if(!errors.hasErrors() && !result.hasErrors()) {
+            if(!userService.areFieldsUnique(user.getUsername()) && !updatedUser.getUsername().equals(user.getUsername())){
+                errors.rejectValue("username","username.notUnique", "Username is already taken.");
+                success = false;
+            }
+            if(!userService.areFieldsUnique(user.getEmail()) && !updatedUser.getEmail().equals(user.getEmail())){
+                errors.rejectValue("email","email.notUnique", "Email is already taken.");
+                success = false;
+            }
+        }
+        else{
+            success = false;
+        }
+        if(success){
+            userService.updateUser(user, updatedUser.getId());
+            cbUserDetailsService.updateAuth(user.getUsername());
+            User Storeduser = userService.getCurrentUser();
+            Storeduser.setPassword("");
+            model.addAttribute("user",Storeduser);
+            model.addAttribute("updatePass", "Update successful!");
+            return "profile/account";
+        }
+        else{
+            model.addAttribute("user", user);
+            model.addAttribute("updateFail", "Update failed. Please try again.");
+            return "profile/account";
+        }
     }
 
     @GetMapping("profiles/{userName}")

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org/" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CineBuddy | Watch List</title>
+    <!-- Flickity CSS -->
+    <th:block th:replace="~{fragments :: head}"></th:block>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/flickity@2/dist/flickity.min.css">
+    <link rel="stylesheet" th:href="@{/css/watch-list-styles.css}">
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <!-- Google Font: Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js" integrity="sha384-GNFwBvfVxBkLMJpYMOABq3c+d3KnQxudP/mGPkzpZSTYykLBNsZEnG2D9G/X/+7D" crossorigin="anonymous" async></script>
+</head>
+<body>
+<div th:replace="~{fragments :: page-nav}"></div>
+
+<div class="container">
+    <div class="title-card">
+        <h1>My Watch Lists</h1>
+    </div>
+    <div class="add-movie-form">
+        <form method="POST">
+            <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
+
+            <ul class="list-group">
+                <th:block th:each="watchlist : ${user.getProfile().getWatchLists()}">
+                    <li class="list-group-item d-flex justify-content-start align-items-center watch-list-checkbox">
+                        <input type="checkbox" name="watchListChoice" th:id="'watchListChoice-' + ${watchlist.id}" th:value="${watchlist.id}" aria-hidden="false">
+                        <label th:for="'watchListChoice-' + ${watchlist.id}" th:text="${watchlist.name}"></label>
+                    </li>
+                </th:block>
+            </ul>
+
+            <a th:href="@{/watchlist}">
+                <button class="add-movie-button" type="submit">Add Movie to Your Watch List</button>
+            </a>
+        </form>
+    </div>
+</div>
+</body>
+</html>

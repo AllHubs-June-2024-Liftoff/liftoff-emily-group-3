@@ -2,6 +2,7 @@ package com.nat.CineBuddy.services;
 
 import com.nat.CineBuddy.dto.MovieDTO;
 import com.nat.CineBuddy.models.Profile;
+import com.nat.CineBuddy.models.Review;
 import com.nat.CineBuddy.models.User;
 import com.nat.CineBuddy.repositories.ProfileRepository;
 import jakarta.servlet.http.HttpServletRequest;
@@ -36,6 +37,7 @@ public class ProfileServiceImpl implements ProfileService{
             return false;
         }
         Profile profile = new Profile();
+        profile.setImage("/images/profile_thumb.png");
         profile.setUser(user);
         profile.setHidden(false);
         profile.setName(name);
@@ -86,11 +88,10 @@ public class ProfileServiceImpl implements ProfileService{
         profileRepository.saveAll(profiles);
     }
 
-    public List<MovieDTO> getTopRatedMovies(Profile profile){
+    public List<MovieDTO> getTopRatedMovies(List<Review> reviews){
         Set<MovieDTO> topRatedMovies = new HashSet<>();
-        List<String> tempData = List.of("762509","402431","400","60375","6","700","8","9");
-        for(String movieId : tempData){
-            MovieDTO tempMovie = tmDbService.getMovieDetails(movieId);
+        for(Review review : reviews){
+            MovieDTO tempMovie = tmDbService.getMovieDetails(review.getMovieId());
             if(tempMovie != null){
                 topRatedMovies.add(tempMovie);
             }

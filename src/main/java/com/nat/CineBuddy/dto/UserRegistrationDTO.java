@@ -69,4 +69,15 @@ public class UserRegistrationDTO {
     public void setRoles(Set<Integer> roles) {
         this.roles = roles;
     }
+
+    @Override
+    public String toString() {
+        return "UserRegistrationDTO{" +
+                "name='" + name + '\'' +
+                ", username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", roles=" + roles +
+                '}';
+    }
 }
