@@ -2,6 +2,7 @@ package com.nat.CineBuddy.services;
 
 import com.nat.CineBuddy.dto.MovieDTO;
 import com.nat.CineBuddy.models.Profile;
+import com.nat.CineBuddy.models.Review;
 import com.nat.CineBuddy.models.Role;
 import com.nat.CineBuddy.models.User;
 import jakarta.servlet.http.HttpServletRequest;
@@ -27,5 +28,5 @@ public interface ProfileService {
 
     public void saveAll(List<Profile> profiles);
 
-    public List<MovieDTO> getTopRatedMovies(Profile profile);
+    public List<MovieDTO> getTopRatedMovies(List<Review> reviews);
 }

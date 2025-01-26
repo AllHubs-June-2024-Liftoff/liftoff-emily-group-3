@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <th:block th:replace="~{fragments :: head}"></th:block>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+
+<header th:replace="~{fragments :: page-nav}"></header>
+<div class="container mt-2">
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <div th:if="${updatePass}">
+                <div class="alert alert-success">Account Successfully Updated</div>
+            </div>
+            <div th:if="${updateFail}">
+                <div class="alert alert-danger">Account Update Failed</div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="text-center">Account Settings</h2>
+                </div>
+                <div class="card-body">
+                    <p style="text-align: end;">
+                        <a href="/profile/delete" onclick="return confirm('Delete Account? This can not be undone.');">Delete Account</a>
+                    </p>
+                    <form method="post" role="form" th:object="${user}" th:action="@{/profile/account}" class="form-horizontal">
+                        <div class="form-group mb-3">
+                            <label class="control-label" for="username">Username</label>
+                            <input type="text" id="username" th:field="*{username}" class="form-control" />
+                            <span th:errors="${user.username}" class="error"></span>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label class="control-label" for="email">Email</label>
+                            <input type="text" id="email" th:field="*{email}" class="form-control" />
+                            <span th:errors="${user.email}" class="error"></span>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label class="control-label" for="password">Password</label>
+                            <input type="text" id="password" th:field="*{password}" class="form-control" />
+                            <span th:errors="${user.password}" class="error"></span>
+                        </div>
+                        <div class="form-group mb-3">
+                            <button type="submit" class="btn btn-primary">Update Account</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

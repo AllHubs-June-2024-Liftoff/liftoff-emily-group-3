@@ -9,34 +9,56 @@
 <body>
 <header th:replace="~{fragments :: page-nav}"></header>
 <main class="container">
-    <h1>Create a user!</h1>
-    <form method="post" style="max-width:600px;">
-        <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
-        <div class="form-group">
-            <label th:for="name">Username</label>
-            <input class="form-control" th:field="${user.username}" />
-            <span th:errors="${user.username}" class="error"></span>
+
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="text-center">Create a user.</h2>
+                </div>
+                <div class="card-body">
+
+                    <form method="post" style="max-width:600px;" th:object="${user}">
+                        <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
+                        <div class="form-group mb-3">
+                            <label th:for="name">Name</label>
+                            <input class="form-control" th:field="${user.name}" />
+                            <span th:errors="${user.name}" class="error"></span>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label th:for="username">Username</label>
+                            <input class="form-control" th:field="${user.username}" />
+                            <span th:errors="${user.username}" class="error"></span>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label th:for="name">Email</label>
+                            <input class="form-control" th:field="${user.email}" />
+                            <span th:errors="${user.email}" class="error"></span>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label th:for="name">Password</label>
+                            <input class="form-control" th:field="${user.password}" />
+                            <span th:errors="${user.password}" class="error"></span>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label th:for="roles">Roles</label>
+                            <th:block th:each="role : ${roles}">
+                                <input type="checkbox" name="roles" th:value="${role.id}" th:id="'role-' + ${role.id}" />
+                                <label th:for="'role-' + ${role.id}" th:text="${role.name}"></label>
+                            </th:block>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <button type="submit" class="btn btn-primary">Create User</button>
+                        </div>
+                    </form>
+                    <a href="/admin/users">Users List</a>
+
+                </div>
+            </div>
         </div>
-        <div class="form-group">
-            <label th:for="name">Email</label>
-            <input class="form-control" th:field="${user.email}" />
-            <span th:errors="${user.email}" class="error"></span>
-        </div>
-        <div class="form-group">
-            <label th:for="name">Password</label>
-            <input class="form-control" th:field="${user.password}" />
-            <span th:errors="${user.password}" class="error"></span>
-        </div>
-        <div class="form-group">
-            <label th:for="roles">Roles</label>
-            <th:block th:each="role : ${roles}">
-                <input type="checkbox" name="roles" th:value="${role.id}" th:id="'role-' + ${role.id}" />
-                <label th:for="'role-' + ${role.id}" th:text="${role.name}"></label>
-            </th:block>
-        </div>
-        <input type="submit" value="Create User" />
-    </form>
-    <a href="/admin/users">Users List</a>
+    </div>
+
 </main>
 </body>
 </html>
