@@ -32,7 +32,7 @@ public class VoteController {
     @PostMapping("/{watchPartyId}/vote")
     public String castVote(@PathVariable Integer watchPartyId, @RequestParam Integer movieId) {
         WatchParty watchParty = watchPartyService.getWatchParty(watchPartyId); // Using existing method instead of findById.
-        boolean success = voteService.castVote(watchParty, movieId); // Cast vote
+        boolean success = voteService.castVote(watchParty, movieId, userService.getCurrentUser().getProfile()); // Cast vote
         return "redirect:/watchparty/"+watchPartyId; //Return back to the watchparty
     }
 
@@ -79,7 +79,7 @@ public class VoteController {
     @PostMapping("/{watchPartyId}/retract")
     public String retractVote(@PathVariable Integer watchPartyId) {
         WatchParty watchparty = watchPartyService.getWatchParty(watchPartyId);
-        boolean success = voteService.retractVote(watchparty);
+        boolean success = voteService.retractVote(watchparty, userService.getCurrentUser().getProfile());
         return "redirect:/watchparty/"+watchPartyId; //Redirect back to watchparty
 
 

@@ -19,15 +19,6 @@ public class VoteService {
     @Autowired
     private VoteRepository voteRepository;
 
-    @Autowired
-    private UserService userService;
-
-//    @Autowired
-//    private WatchPartyService watchPartyService;
-//
-//    @Autowired
-//    private WatchPartyRepository watchPartyRepository;
-
 
     /**
      * Cast a vote for a movie.
@@ -36,10 +27,9 @@ public class VoteService {
      * @param movieId The ID of the movie being voted for.
      * @return True if the vote is successfully cast, false if the user already voted.
      */
-    public boolean castVote(WatchParty watchParty, Integer movieId) {
+    public boolean castVote(WatchParty watchParty, Integer movieId, Profile profile) {
         // Check if the user has already voted in this WatchParty
         List<Vote> existingVotes = voteRepository.findByWatchParty(watchParty);
-        Profile profile = userService.getCurrentUser().getProfile();
         for (Vote vote : existingVotes) {
             if (vote.getProfile() != null && vote.getProfile().equals(profile)) {
                 return false; // User has already voted
@@ -102,8 +92,7 @@ public class VoteService {
      * @param watchParty object passed in.
      * @return any vote that matches the profile.
      */
-    public boolean hasAlreadyVoted (WatchParty watchParty) {
-        Profile profile = userService.getCurrentUser().getProfile();
+    public boolean hasAlreadyVoted (WatchParty watchParty, Profile profile) {
         return getAllVotes(watchParty).stream().anyMatch(vote -> vote.getProfile().equals(profile));
     }
 
@@ -113,8 +102,7 @@ public class VoteService {
      * @param watchParty object passed in.  Gets profile
      * @return false if no votes, if votes delete all.
      */
-    public boolean retractVote (WatchParty watchParty) {
-        Profile profile = userService.getCurrentUser().getProfile();
+    public boolean retractVote (WatchParty watchParty, Profile profile) {
         List<Vote> userVotes = getAllVotes(watchParty).stream()
                 .filter(vote -> vote.getProfile().equals(profile)).toList();
 
@@ -133,9 +121,8 @@ public class VoteService {
      * Utilize watchParty object to set our most voted movie.
      * @return most voted movie.
      */
-    public Integer finalizeVotes(WatchParty watchParty) {
+    public Integer finalizeVotes(WatchParty watchParty){
         return getMostVotedMovie(watchParty);
-
     }
 
     /**
@@ -143,14 +130,16 @@ public class VoteService {
      * @param watchParty take watchparty as object for spacific watchparty.
      * @return true if votes exist and all votes are deleted in voteRepository.
      */
-    public boolean deleteAllVotes (WatchParty watchParty){
+    public boolean deleteAllVotes(WatchParty watchParty){
         List<Vote> allVotes = voteRepository.findByWatchParty(watchParty);
 
-        if (allVotes.isEmpty()) {
+        if(allVotes.isEmpty()){
             return false; //No votes to delete
         }
 
         voteRepository.deleteAll(allVotes);
         return true;
     }
+
+
 }
