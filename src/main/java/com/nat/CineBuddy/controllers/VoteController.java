@@ -97,7 +97,7 @@ public class VoteController {
         WatchParty watchParty = watchPartyService.getWatchParty(watchPartyId);
         watchParty.setMovieChoice( voteService.finalizeVotes(watchParty));
         watchPartyService.updateWatchParty(watchPartyId,watchParty);
-        return "Votes finalized. The selected movie is: " + watchParty.getMovieChoice();
+        return "redirect:/watchparty/"+watchPartyId;
     }
 
     /**
