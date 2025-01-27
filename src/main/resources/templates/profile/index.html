@@ -20,12 +20,11 @@
                 <img th:src="${user.getProfile().getImage()}" class="border rounded-circle overflow-hidden profile-thumb">
             </div>
             <div class="d-flex justify-content-center">
-                <a href="/profile/reviews" th:text="reviews"></a>
+                <a href="/profile/reviews" th:text="'Edit Reviews'"></a>
             </div>
             <div class="pt-3 border-bottom">
-                <h6 th:text="${user.getProfile().getName()} + '\'s Watchlist' "></h6>
+                <h6 th:text="${user.getProfile().getName()} + '\'s Badges' "></h6>
                 <div class="badges-section">
-                    <h6>Your Badges:</h6>
                     <div th:if="${badges.isEmpty()}">
                         <p>No badges yet. Start earning by participating!</p>
                     </div>
@@ -40,6 +39,20 @@
           th:text="${badge.badgeName}"></span>
                     </div>
 
+                </div>
+                <h6 th:text="${user.getProfile().getName()} + '\'s Watchlist' "></h6>
+                <div class="movie-reviews" id="reviews-display">
+
+                    <div th:each="review : ${reviews}">
+                        <div class="review">
+                            <a th:href="@{/movie-details/{id}(id=${review.movieId})}" th:text="${review.movieTitle}"></a>
+                            <p>
+                                <span th:each="star : ${#numbers.sequence(1, review.rating)}" class="star-filled">&#9733;</span>
+                            </p>
+                            <p th:text="${review.content}"></p>
+                            <hr/>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

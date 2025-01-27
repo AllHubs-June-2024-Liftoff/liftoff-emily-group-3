@@ -140,7 +140,7 @@
     </div>
     <div th:each="review : ${reviews}">
         <div class="review">
-            <p><strong th:text="${review.username}"></strong> (Rating: <span th:each="star : ${#numbers.sequence(1, review.rating)}" class="star-filled">&#9733;</span>)</p>
+            <p><strong th:text="${review.profile.name}"></strong> (Rating: <span th:each="star : ${#numbers.sequence(1, review.rating)}" class="star-filled">&#9733;</span>)</p>
             <p th:text="${review.content}"></p>
             <hr/>
         </div>

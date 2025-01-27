@@ -46,10 +46,12 @@ public class ProfileController {
     @GetMapping("profile")
     public String index(Model model){
         List<Review> reviews = reviewRepository.findByProfileIdOrderByRatingDesc(userService.getCurrentUser().getProfile().getId());
+        List<Review> userReviews = reviewRepository.findByProfileId(userService.getCurrentUser().getProfile().getId());
         List<Badge> badges = badgeService.getUserBadges(userService.getCurrentUser().getProfile().getId());
         model.addAttribute("user",userService.getCurrentUser());
         model.addAttribute("topRated",profileService.getTopRatedMovies(reviews.subList(0, Math.min(10, reviews.size()))));
         model.addAttribute("badges", badges);
+        model.addAttribute("reviews", userReviews);
         return "profile/index";
     }
 

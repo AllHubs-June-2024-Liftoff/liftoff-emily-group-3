@@ -53,11 +53,13 @@ public class MovieController {
         if (principal == null) {
             return "redirect:/login";
         }        Review newReview = new Review();
+        MovieDTO movieDTO = tmDbService.getMovieDetails(movieId);
         newReview.setMovieId(movieId);
         newReview.setProfile(userService.getCurrentUser().getProfile());
         newReview.setRating(rating);
         newReview.setContent(review);
         newReview.setDateCreated(LocalDateTime.now());
+        newReview.setMovieTitle(movieDTO.getTitle());
 
         reviewRepository.save(newReview);
 
@@ -65,7 +67,7 @@ public class MovieController {
 
         // Fetch all reviews for the movie
         List<Review> reviews = reviewRepository.findByMovieId(movieId);
-        MovieDTO movieDTO = tmDbService.getMovieDetails(movieId);
+//        MovieDTO movieDTO = tmDbService.getMovieDetails(movieId);
         List<MovieDTO> similarMovies = tmDbService.getSimilarMovieRecommendations(movieId);
         List<Actor> actors = tmDbService.getMovieActors(movieId);
 
