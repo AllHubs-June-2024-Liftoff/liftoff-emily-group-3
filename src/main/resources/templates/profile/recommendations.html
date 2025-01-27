@@ -31,6 +31,28 @@
         </div>
     </div>
 </div>
+<!-- Back to Top Button -->
+<button id="backToTopBtn" onclick="scrollToTop()">↑ Back to Top</button>
+
+<script>
+    // Show the button when scrolling down
+    window.onscroll = function() {
+        const backToTopBtn = document.getElementById("backToTopBtn");
+        if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
+            backToTopBtn.style.display = "block";
+        } else {
+            backToTopBtn.style.display = "none";
+        }
+    };
+
+    // Smooth scroll to the top
+    function scrollToTop() {
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+    }
+</script>
 
 </body>
 </html>
