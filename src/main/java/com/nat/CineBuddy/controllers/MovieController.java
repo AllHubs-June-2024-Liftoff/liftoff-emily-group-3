@@ -1,3 +1,4 @@
+
 package com.nat.CineBuddy.controllers;
 
 import com.nat.CineBuddy.dto.MovieDTO;
@@ -6,7 +7,10 @@ import com.nat.CineBuddy.models.Movie;
 import com.nat.CineBuddy.models.Review;
 import com.nat.CineBuddy.repositories.MovieRepository;
 import com.nat.CineBuddy.repositories.ReviewRepository;
+import com.nat.CineBuddy.services.BadgeService;
+import com.nat.CineBuddy.services.ProfileService;
 import com.nat.CineBuddy.services.TMDbService;
+import com.nat.CineBuddy.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,9 +28,15 @@ import java.util.Optional;
 @Controller
 public class MovieController {
     private final TMDbService tmDbService;
+    private final BadgeService badgeService;
+    private final UserService userService;
+    private final ProfileService profileService;
 
-    public MovieController(TMDbService tmDbService) {
+    public MovieController(TMDbService tmDbService, BadgeService badgeService, UserService userService, ProfileService profileService) {
         this.tmDbService = tmDbService;
+        this.badgeService = badgeService;
+        this.userService = userService;
+        this.profileService = profileService;
     }
 
 
@@ -39,16 +49,19 @@ public class MovieController {
     @PostMapping("/submit-review")
     public String submitReview(@RequestParam String movieId, @RequestParam int rating,
                                @RequestParam String review, Principal principal, Model model) {
+
         if (principal == null) {
             return "redirect:/login";
         }        Review newReview = new Review();
         newReview.setMovieId(movieId);
-        newReview.setUsername(principal.getName());
+        newReview.setProfile(userService.getCurrentUser().getProfile());
         newReview.setRating(rating);
         newReview.setContent(review);
         newReview.setDateCreated(LocalDateTime.now());
 
         reviewRepository.save(newReview);
+
+        badgeService.awardBadge(userService.getCurrentUser().getProfile().getId());
 
         // Fetch all reviews for the movie
         List<Review> reviews = reviewRepository.findByMovieId(movieId);
