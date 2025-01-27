@@ -30,6 +30,14 @@ public class Profile {
     @JsonIgnore
     private List<Vote> votes;
 
+    @OneToMany(mappedBy = "profile", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JsonIgnore
+    private List<Review> reviews;
+
+    @OneToMany(mappedBy = "profile", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JsonIgnore
+    private List<Badge> badges;
+
 
     public Integer getId() {
         return id;

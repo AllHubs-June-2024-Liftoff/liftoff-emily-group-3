@@ -1,10 +1,7 @@
 package com.nat.CineBuddy.models;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -17,7 +14,11 @@ public class Review {
     private Integer id;
 
     private String movieId;
-    private String username;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "profile_id", nullable = false)
+    private Profile profile;
+
     private int rating;
     private String content;
     private String movieTitle;
@@ -27,18 +28,18 @@ public class Review {
     public Review() {
     }
 
-    public Review(Integer id, String movieId, String username, int rating, String content) {
+    public Review(Integer id, String movieId, Profile profile, int rating, String content) {
         this.id = id;
         this.movieId = movieId;
-        this.username = username;
+        this.profile = profile;
         this.rating = rating;
         this.content = content;
     }
 
-    public Review(Integer id, String movieId, String username, int rating, String content, String movieTitle, LocalDateTime dateCreated) {
+    public Review(Integer id, String movieId, Profile profile, int rating, String content, String movieTitle, LocalDateTime dateCreated) {
         this.id = id;
         this.movieId = movieId;
-        this.username = username;
+        this.profile = profile;
         this.rating = rating;
         this.content = content;
         this.movieTitle = movieTitle;
@@ -61,12 +62,12 @@ public class Review {
         this.movieId = movieId;
     }
 
-    public String getUsername() {
-        return username;
+    public Profile getProfile() {
+        return profile;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setProfile(Profile profile) {
+        this.profile = profile;
     }
 
     public int getRating() {

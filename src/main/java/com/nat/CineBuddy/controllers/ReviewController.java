@@ -2,9 +2,11 @@ package com.nat.CineBuddy.controllers;
 
 import com.nat.CineBuddy.dto.MovieDTO;
 import com.nat.CineBuddy.models.Review;
+import com.nat.CineBuddy.models.User;
 import com.nat.CineBuddy.repositories.ReviewRepository;
 import com.nat.CineBuddy.services.ReviewService;
 import com.nat.CineBuddy.services.TMDbService;
+import com.nat.CineBuddy.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,12 +25,14 @@ public class ReviewController {
     private final TMDbService tmDbService;
     private final ReviewRepository reviewRepository;
     private final ReviewService reviewService;
+    private final UserService userService;
 
     @Autowired
-    public ReviewController(TMDbService tmDbService, ReviewRepository reviewRepository, ReviewService reviewService) {
+    public ReviewController(TMDbService tmDbService, ReviewRepository reviewRepository, ReviewService reviewService, UserService userService) {
         this.tmDbService = tmDbService;
         this.reviewRepository = reviewRepository;
         this.reviewService = reviewService;
+        this.userService = userService;
     }
 
     @PostMapping("/delete-review/{id}")
@@ -44,7 +48,7 @@ public class ReviewController {
     @GetMapping("/profile/reviews")
     public String viewUserReviews(Principal principal, Model model, @RequestParam(value = "sort", required = false) String sort) {
 
-        List<Review> userReviews = reviewRepository.findByUsername(principal.getName());
+        List<Review> userReviews = reviewRepository.findByProfileId(userService.getCurrentUser().getProfile().getId());
 
         // Set movie titles using TMDB service
         for (Review review : userReviews) {

@@ -51,8 +51,8 @@ public class ProfileController {
     @GetMapping("profile")
     public String index(Model model, Principal principal){
         model.addAttribute("user",userService.getCurrentUser());
-        List<Review> userReviews = reviewRepository.findByUsername(principal.getName());
-        List<Badge> badges = badgeService.getUserBadges(principal.getName());
+        List<Review> userReviews = reviewRepository.findByProfileId(userService.getCurrentUser().getProfile().getId());
+        List<Badge> badges = badgeService.getUserBadges(userService.getCurrentUser().getProfile().getId());
 
         for (Review review : userReviews) {
             MovieDTO movieDTO = tmDbService.getMovieDetails(review.getMovieId());  // Get movie details by ID
@@ -60,7 +60,7 @@ public class ProfileController {
         }
         model.addAttribute("reviews", userReviews);
         model.addAttribute("badges", badges);
-        return "user/index";
+        return "profile/index";
     }
 
     @GetMapping("profile/update")
