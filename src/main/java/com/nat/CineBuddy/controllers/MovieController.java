@@ -8,7 +8,6 @@ import com.nat.CineBuddy.models.Review;
 import com.nat.CineBuddy.repositories.MovieRepository;
 import com.nat.CineBuddy.repositories.ReviewRepository;
 import com.nat.CineBuddy.services.BadgeService;
-import com.nat.CineBuddy.services.ProfileService;
 import com.nat.CineBuddy.services.TMDbService;
 import com.nat.CineBuddy.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,13 +29,11 @@ public class MovieController {
     private final TMDbService tmDbService;
     private final BadgeService badgeService;
     private final UserService userService;
-    private final ProfileService profileService;
 
-    public MovieController(TMDbService tmDbService, BadgeService badgeService, UserService userService, ProfileService profileService) {
+    public MovieController(TMDbService tmDbService, BadgeService badgeService, UserService userService) {
         this.tmDbService = tmDbService;
         this.badgeService = badgeService;
-        this.userService = userService;
-        this.profileService = profileService;
+        this.userService = userService;;
     }
 
 
@@ -52,7 +49,8 @@ public class MovieController {
 
         if (principal == null) {
             return "redirect:/login";
-        }        Review newReview = new Review();
+        }
+        Review newReview = new Review();
         MovieDTO movieDTO = tmDbService.getMovieDetails(movieId);
         newReview.setMovieId(movieId);
         newReview.setProfile(userService.getCurrentUser().getProfile());
@@ -79,7 +77,6 @@ public class MovieController {
 
         return "movies/movie-details";
     }
-
 
 
     @GetMapping("/movie-details/{id}")

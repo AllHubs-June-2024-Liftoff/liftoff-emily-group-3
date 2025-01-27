@@ -18,20 +18,17 @@ public class BadgeService {
     private ReviewRepository reviewRepository;
 
     @Autowired
-    private ProfileService profileService; // Service to fetch Profile
+    private ProfileService profileService;
 
     public void awardBadge(Integer id) {
-        // Fetch the Profile by username
         Profile profile = profileService.getProfileById(id);
 
         if (profile == null) {
             throw new IllegalArgumentException("Profile not found for profile: " + id);
         }
 
-        // Check if the "First Review" badge exists
         boolean badgeExists = badgeRepository.existsByProfileIdAndBadgeName(id, "First Review");
 
-        // Count reviews with a 1-star rating for the Profile
         int oneStarReviews = reviewRepository.countByProfileIdAndRating(id, 1);
 
         if (!badgeExists) {
@@ -54,7 +51,7 @@ public class BadgeService {
         }
     }
 
-    public List<Badge> getUserBadges(int profileId ) {
+    public List<Badge> getUserBadges(int profileId) {
         return badgeRepository.findByProfileId(profileId);
     }
 }
