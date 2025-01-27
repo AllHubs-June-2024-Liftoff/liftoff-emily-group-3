@@ -66,7 +66,7 @@ public class ProfileController {
     @GetMapping("profile/update")
     public String userProfileUpdateForm(Model model){
         model.addAttribute("profile",userService.getCurrentUser().getProfile());
-        return "user/update";
+        return "profile/update";
     }
 
     @PostMapping("profile/update")
