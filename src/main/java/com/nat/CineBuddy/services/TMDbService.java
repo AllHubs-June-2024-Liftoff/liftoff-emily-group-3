@@ -8,8 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import com.fasterxml.jackson.databind.JsonNode;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -125,35 +124,34 @@ public class TMDbService {
     private String getJsonField(JsonNode node, String fieldName, String defaultValue) {
         return node.has(fieldName) ? node.get(fieldName).asText() : defaultValue;
     }
-    public List<MovieDTO> searchMovies(String query, String searchBy, String sortBy) {
-        String endpoint;
-
-        switch (searchBy.toLowerCase()) {
-            case "actor":
-                endpoint = "/search/person";
-                break;
-            case "genre":
-                endpoint = "/discover/movie&with_genres=" + query;
-                break;
-            default:
-                endpoint = "/search/movie";
-        }
+    public List<MovieDTO> searchMovies(String query, String searchBy, String sortBy, String genre) {
+        String endpoint = switch (searchBy.toLowerCase()) {
+            case "actor" -> "/search/person";
+            default -> "/search/movie";
+        };
 
         String url = BASE_URL + endpoint + "?api_key=" + apiKey + "&query=" + query;
 
         try {
             JsonNode response = restTemplate.getForObject(url, JsonNode.class);
-            List<MovieDTO> movies;
+            List<MovieDTO> movies = new ArrayList<>();
 
+            // Handle actor search using parseActorMovies
             if ("actor".equalsIgnoreCase(searchBy) && response != null && response.has("results")) {
                 movies = parseActorMovies(response.get("results"));
-            } else {
-                movies = response != null && response.has("results") ? parseMovies(response.get("results")) : Collections.emptyList();
             }
 
-            // Sort results if required
-            if ("top-rated".equalsIgnoreCase(sortBy)) {
-                movies.sort((m1, m2) -> Double.compare(Double.parseDouble(m2.getVoteAverage()), Double.parseDouble(m1.getVoteAverage())));
+            // Handle other searches
+            if (!"actor".equalsIgnoreCase(searchBy) && response != null && response.has("results")) {
+                movies = parseMovies(response.get("results"));
+
+                // Sort by top-rated if applicable
+                if ("top-rated".equalsIgnoreCase(sortBy)) {
+                    movies.sort((m1, m2) -> Double.compare(
+                            Double.parseDouble(m2.getVoteAverage()),
+                            Double.parseDouble(m1.getVoteAverage())
+                    ));
+                }
             }
 
             return movies;
@@ -163,6 +161,47 @@ public class TMDbService {
             return Collections.emptyList();
         }
     }
+
+
+
+    public Map<Integer, String> getGenres() {
+        String url = BASE_URL + "/genre/movie/list?api_key=" + apiKey;
+        try {
+            JsonNode response = restTemplate.getForObject(url, JsonNode.class);
+            Map<Integer, String> genres = new HashMap<>();
+            if (response != null && response.has("genres")) {
+                for (JsonNode genreNode : response.get("genres")) {
+                    genres.put(genreNode.get("id").asInt(), genreNode.get("name").asText());
+                }
+            }
+            return genres;
+        } catch (Exception e) {
+            System.err.println("Error fetching genres: " + e.getMessage());
+            return Collections.emptyMap();
+        }
+    }
+
+    public List<MovieDTO> searchMoviesByGenre(String genre, String sortBy) {
+        String url = BASE_URL + "/discover/movie?api_key=" + apiKey + "&with_genres=" + genre;
+
+        try {
+            JsonNode response = restTemplate.getForObject(url, JsonNode.class);
+            List<MovieDTO> movies = response != null && response.has("results")
+                    ? parseMovies(response.get("results"))
+                    : Collections.emptyList();
+
+            if ("top-rated".equalsIgnoreCase(sortBy)) {
+                movies.sort((m1, m2) -> Double.compare(Double.parseDouble(m2.getVoteAverage()), Double.parseDouble(m1.getVoteAverage())));
+            }
+
+            return movies;
+
+        } catch (Exception e) {
+            System.err.println("Error searching movies by genre: " + e.getMessage());
+            return Collections.emptyList();
+        }
+    }
+
 
 
     private List<MovieDTO> parseActorMovies(JsonNode nodes) {

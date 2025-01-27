@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
-    <title>Search Results</title>
+    <title>CineSearch</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Flickity CSS -->
@@ -21,9 +21,9 @@
     <div class="results-title">CineSearch</div>
 
     <form th:action="@{/search}" method="get" class="row g-3">
-        <!-- Search Input -->
+        <!-- Search Input (Optional) -->
         <div class="col-md-8">
-            <input type="text" class="form-control" name="query" placeholder="Search for movies, actors, or genres..." required>
+            <input type="text" class="form-control" name="query" placeholder="Search by movie title or actor...">
         </div>
 
         <!-- Search By Selection -->
@@ -31,7 +31,17 @@
             <select class="form-select" name="searchBy">
                 <option value="title" selected>Title</option>
                 <option value="actor">Actor</option>
-                <option value="genre">Genre</option>
+            </select>
+        </div>
+
+        <!-- Filter By Genre -->
+        <div class="col-md-4">
+            <select class="form-select" name="genre">
+                <option value="">Filter by genre</option>
+                <option th:each="entry : ${genres.entrySet()}"
+                        th:value="${entry.key}"
+                        th:text="${entry.value}">
+                </option>
             </select>
         </div>
 

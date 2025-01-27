@@ -93,3 +93,11 @@
   border-left: none;
   cursor: pointer;
 }
+
+form.row.g-3.mb-4 {
+    background-color: #fff;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
