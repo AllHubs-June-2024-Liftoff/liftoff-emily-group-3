@@ -23,7 +23,7 @@
             <a href="#reviews-display">
                 <button class="btn btn-primary">See Reviews</button>
             </a>
-            <button class="btn btn-secondary">Add to Watchlist</button>
+            <a sec:authorize="isAuthenticated()" th:href="'/watchlist/add/' + ${movie.id}" class="btn btn-success">Add to WatchList</a>
             <a sec:authorize="isAuthenticated()" th:href="'/watchparty/add/' + ${movie.id}" class="btn btn-warning">Add to WatchParty</a>
         </div>
         <img th:src="@{${movie.posterPath.endsWith('null') || movie.posterPath == null ? '/images/poster-placeholder-cinebuddy.png' : 'https://image.tmdb.org/t/p/w500' + movie.posterPath}}" alt="Movie Poster"/>
