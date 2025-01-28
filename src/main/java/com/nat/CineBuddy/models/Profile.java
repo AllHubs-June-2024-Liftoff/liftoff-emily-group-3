@@ -33,6 +33,14 @@ public class Profile {
     @OneToMany(mappedBy = "profile", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private List<WatchList> watchLists;
 
+    @OneToMany(mappedBy = "profile", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JsonIgnore
+    private List<Review> reviews;
+
+    @OneToMany(mappedBy = "profile", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JsonIgnore
+    private List<Badge> badges;
+
     public List<WatchList> getWatchLists() {
         return watchLists;
     }
@@ -112,6 +120,22 @@ public class Profile {
 
     public void setVotes(List<Vote> votes) {
         this.votes = votes;
+    }
+
+    public List<Review> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(List<Review> reviews) {
+        this.reviews = reviews;
+    }
+
+    public List<Badge> getBadges() {
+        return badges;
+    }
+
+    public void setBadges(List<Badge> badges) {
+        this.badges = badges;
     }
 
     @Override

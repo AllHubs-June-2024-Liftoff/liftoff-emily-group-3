@@ -1,3 +1,4 @@
+
 package com.nat.CineBuddy.controllers;
 
 import com.nat.CineBuddy.dto.MovieDTO;
@@ -6,9 +7,11 @@ import com.nat.CineBuddy.models.Movie;
 import com.nat.CineBuddy.models.Review;
 import com.nat.CineBuddy.repositories.MovieRepository;
 import com.nat.CineBuddy.repositories.ReviewRepository;
-import com.nat.CineBuddy.services.RecommendationService;
+import com.nat.CineBuddy.services.BadgeService;
 import com.nat.CineBuddy.services.TMDbService;
+import com.nat.CineBuddy.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,9 +28,13 @@ import java.util.Optional;
 @Controller
 public class MovieController {
     private final TMDbService tmDbService;
+    private final BadgeService badgeService;
+    private final UserService userService;
 
-    public MovieController(TMDbService tmDbService) {
+    public MovieController(TMDbService tmDbService, BadgeService badgeService, UserService userService) {
         this.tmDbService = tmDbService;
+        this.badgeService = badgeService;
+        this.userService = userService;;
     }
 
 
@@ -37,28 +44,30 @@ public class MovieController {
     @Autowired
     private MovieRepository movieRepository;
 
-    @Autowired
-    private RecommendationService recommendationService;
-
     @PostMapping("/submit-review")
     public String submitReview(@RequestParam String movieId, @RequestParam int rating,
                                @RequestParam String review, Principal principal, Model model) {
+
         if (principal == null) {
             return "redirect:/login";
-        }        Review newReview = new Review();
+        }
+        Review newReview = new Review();
+        MovieDTO movieDTO = tmDbService.getMovieDetails(movieId);
         newReview.setMovieId(movieId);
-        newReview.setUsername(principal.getName());
+        newReview.setProfile(userService.getCurrentUser().getProfile());
         newReview.setRating(rating);
         newReview.setContent(review);
         newReview.setDateCreated(LocalDateTime.now());
+        newReview.setMovieTitle(movieDTO.getTitle());
+        newReview.setGenre(movieDTO.getGenres());
 
         reviewRepository.save(newReview);
+        badgeService.awardBadge(userService.getCurrentUser().getProfile().getId());
 
-//        recommendationService.updateRecommendations(movieId);
 
         // Fetch all reviews for the movie
         List<Review> reviews = reviewRepository.findByMovieId(movieId);
-        MovieDTO movieDTO = tmDbService.getMovieDetails(movieId);
+//        MovieDTO movieDTO = tmDbService.getMovieDetails(movieId);
         List<MovieDTO> similarMovies = tmDbService.getSimilarMovieRecommendations(movieId);
         List<Actor> actors = tmDbService.getMovieActors(movieId);
 
@@ -72,17 +81,19 @@ public class MovieController {
     }
 
 
-
     @GetMapping("/movie-details/{id}")
-    public String getMovieDetails(@PathVariable String id, Model model) {
+    public String getMovieDetails(@PathVariable String id, @RequestParam(required = false, defaultValue = "date") String sort, Model model) {
         MovieDTO movieDTO = tmDbService.getMovieDetails(id);
         List<MovieDTO> similarMovies = tmDbService.getSimilarMovieRecommendations(id);
         List<Actor> actors = tmDbService.getMovieActors(id);
+
         List<Review> reviews = reviewRepository.findByMovieId(id);
+
         model.addAttribute("reviews", reviews);
         model.addAttribute("movie", movieDTO);
         model.addAttribute("similarMovies", similarMovies);
         model.addAttribute("actors", actors);
+        model.addAttribute("currentSort", sort);
 
         Optional<Movie> movieOptional = movieRepository.findById(Integer.valueOf(id));
         movieOptional.ifPresent(movie -> model.addAttribute("repoMovie", movie));

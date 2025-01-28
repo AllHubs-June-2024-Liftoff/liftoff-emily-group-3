@@ -58,7 +58,7 @@ public class RecommendationService {
      */
     public List<String> getAllReviewedMovies(Profile profile) {
         // Fetch reviews by the user's username.
-        List<Review> userReviews = reviewRepository.findByUsername(profile.getUser().getUsername());
+        List<Review> userReviews = reviewRepository.findByProfileId(profile.getId());
 
         // Extract movie IDs from the reviews.
         return userReviews.stream()
