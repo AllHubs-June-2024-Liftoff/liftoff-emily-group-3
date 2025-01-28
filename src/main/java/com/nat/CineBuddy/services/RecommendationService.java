@@ -52,12 +52,6 @@ public class RecommendationService {
         return allMovieIds;
 
     }
-//     Testing code with hardcoded data
-//    public List<String> getAllWatchlistMovies(Profile profile) {
-//        // Hardcoded list of movie IDs for testing
-//        return List.of("12345", "67890", "112233");
-//    }
-
 
     /**
      * Get all movies reviewed by the user.

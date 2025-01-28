@@ -24,6 +24,7 @@ public class RecommendedMovieController {
     /**
      * Show the recommended movies page for the logged-in user.
      */
+
     @GetMapping("/recommendations")
     public String getRecommendations(Model model) {
         Profile profile = userService.getCurrentUser().getProfile();
