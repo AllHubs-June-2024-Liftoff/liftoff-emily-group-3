@@ -1,23 +1,21 @@
-/* General container styles */
 .container {
     margin-top: 20px;
 }
 
-/* Masonry layout container */
 .masonry-container {
-    column-count: 3; /* Number of columns */
-    column-gap: 15px; /* Spacing between columns */
+    column-count: 3;
+    column-gap: 15px;
 }
 
 .movie-card {
-    display: inline-block; /* Prevent breaking between columns */
+    display: inline-block;
     background-color: #fff;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     margin-bottom: 15px;
     overflow: hidden;
     transition: transform 0.2s ease-in-out;
-    break-inside: avoid; /* Prevent breaking within columns */
+    break-inside: avoid;
 }
 
 .movie-card:hover {
@@ -30,7 +28,6 @@
     border-bottom: 1px solid #ddd;
 }
 
-/* Movie info container (for title and description) */
 .movie-info {
     padding: 15px;
 }
@@ -46,7 +43,6 @@
     font-size: 0.9rem;
 }
 
-/* Link styling for the movie card */
 .movie-card-link {
     text-decoration: none;
     color: inherit;
@@ -57,7 +53,6 @@
     color: inherit;
 }
 
-/* Styles for Results title */
 .results-title {
     font-family: 'Poppins', sans-serif;
     font-size: 2rem;
@@ -71,10 +66,9 @@
     margin-bottom: 20px;
 }
 
-/* Responsive adjustments */
 @media (max-width: 768px) {
     .masonry-container {
-        column-count: 1; /* One column for smaller screens */
+        column-count: 1;
     }
 
     .movie-card {
