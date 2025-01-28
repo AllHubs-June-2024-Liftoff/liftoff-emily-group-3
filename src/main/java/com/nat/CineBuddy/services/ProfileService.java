@@ -29,4 +29,6 @@ public interface ProfileService {
     public void saveAll(List<Profile> profiles);
 
     public List<MovieDTO> getTopRatedMovies(List<Review> reviews);
+
+    List<MovieDTO> getRecommendedMovies(Profile profile);
 }
