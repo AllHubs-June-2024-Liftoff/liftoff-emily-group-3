@@ -11,13 +11,16 @@
     <link rel="stylesheet" href="https://unpkg.com/flickity@2/dist/flickity.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <!--Font for Trending Movies -->
+    <link href="https://fonts.googleapis.com/css2?family=Limelight&display=swap" rel="stylesheet">
 </head>
 <body>
 
 <div th:replace="~{fragments :: page-nav}"></div>
 
-
-<h2>Trending Movies</h2>
+<div class="trending-movies">
+    <h2>Trending    Movies</h2>
+</div>
 
 <!-- Flickity Carousel -->
 <div class="gallery js-flickity"

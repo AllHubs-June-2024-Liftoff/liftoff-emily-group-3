@@ -48,7 +48,20 @@
         </div>
     </div>
 </div>
-</body>
-</html>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Initialize Masonry after images have loaded
+        const grid = document.querySelector('.row[data-masonry]');
+        const masonryInstance = new Masonry(grid, {
+            percentPosition: true,
+            itemSelector: '.col-md-4',
+        });
+
+        imagesLoaded(grid, function () {
+            masonryInstance.layout();
+        });
+    });
+</script>
+<script src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
 </body>
 </html>

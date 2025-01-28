@@ -21,16 +21,33 @@ public class SearchController {
     @GetMapping("/search")
     public String searchResults(
             @RequestParam(value = "query", required = false) String query,
-            @RequestParam(value = "filter", required = false) String filter,
+            @RequestParam(value = "searchBy", required = false, defaultValue = "title") String searchBy,
+            @RequestParam(value = "sortBy", required = false, defaultValue = "relevance") String sortBy,
+            @RequestParam(value = "genre", required = false) String genre,
             Model model) {
 
-        if (query == null || query.isEmpty()) {
-            model.addAttribute("movies", List.of()); // Empty results
+        // If no query and no genre selected, return empty results
+        if ((query == null || query.isBlank()) && (genre == null || genre.isBlank())) {
+            model.addAttribute("movies", List.of());
             return "search/search-results";
         }
 
-        List<MovieDTO> movies = tmDbService.searchMovies(query, filter);
+        // Allow searching by genre only, without requiring a query
+        List<MovieDTO> movies;
+        if (genre != null && !genre.isEmpty() && (query == null || query.isBlank())) {
+            movies = tmDbService.searchMoviesByGenre(genre, sortBy);
+        } else {
+            movies = tmDbService.searchMovies(query, searchBy, sortBy, genre);
+        }
+
         model.addAttribute("movies", movies);
         return "search/search-results";
+    }
+
+
+    @GetMapping("/search-menu")
+    public String searchMenu(Model model) {
+        model.addAttribute("genres", tmDbService.getGenres());
+        return "search/search-menu";
     }
 }
