@@ -20,9 +20,7 @@
         <h2 th:text="${movie.title}"></h2>
 
         <div class="button-container">
-            <a href="#reviews-display">
-                <button class="btn btn-primary">See Reviews</button>
-            </a>
+            <a class="btn btn-primary" href="#reviews-display">See Reviews</a>
             <a sec:authorize="isAuthenticated()" th:href="'/watchlist/add/' + ${movie.id}" class="btn btn-success">Add to WatchList</a>
             <a sec:authorize="isAuthenticated()" th:href="'/watchparty/add/' + ${movie.id}" class="btn btn-warning">Add to WatchParty</a>
         </div>
