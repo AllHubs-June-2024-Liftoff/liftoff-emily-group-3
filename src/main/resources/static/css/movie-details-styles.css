@@ -1,3 +1,4 @@
+
 /* General Body and Container Styling */
 body {
   font-family: Arial, sans-serif;
@@ -41,6 +42,10 @@ p {
   color: black;
   line-height: 1.6;
   padding-left: 12px;
+}
+
+small {
+   padding-left: 12px;
 }
 
 .movie-stats {

@@ -11,6 +11,7 @@ import com.nat.CineBuddy.services.BadgeService;
 import com.nat.CineBuddy.services.TMDbService;
 import com.nat.CineBuddy.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -58,10 +59,11 @@ public class MovieController {
         newReview.setContent(review);
         newReview.setDateCreated(LocalDateTime.now());
         newReview.setMovieTitle(movieDTO.getTitle());
+        newReview.setGenre(movieDTO.getGenres());
 
         reviewRepository.save(newReview);
-
         badgeService.awardBadge(userService.getCurrentUser().getProfile().getId());
+
 
         // Fetch all reviews for the movie
         List<Review> reviews = reviewRepository.findByMovieId(movieId);
@@ -80,15 +82,18 @@ public class MovieController {
 
 
     @GetMapping("/movie-details/{id}")
-    public String getMovieDetails(@PathVariable String id, Model model) {
+    public String getMovieDetails(@PathVariable String id, @RequestParam(required = false, defaultValue = "date") String sort, Model model) {
         MovieDTO movieDTO = tmDbService.getMovieDetails(id);
         List<MovieDTO> similarMovies = tmDbService.getSimilarMovieRecommendations(id);
         List<Actor> actors = tmDbService.getMovieActors(id);
+
         List<Review> reviews = reviewRepository.findByMovieId(id);
+
         model.addAttribute("reviews", reviews);
         model.addAttribute("movie", movieDTO);
         model.addAttribute("similarMovies", similarMovies);
         model.addAttribute("actors", actors);
+        model.addAttribute("currentSort", sort);
 
         Optional<Movie> movieOptional = movieRepository.findById(Integer.valueOf(id));
         movieOptional.ifPresent(movie -> model.addAttribute("repoMovie", movie));

@@ -30,12 +30,12 @@
                     </div>
                     <div class="badge-container" th:each="badge : ${badges}">
     <span class="badge badge-pill"
-          th:classappend="${badge.badgeName == 'First Review' ? 'badge-success' : (badge.badgeName == 'Hater' ? 'badge-danger' : 'badge-primary')}"
+          th:classappend="${badge.badgeName == 'First Review' ? 'badge-success' : (badge.badgeName == 'Hater' ? 'badge-danger' : 'badge-dark')}"
           data-toggle="tooltip"
           data-placement="right"
           th:title="${badge.badgeName == 'First Review' ? 'Awarded for submitting your first review!'
                 : (badge.badgeName == 'Hater' ? 'Given for submitting 3 or more 1-star reviews.'
-                : 'Special badge for active participation.')}"
+                : 'Given for reviewing 3 or more horror movies.')}"
           th:text="${badge.badgeName}"></span>
                     </div>
 

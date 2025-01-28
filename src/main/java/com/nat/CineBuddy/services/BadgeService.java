@@ -49,7 +49,20 @@ public class BadgeService {
                 badgeRepository.save(newBadge);
             }
         }
+
+        int horrorReviews = reviewRepository.countByProfileIdAndGenreContaining(id, "Horror");
+        if (horrorReviews >= 3) {
+            boolean horrorBadgeExists = badgeRepository.existsByProfileIdAndBadgeName(id, "Horror Enthusiast");
+            if (!horrorBadgeExists) {
+                Badge badge = new Badge();
+                badge.setProfile(profile);
+                badge.setBadgeName("Horror Enthusiast");
+                badgeRepository.save(badge);
+            }
+        }
     }
+
+
 
     public List<Badge> getUserBadges(int profileId) {
         return badgeRepository.findByProfileId(profileId);

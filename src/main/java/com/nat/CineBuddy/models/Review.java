@@ -25,6 +25,8 @@ public class Review {
 
     private LocalDateTime dateCreated;
 
+    private String genre;
+
     public Review() {
     }
 
@@ -36,7 +38,7 @@ public class Review {
         this.content = content;
     }
 
-    public Review(Integer id, String movieId, Profile profile, int rating, String content, String movieTitle, LocalDateTime dateCreated) {
+    public Review(Integer id, String movieId, Profile profile, int rating, String content, String movieTitle, LocalDateTime dateCreated, String genre) {
         this.id = id;
         this.movieId = movieId;
         this.profile = profile;
@@ -44,6 +46,7 @@ public class Review {
         this.content = content;
         this.movieTitle = movieTitle;
         this.dateCreated = dateCreated;
+        this.genre = genre;
     }
 
     public Integer getId() {
@@ -108,5 +111,13 @@ public class Review {
             return dateCreated.format(formatter);
         }
         return "";
+    }
+
+    public String getGenre() {
+        return genre;
+    }
+
+    public void setGenre(String genre) {
+        this.genre = genre;
     }
 }

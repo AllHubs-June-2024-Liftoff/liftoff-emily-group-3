@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org/" xmlns:sec="http://www.w3.org/1999/xhtml" lang="en">
 <head>
@@ -22,10 +23,11 @@
             <a href="#reviews-display">
                 <button class="btn btn-primary">See Reviews</button>
             </a>
-            <a sec:authorize="isAuthenticated()" th:href="'/watchlist/add/' + ${movie.id}" class="btn btn-success">Add to WatchList</a>
+            <button class="btn btn-secondary">Add to Watchlist</button>
             <a sec:authorize="isAuthenticated()" th:href="'/watchparty/add/' + ${movie.id}" class="btn btn-warning">Add to WatchParty</a>
         </div>
-        <img th:src="@{'https://image.tmdb.org/t/p/w500' + ${movie.posterPath}}" alt="Movie Poster"/>
+        <img th:src="@{${movie.posterPath.endsWith('null') || movie.posterPath == null ? '/images/poster-placeholder-cinebuddy.png' : 'https://image.tmdb.org/t/p/w500' + movie.posterPath}}" alt="Movie Poster"/>
+
         <p th:text="${movie.overview}"></p>
 
         <p class="movie-stats">Average Rating: <span th:text="${movie.voteAverage}"></span></p>
@@ -100,7 +102,10 @@
 
 <div class="recommended-actors">
     <h3>Actors</h3>
-    <div class="gallery js-flickity" data-flickity-options='{ "wrapAround": true, "contain": true, "pageDots": false }'>
+    <div th:if="${actors.isEmpty()}">
+        <p>No info here yet. Come back soon!</p>
+    </div>
+    <div th:if="${!actors.isEmpty()}" class="gallery js-flickity" data-flickity-options='{ "wrapAround": true, "contain": true, "pageDots": false }'>
         <div class="gallery-cell" th:each="actor : ${actors}">
             <a th:href="@{https://www.themoviedb.org/person/{id}(id=${actor.id})}">
                 <div class="actor-img">
@@ -120,10 +125,14 @@
 
 <div class="recommended-movies">
     <h3>Recommended Movies</h3>
-    <div class="gallery js-flickity" data-flickity-options='{ "wrapAround": true, "contain": true, "pageDots": false }'>
+    <div th:if="${similarMovies.isEmpty()}">
+        <p>No info here yet. Come back soon!</p>
+    </div>
+    <div th:if="${!similarMovies.isEmpty()}" class="gallery js-flickity" data-flickity-options='{ "wrapAround": true, "contain": true, "pageDots": false }'>
         <div class="gallery-cell" th:each="movie : ${similarMovies}">
             <a th:href="@{/movie-details/{id}(id=${movie.id})}">
-                <img th:src="@{'https://image.tmdb.org/t/p/w500' + ${movie.posterPath}}" alt="Movie Poster"/>
+                <img th:src="@{${movie.posterPath.endsWith('null') || movie.posterPath == null ? '/images/poster-placeholder-cinebuddy.png' : 'https://image.tmdb.org/t/p/w500' + movie.posterPath}}" alt="Movie Poster"/>
+
                 <div class="caption">
                     <h5 th:text="${movie.title}"></h5>
                 </div>
@@ -140,8 +149,9 @@
     </div>
     <div th:each="review : ${reviews}">
         <div class="review">
-            <p><strong th:text="${review.profile.name}"></strong> (Rating: <span th:each="star : ${#numbers.sequence(1, review.rating)}" class="star-filled">&#9733;</span>)</p>
+            <p><strong th:text="${review.profile.name}"></strong> | Rating: <span th:each="star : ${#numbers.sequence(1, review.rating)}" class="star-filled">&#9733;</span></p>
             <p th:text="${review.content}"></p>
+            <small th:text="${review.formattedDateCreated}"></small>
             <hr/>
         </div>
     </div>
