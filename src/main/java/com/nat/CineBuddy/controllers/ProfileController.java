@@ -1,10 +1,12 @@
 package com.nat.CineBuddy.controllers;
 
+import com.nat.CineBuddy.models.Badge;
 import com.nat.CineBuddy.models.Profile;
 import com.nat.CineBuddy.models.Review;
 import com.nat.CineBuddy.models.User;
 import com.nat.CineBuddy.repositories.ReviewRepository;
 import com.nat.CineBuddy.security.CBUserDetailsService;
+import com.nat.CineBuddy.services.BadgeService;
 import com.nat.CineBuddy.services.ProfileService;
 import com.nat.CineBuddy.services.UserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -33,6 +35,9 @@ public class ProfileController {
     private UserService userService;
 
     @Autowired
+    private BadgeService badgeService;
+
+    @Autowired
     private ReviewRepository reviewRepository;
 
     @Autowired
@@ -40,9 +45,13 @@ public class ProfileController {
 
     @GetMapping("profile")
     public String index(Model model){
-        List<Review> reviews = reviewRepository.findByUsernameOrderByRatingDesc(userService.getCurrentUser().getUsername());
+        List<Review> reviews = reviewRepository.findByProfileIdOrderByRatingDesc(userService.getCurrentUser().getProfile().getId());
+        List<Review> userReviews = reviewRepository.findByProfileId(userService.getCurrentUser().getProfile().getId());
+        List<Badge> badges = badgeService.getUserBadges(userService.getCurrentUser().getProfile().getId());
         model.addAttribute("user",userService.getCurrentUser());
         model.addAttribute("topRated",profileService.getTopRatedMovies(reviews.subList(0, Math.min(10, reviews.size()))));
+        model.addAttribute("badges", badges);
+        model.addAttribute("reviews", userReviews);
         return "profile/index";
     }
 

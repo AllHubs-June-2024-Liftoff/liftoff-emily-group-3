@@ -129,7 +129,7 @@ public class WatchPartyServiceImpl implements WatchPartyService{
     public List<MovieDTO> getTopRatedMovies(WatchParty watchParty){
         Set<MovieDTO> topRatedMovies = new HashSet<>();
         for(Profile member : watchParty.getMembers()){
-            topRatedMovies.addAll(profileService.getTopRatedMovies(reviewRepository.findByUsernameOrderByRatingDesc(member.getUser().getUsername())));
+            topRatedMovies.addAll(profileService.getTopRatedMovies(reviewRepository.findByProfileIdOrderByRatingDesc(member.getUser().getProfile().getId())));
         }
         return new ArrayList<>(topRatedMovies);
     }
