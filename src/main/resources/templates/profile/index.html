@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org/">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <th:block th:replace="~{fragments :: head}"></th:block>
+    <link rel="stylesheet" href="https://unpkg.com/flickity@2/dist/flickity.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <link rel="stylesheet" th:href="@{/css/profile.css}">
+</head>
+<body class="bg-light">
+
+<nav th:replace="~{fragments :: page-nav}"></nav>
+<main class="container body-content pt-2">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="d-flex justify-content-center">
+                <img th:src="${user.getProfile().getImage()}" class="border rounded-circle overflow-hidden profile-thumb">
+            </div>
+            <div class="d-flex justify-content-center">
+                <a href="/profile/reviews" th:text="'Edit Reviews'"></a>
+            </div>
+            <div class="pt-3 border-bottom">
+                <h6 th:text="${user.getProfile().getName()} + '\'s Badges' "></h6>
+                <div class="badges-section">
+                    <div th:if="${badges.isEmpty()}">
+                        <p>No badges yet. Start earning by participating!</p>
+                    </div>
+                    <div class="badge-container" th:each="badge : ${badges}">
+    <span class="badge badge-pill"
+          th:classappend="${badge.badgeName == 'First Review' ? 'badge-success' : (badge.badgeName == 'Hater' ? 'badge-danger' : 'badge-dark')}"
+          data-toggle="tooltip"
+          data-placement="right"
+          th:title="${badge.badgeName == 'First Review' ? 'Awarded for submitting your first review!'
+                : (badge.badgeName == 'Hater' ? 'Given for submitting 3 or more 1-star reviews.'
+                : 'Given for reviewing 3 or more horror movies.')}"
+          th:text="${badge.badgeName}"></span>
+                    </div>
+
+                </div>
+                <h6 th:text="${user.getProfile().getName()} + '\'s Watchlist' "></h6>
+                <div class="movie-reviews" id="reviews-display">
+
+                    <div th:each="review : ${reviews}">
+                        <div class="review">
+                            <a th:href="@{/movie-details/{id}(id=${review.movieId})}" th:text="${review.movieTitle}"></a>
+                            <p>
+                                <span th:each="star : ${#numbers.sequence(1, review.rating)}" class="star-filled">&#9733;</span>
+                            </p>
+                            <p th:text="${review.content}"></p>
+                            <hr/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <h2 th:text="${user.getProfile().getName()} + '!'" class="border-bottom"></h2>
+            <p th:text="${user.getProfile().getBio()}"></p>
+
+            <div class="pt-3" th:if="${topRated?.size() > 0}">
+                <h6 th:text="${user.getProfile().getName()} + '\'s Top Rated Movies'"></h6>
+                <div class="gallery js-flickity"
+                     data-flickity-options='{ "wrapAround": true, "contain": true, "pageDots": false }'>
+                    <!-- Dynamic movie cells -->
+                    <div class="gallery-cell" th:each="movie : ${topRated}">
+                        <a th:href="@{/movie-details/{id}(id=${movie.id})}">
+                            <img th:src="@{'https://image.tmdb.org/t/p/w500' + ${movie.posterPath}}" alt="Movie Poster"/>
+                            <div class="caption">
+                                <h5 th:text="${movie.title}"></h5>
+                                <p th:text="${movie.overview}"></p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion" id="watchpartyAccordion">
+
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingHosted">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseHosted" aria-expanded="false" aria-controls="collapseHosted">
+                            Hosted Watch Parties
+                        </button>
+                    </h2>
+                    <div id="collapseHosted" class="accordion-collapse collapse" aria-labelledby="headingHosted" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                            <div th:if="${user.getProfile().getHostedGroups()?.size() > 0}">
+                                <ul class="list-group">
+                                    <th:li th:each="watchParty : ${user.getProfile().getHostedGroups()}" class="list-group-item d-flex align-items-center justify-content-between">
+                                        <div th:text="${watchParty.name}"></div>
+                                        <div th:text="'members: ' + ${watchParty.members.size()}"></div>
+                                    </th:li>0.
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingJoined">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseJoined" aria-expanded="false" aria-controls="collapseJoined">
+                            Joined Watch Parties
+                        </button>
+                    </h2>
+                    <div id="collapseJoined" class="accordion-collapse collapse" aria-labelledby="headingJoined" data-bs-parent="#watchpartyAccordion">
+                        <div class="accordion-body">
+                            <div th:if="${user.getProfile().getJoinedGroups()?.size() > 0}">
+                                <ul class="list-group">
+                                    <th:li th:each="watchParty : ${user.getProfile().getJoinedGroups()}" class="list-group-item d-flex align-items-center justify-content-between">
+                                        <div th:text="${watchParty.name}"></div>
+                                        <div th:text="'members: ' + ${watchParty.members.size()}"></div>
+                                    </th:li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+
+        </div>
+    </div>
+</main>
+<!-- Flickity JavaScript -->
+<script src="https://unpkg.com/flickity@2/dist/flickity.pkgd.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-toggle="tooltip"]'));
+      tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl, {
+          placement: 'right'
+        });
+      });
+    });
+</script>
+</body>
+</html>

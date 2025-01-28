@@ -24,6 +24,8 @@ public class UserServiceImpl implements UserService{
     private ProfileService profileService;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private WatchPartyService watchPartyService;
 
 
     @Override
@@ -51,6 +53,9 @@ public class UserServiceImpl implements UserService{
             Set<Role> emptyRoles = new HashSet<>();
             User storedUser = optionalUser.get();
             storedUser.setRoles(emptyRoles);
+            watchPartyService.removeFromAll(storedUser.getProfile());
+            storedUser.getProfile().setHostedGroups(new ArrayList<>());
+            storedUser.getProfile().setJoinedGroups(new ArrayList<>());
             userRepository.save(storedUser);
             userRepository.delete(storedUser);
         }
@@ -86,16 +91,24 @@ public class UserServiceImpl implements UserService{
             User storedUser = optionalUser.get();
             storedUser.setUsername(user.getUsername());
             storedUser.setEmail(user.getEmail());
-            if(user.getPassword() != null && user.getPassword().isEmpty()){
+            if(user.getPassword() != null && !user.getPassword().isEmpty()){
                 storedUser.setPassword(this.passwordEncoder.encode(user.getPassword()));
             }
-            storedUser.setRoles(user.getRoles());
+            if(user.getRoles() != null){
+                storedUser.setRoles(user.getRoles());
+            }
             userRepository.save(storedUser);
             return true;
         }
         else{
             return false;
         }
+    }
+
+    @Override
+    public boolean areFieldsUnique(String field){
+        Optional<User> optionalUser = userRepository.findByUsernameOrEmail(field,field);
+        return optionalUser.isEmpty();
     }
 
     /*Extra methods I'm trying to determine where I should place*/

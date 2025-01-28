@@ -1,6 +1,9 @@
 package com.nat.CineBuddy.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+
+import java.util.List;
 
 
 @Entity
@@ -14,11 +17,46 @@ public class Profile {
     private boolean hidden;
     @OneToOne
     @JoinColumn(name = "user_id")
+    @JsonIgnore
     private User user;
+    @ManyToMany(mappedBy = "members", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JsonIgnore
+    private List<WatchParty> joinedGroups;
+    @OneToMany(mappedBy = "leader")
+    @JsonIgnore
+    private List<WatchParty> hostedGroups;
+
+    @OneToMany(mappedBy = "profile", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JsonIgnore
+    private List<Vote> votes;
+
+    @OneToMany(mappedBy = "profile", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    private List<WatchList> watchLists;
+
+    @OneToMany(mappedBy = "profile", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JsonIgnore
+    private List<Review> reviews;
+
+    @OneToMany(mappedBy = "profile", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JsonIgnore
+    private List<Badge> badges;
+
+    public List<WatchList> getWatchLists() {
+        return watchLists;
+    }
+
+    public void setWatchLists(List<WatchList> watchLists) {
+        this.watchLists = watchLists;
+    }
+
 
     public Integer getId() {
         return id;
     }
+
+    public void setId(Integer id) {
+        this.id = id;
+    } //Added for VoteService Test.
 
     public String getName() {
         return name;
@@ -60,14 +98,81 @@ public class Profile {
         this.user = user;
     }
 
+    public List<WatchParty> getJoinedGroups() {
+        return joinedGroups;
+    }
+
+    public void setJoinedGroups(List<WatchParty> joinedGroups) {
+        this.joinedGroups = joinedGroups;
+    }
+
+    public List<WatchParty> getHostedGroups() {
+        return hostedGroups;
+    }
+
+    public void setHostedGroups(List<WatchParty> hostedGroups) {
+        this.hostedGroups = hostedGroups;
+    }
+
+    public List<Vote> getVotes() {
+        return votes;
+    }
+
+    public void setVotes(List<Vote> votes) {
+        this.votes = votes;
+    }
+
+    public List<Review> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(List<Review> reviews) {
+        this.reviews = reviews;
+    }
+
+    public List<Badge> getBadges() {
+        return badges;
+    }
+
+    public void setBadges(List<Badge> badges) {
+        this.badges = badges;
+    }
 
     @Override
     public String toString() {
         return "Profile{" +
-                ", image='" + image + '\'' +
-                ", bio='" + bio + '\'' +
+                "id=" + id +
                 ", name='" + name + '\'' +
-                ", private='" + hidden + '\'' +
+                ", bio='" + bio + '\'' +
+                ", image='" + image + '\'' +
+                ", hidden=" + hidden +
+                ", joinedGroups=" + joinedGroups +
+                ", hostedGroups=" + hostedGroups +
+                ", votes=" + votes +
                 '}';
+    }
+
+    //Added for VoteService Test treats two profile objects with same id the same.
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Profile profile = (Profile) o;
+        return id != null && id.equals(profile.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : 0;
+    }
+
+    /*Searches profile votes to determine if the user has voted in a watchparty.*/
+    public String movieVotedForInWatchParty(WatchParty watchParty){
+        for(Vote vote: this.votes){
+            if(vote.getWatchParty().equals(watchParty)){
+               return String.valueOf(vote.getMovieId());
+            }
+        }
+        return "-1";
     }
 }

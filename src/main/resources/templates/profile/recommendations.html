@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <th:block th:replace="~{fragments :: head}"></th:block>
+    <title>Your Recommendations</title>
+    <link rel="stylesheet" th:href="@{/css/recommendations.css}">
+</head>
+<body>
+
+
+<div th:replace="~{fragments :: page-nav}"></div>
+
+<!-- Recommendations Content -->
+<div class="container">
+    <h1>Your Recommended Movies</h1>
+
+    <!-- Show a message if no recommendations are available -->
+    <div th:if="${recommendedMovies.isEmpty()}">
+        <p>No recommended movies found. Start adding movies to your watchlist or reviewing movies to get recommendations!</p>
+    </div>
+
+    <!-- Render recommended movies in a grid -->
+    <div class="grid" th:if="${!recommendedMovies.isEmpty()}">
+        <div class="grid-item" th:each="movie : ${recommendedMovies}">
+            <a th:href="@{/movie-details/{id}(id=${movie.id})}">
+                <img th:src="@{'https://image.tmdb.org/t/p/w500' + ${movie.posterPath}}" alt="Movie Poster">
+                <h5 th:text="${movie.title}"></h5>
+            </a>
+        </div>
+    </div>
+</div>
+<!-- Back to Top Button -->
+<button id="backToTopBtn" onclick="scrollToTop()">↑ Back to Top</button>
+
+<script>
+    // Show the button when scrolling down
+    window.onscroll = function() {
+        const backToTopBtn = document.getElementById("backToTopBtn");
+        if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
+            backToTopBtn.style.display = "block";
+        } else {
+            backToTopBtn.style.display = "none";
+        }
+    };
+
+    // Smooth scroll to the top
+    function scrollToTop() {
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+    }
+</script>
+
+</body>
+</html>

@@ -1,17 +1,16 @@
+
 package com.nat.CineBuddy.services;
 
+import com.nat.CineBuddy.dto.MovieDTO;
 import com.nat.CineBuddy.models.Actor;
-import com.nat.CineBuddy.models.Movie;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import com.fasterxml.jackson.databind.JsonNode;
 
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 
@@ -29,7 +28,7 @@ public class TMDbService {
     }
 
     // Fetch movie details
-    public Movie getMovieDetails(String movieId) {
+    public MovieDTO getMovieDetails(String movieId) {
         try {
             JsonNode response = fetchFromApi("/movie/" + movieId);
             return response != null ? parseMovie(response) : null;
@@ -40,7 +39,7 @@ public class TMDbService {
     }
 
     // Fetch trending movies
-    public List<Movie> getTrendingMovies() {
+    public List<MovieDTO> getTrendingMovies() {
         try {
             JsonNode response = fetchFromApi("/trending/movie/day");
             return response != null && response.has("results") ? parseMovies(response.get("results")) : Collections.emptyList();
@@ -51,7 +50,7 @@ public class TMDbService {
     }
 
     // Fetch similar movie recommendations
-    public List<Movie> getSimilarMovieRecommendations(String movieId) {
+    public List<MovieDTO> getSimilarMovieRecommendations(String movieId) {
         try {
             JsonNode response = fetchFromApi("/movie/" + movieId + "/recommendations");
             return response != null && response.has("results") ? parseMovies(response.get("results")) : Collections.emptyList();
@@ -62,7 +61,6 @@ public class TMDbService {
     }
 
     // Fetch actors for a movie
-    //todo rename e variable to error
     public List<Actor> getMovieActors(String movieId) {
         try {
             JsonNode response = fetchFromApi("/movie/" + movieId + "/credits");
@@ -80,7 +78,7 @@ public class TMDbService {
     }
 
     // Parse a single movie JSON object into a Movie instance
-    private Movie parseMovie(JsonNode node) {
+    private MovieDTO parseMovie(JsonNode node) {
         String id = getJsonField(node, "id", "N/A");
         String title = getJsonField(node, "title", "Unknown Title");
         String overview = getJsonField(node, "overview", "No overview available");
@@ -92,11 +90,11 @@ public class TMDbService {
         String runtime = getJsonField(node, "runtime", "N/A");
         String voteAverage = getJsonField(node, "vote_average", "N/A");
 
-        return new Movie(id, title, overview, releaseDate, posterPath, genres, budget, revenue, runtime, voteAverage);
+        return new MovieDTO(id, title, overview, releaseDate, posterPath, genres, budget, revenue, runtime, voteAverage);
     }
 
     // Parse a list of movie JSON objects into a list of Movie instances
-    private List<Movie> parseMovies(JsonNode nodes) {
+    private List<MovieDTO> parseMovies(JsonNode nodes) {
         return StreamSupport.stream(nodes.spliterator(), false)
                 .map(this::parseMovie)
                 .collect(Collectors.toList());
@@ -126,26 +124,90 @@ public class TMDbService {
     private String getJsonField(JsonNode node, String fieldName, String defaultValue) {
         return node.has(fieldName) ? node.get(fieldName).asText() : defaultValue;
     }
+    public List<MovieDTO> searchMovies(String query, String searchBy, String sortBy, String genre) {
+        String endpoint = switch (searchBy.toLowerCase()) {
+            case "actor" -> "/search/person";
+            default -> "/search/movie";
+        };
 
-    /**
-     * - Searches for movies using an external API.
-     * - Takes a search query, sends a GET request to the API, and retrieves results.
-     * - Converts the API response into a list of Movie objects.
-     * - Returns the list of movies or an empty list if no results or errors occur.
-     */
-    public List<Movie> searchMovies(String query) {
+        String url = BASE_URL + endpoint + "?api_key=" + apiKey + "&query=" + query;
+
         try {
-            String url = BASE_URL + "/search/movie?query=" + URLEncoder.encode(query, StandardCharsets.UTF_8) + "&api_key=" + apiKey;
             JsonNode response = restTemplate.getForObject(url, JsonNode.class);
+            List<MovieDTO> movies = new ArrayList<>();
 
-            if (response != null && response.has("results")) {
-                return parseMovies(response.get("results"));
+            // Handle actor search using parseActorMovies
+            if ("actor".equalsIgnoreCase(searchBy) && response != null && response.has("results")) {
+                movies = parseActorMovies(response.get("results"));
             }
+
+            // Handle other searches
+            if (!"actor".equalsIgnoreCase(searchBy) && response != null && response.has("results")) {
+                movies = parseMovies(response.get("results"));
+
+                // Sort by top-rated if applicable
+                if ("top-rated".equalsIgnoreCase(sortBy)) {
+                    movies.sort((m1, m2) -> Double.compare(
+                            Double.parseDouble(m2.getVoteAverage()),
+                            Double.parseDouble(m1.getVoteAverage())
+                    ));
+                }
+            }
+
+            return movies;
+
         } catch (Exception e) {
-            System.err.println("Error searching for movies: " + e.getMessage());
+            System.err.println("Error searching movies: " + e.getMessage());
+            return Collections.emptyList();
         }
-        return Collections.emptyList();
     }
 
 
+
+    public Map<Integer, String> getGenres() {
+        String url = BASE_URL + "/genre/movie/list?api_key=" + apiKey;
+        try {
+            JsonNode response = restTemplate.getForObject(url, JsonNode.class);
+            Map<Integer, String> genres = new HashMap<>();
+            if (response != null && response.has("genres")) {
+                for (JsonNode genreNode : response.get("genres")) {
+                    genres.put(genreNode.get("id").asInt(), genreNode.get("name").asText());
+                }
+            }
+            return genres;
+        } catch (Exception e) {
+            System.err.println("Error fetching genres: " + e.getMessage());
+            return Collections.emptyMap();
+        }
+    }
+
+    public List<MovieDTO> searchMoviesByGenre(String genre, String sortBy) {
+        String url = BASE_URL + "/discover/movie?api_key=" + apiKey + "&with_genres=" + genre;
+
+        try {
+            JsonNode response = restTemplate.getForObject(url, JsonNode.class);
+            List<MovieDTO> movies = response != null && response.has("results")
+                    ? parseMovies(response.get("results"))
+                    : Collections.emptyList();
+
+            if ("top-rated".equalsIgnoreCase(sortBy)) {
+                movies.sort((m1, m2) -> Double.compare(Double.parseDouble(m2.getVoteAverage()), Double.parseDouble(m1.getVoteAverage())));
+            }
+
+            return movies;
+
+        } catch (Exception e) {
+            System.err.println("Error searching movies by genre: " + e.getMessage());
+            return Collections.emptyList();
+        }
+    }
+
+
+
+    private List<MovieDTO> parseActorMovies(JsonNode nodes) {
+        return StreamSupport.stream(nodes.spliterator(), false)
+                .flatMap(node -> node.has("known_for") ? parseMovies(node.get("known_for")).stream() : Stream.empty())
+                .distinct()
+                .collect(Collectors.toList());
+    }
 }

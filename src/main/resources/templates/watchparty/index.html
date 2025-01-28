@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org/" lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CineBuddy | Watch Party</title>
+    <th:block th:replace="~{fragments :: head}"></th:block>
+</head>
+<body>
+
+<div th:replace="~{fragments :: page-nav}"></div>
+
+<div class="container">
+    <h2>Watch Parties</h2>
+    <ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <a class="nav-link active" id="wp-organizer" data-bs-toggle="tab" href="#wp-organizer-panel" role="tab" aria-controls="wp-organizer-panel" aria-selected="true">Organizer</a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link" id="wp-member" data-bs-toggle="tab" href="#wp-member-panel" role="tab" aria-controls="wp-member-panel" aria-selected="false">Member</a>
+        </li>
+        <li class="align-content-center d-flex flex-column justify-content-center">
+            <a href="/watchparty/host" class="cursor-pointer ms-1">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" height="24" width="24">
+                    <path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 144L48 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l144 0 0 144c0 17.7 14.3 32 32 32s32-14.3 32-32l0-144 144 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-144 0 0-144z"/>
+                </svg>
+            </a>
+        </li>
+    </ul>
+    <div class="tab-content pt-5" id="tab-content">
+        <div class="tab-pane active" id="wp-organizer-panel" role="tabpanel" aria-labelledby="wp-organizer">
+            <ul th:if="${#lists.isEmpty(user.profile.hostedGroups)}">
+                <li class="list-group-item d-flex justify-content-between align-items-center">No Groups</li>
+            </ul>
+            <ul th:unless="${#lists.isEmpty(user.profile.hostedGroups)}" class="list-group">
+            <th:block th:each="hostedGroup : ${user.profile.hostedGroups}">
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div th:text="${hostedGroup.name}"></div>
+                    <div>
+                        <!--Add fancy movie card. right now just says id-->
+                        <div th:text="'members: ' + ${hostedGroup.members.size()}"></div>
+                        <div><a th:href="'/watchparty/'+${hostedGroup.id}">View</a></div>
+                    </div>
+                </li>
+            </th:block>
+            </ul>
+        </div>
+        <div class="tab-pane" id="wp-member-panel" role="tabpanel" aria-labelledby="wp-member">
+            <ul th:if="${#lists.isEmpty(user.profile.joinedGroups)}">
+                <li class="list-group-item d-flex justify-content-between align-items-center">No Groups</li>
+            </ul>
+            <ul th:unless="${#lists.isEmpty(user.profile.joinedGroups)}" class="list-group">
+                <th:block th:each="joinedGroup : ${user.profile.joinedGroups}">
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div th:text="${joinedGroup.name}"></div>
+                        <div>
+                            <div th:text="'members: ' + ${joinedGroup.members.size()}"></div>
+                            <div><a th:href="'/watchparty/'+${joinedGroup.id}">View</a></div>
+                        </div>
+                    </li>
+                </th:block>
+            </ul>
+        </div>
+    </div>
+</div>
+</body>
+</html>

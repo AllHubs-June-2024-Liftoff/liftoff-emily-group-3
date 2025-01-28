@@ -1,18 +1,20 @@
 package com.nat.CineBuddy.models;
 
+import com.nat.CineBuddy.dto.MovieDTO;
 import jakarta.persistence.*;
 
-// This annotation marks the class as a JPA entity
 @Entity
 public class Movie {
 
-    @Id // Marks 'id' as the primary key
-    private String id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
+    @Column(unique = true, nullable = false)
+    private Integer movieId;
 
     private String title;
-
     private String overview;
-
     private String releaseDate;
     private String posterPath;
     private String genres;
@@ -21,22 +23,22 @@ public class Movie {
     private String runtime;
     private String voteAverage;
 
-    // Constructors
-
-    // Empty constructor for SQL database connection
+    // Default constructor
     public Movie() {
     }
 
-    public Movie(String id, String title, String overview, String releaseDate, String posterPath) {
-        this.id = id;
+    // Constructor for essential fields
+    public Movie(Integer movieId, String title, String overview, String releaseDate, String posterPath) {
+        this.movieId = movieId;
         this.title = title;
         this.overview = overview;
         this.releaseDate = releaseDate;
         this.posterPath = posterPath;
     }
 
-    public Movie(String id, String title, String overview, String releaseDate, String posterPath, String genres, String budget, String revenue, String runtime, String voteAverage) {
-        this.id = id;
+    // Constructor for all fields
+    public Movie(Integer movieId, String title, String overview, String releaseDate, String posterPath, String genres, String budget, String revenue, String runtime, String voteAverage) {
+        this.movieId = movieId;
         this.title = title;
         this.overview = overview;
         this.releaseDate = releaseDate;
@@ -49,13 +51,30 @@ public class Movie {
     }
 
     // Getters and Setters
-
-    public String getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Integer id) {
         this.id = id;
+    }
+
+    public Integer getMovieId() {
+        return movieId;
+    }
+
+    public void setMovieId(Integer movieId) {
+        this.movieId = movieId;
+    }
+
+    // Helper method to convert Movie to MovieDTO
+    public MovieDTO toMovieDTO() {
+        MovieDTO dto = new MovieDTO();
+        dto.setId(String.valueOf(this.movieId));
+        // Populate other fields by fetching details from the API if needed
+        dto.setGenres(this.genres);
+        dto.setOverview(this.overview);
+        return dto;
     }
 
     public String getTitle() {

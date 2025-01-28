@@ -26,7 +26,13 @@
         <div class="collapse navbar-collapse" id="CBNav">
             <ul class="navbar-nav me-auto mb-2 mb-md-0">
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="/">Home link</a>
+                    <a class="nav-link active" aria-current="page" href="/watchparty">Watch Party</a>
+                </li>
+                <li sec:authorize="isAuthenticated()">
+                    <a class="nav-link active" aria-current="page" href="/watchlist">Watch List</a>
+                </li>
+                <li class="nav-item"  sec:authorize="isAuthenticated()">
+                    <a class="nav-link active" href="/recommendations">Recommendations</a>
                 </li>
                 <li class="nav-item dropdown" sec:authorize="hasRole('ADMIN')">
                     <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">Administration</a>
@@ -36,9 +42,12 @@
                     </ul>
                 </li>
             </ul>
-            <form role="search">
-                <input class="form-control" type="search" placeholder="Search" aria-label="Search">
-            </form>
+            <div class="d-flex align-items-center">
+                <a class="cine-search-button" href="/search-menu">CineSearch</a>
+                <form role="search" action="/search" method="GET" class="ms-2">
+                    <input class="form-control" type="search" name="query" placeholder="Search" aria-label="Search">
+                </form>
+            </div>
             <div class="d-flex">
                 <div class="dropdown" style="padding-left:1rem;">
                     <svg role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" height="16" width="16" fill="#FFFFFF" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -49,6 +58,11 @@
                         <li sec:authorize="isAuthenticated()"><a class="dropdown-item" href="/profile">View Profile</a></li>
                         <li sec:authorize="isAuthenticated()"><a class="dropdown-item" href="/profile/update">Edit Profile</a></li>
                         <li sec:authorize="isAuthenticated()"><hr class="dropdown-divider"></li>
+                        <li sec:authorize="isAuthenticated()"><a class="dropdown-item" href="/profile/account">Account Settings</a></li>
+                        <li sec:authorize="isAuthenticated()"><hr class="dropdown-divider"></li>
+                        <li sec:authorize="isAuthenticated()"><a class="dropdown-item" href="/watchparty">Watch Party</a></li>
+                        <li sec:authorize="isAuthenticated()"><a class="dropdown-item" href="/watchlist">Watch List</a></li>
+                        <li sec:authorize="isAuthenticated()"><hr class="dropdown-divider"></li>
                         <li sec:authorize="isAuthenticated()"><a class="dropdown-item" href="/logout">Logout</a></li>
                     </ul>
                 </div>
@@ -56,6 +70,7 @@
         </div>
     </div>
 </nav>
+
 
 </body>
 </html>
