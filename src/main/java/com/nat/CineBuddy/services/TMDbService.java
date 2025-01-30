@@ -49,6 +49,7 @@ public class TMDbService {
         }
     }
 
+
     // Fetch similar movie recommendations
     public List<MovieDTO> getSimilarMovieRecommendations(String movieId) {
         try {
