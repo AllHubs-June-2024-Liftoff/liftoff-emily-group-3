@@ -40,20 +40,22 @@
                     </div>
 
                 </div>
-                <h6 th:text="${user.getProfile().getName()} + '\'s Watchlist' "></h6>
-                <div class="movie-reviews" id="reviews-display">
+                <h6 th:text="${user.getProfile().getName()} + '\'s Watchlist'"></h6>
 
-                    <div th:each="review : ${reviews}">
+                <div class="movie-reviews" id="reviews-display">
+                    <div th:each="review : ${sortedReviews}" >
                         <div class="review">
                             <a th:href="@{/movie-details/{id}(id=${review.movieId})}" th:text="${review.movieTitle}"></a>
                             <p>
                                 <span th:each="star : ${#numbers.sequence(1, review.rating)}" class="star-filled">&#9733;</span>
                             </p>
                             <p th:text="${review.content}"></p>
+                            <small th:text="${review.formattedDateCreated}"></small>
                             <hr/>
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
         <div class="col-md-8">

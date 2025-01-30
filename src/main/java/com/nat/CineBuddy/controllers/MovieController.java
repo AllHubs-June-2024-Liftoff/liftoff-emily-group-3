@@ -11,7 +11,6 @@ import com.nat.CineBuddy.services.BadgeService;
 import com.nat.CineBuddy.services.TMDbService;
 import com.nat.CineBuddy.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -71,6 +72,9 @@ public class MovieController {
         List<MovieDTO> similarMovies = tmDbService.getSimilarMovieRecommendations(movieId);
         List<Actor> actors = tmDbService.getMovieActors(movieId);
 
+//        List<Review> sortedReviews = new ArrayList<>(reviews);
+//        Collections.reverse(sortedReviews); // Reverse the order (newest first)
+//        model.addAttribute("reviews", sortedReviews);
         model.addAttribute("reviews", reviews);
         model.addAttribute("movie", movieDTO);
         model.addAttribute("similarMovies", similarMovies);

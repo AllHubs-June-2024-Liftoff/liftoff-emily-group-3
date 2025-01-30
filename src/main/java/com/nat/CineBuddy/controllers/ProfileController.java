@@ -22,8 +22,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Controller
 public class ProfileController {
@@ -48,6 +48,12 @@ public class ProfileController {
         List<Review> reviews = reviewRepository.findByProfileIdOrderByRatingDesc(userService.getCurrentUser().getProfile().getId());
         List<Review> userReviews = reviewRepository.findByProfileId(userService.getCurrentUser().getProfile().getId());
         List<Badge> badges = badgeService.getUserBadges(userService.getCurrentUser().getProfile().getId());
+
+        List<Review> sortedReviews = reviews.stream()
+                .sorted(Comparator.comparing(Review::getDateCreated).reversed())
+                .collect(Collectors.toList());
+        model.addAttribute("sortedReviews", sortedReviews);
+
         model.addAttribute("user",userService.getCurrentUser());
         model.addAttribute("topRated",profileService.getTopRatedMovies(reviews.subList(0, Math.min(10, reviews.size()))));
         model.addAttribute("badges", badges);
