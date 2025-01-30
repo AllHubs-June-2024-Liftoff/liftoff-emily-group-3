@@ -60,6 +60,18 @@ public class BadgeService {
                 badgeRepository.save(badge);
             }
         }
+
+        int animationReviewsFourOrFiveStars = reviewRepository.countByProfileIdAndGenreContainingAndRatingGreaterThanEqual(id, "Animation", 4);
+
+        if (animationReviewsFourOrFiveStars >= 10) {
+            boolean animationBadgeExists = badgeRepository.existsByProfileIdAndBadgeName(id, "Animation Admirer");
+            if (!animationBadgeExists) {
+                Badge badge = new Badge();
+                badge.setProfile(profile);
+                badge.setBadgeName("Animation Admirer");
+                badgeRepository.save(badge);
+            }
+        }
     }
 
 

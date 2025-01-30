@@ -19,9 +19,9 @@
             <div class="d-flex justify-content-center">
                 <img th:src="${user.getProfile().getImage()}" class="border rounded-circle overflow-hidden profile-thumb">
             </div>
-            <div class="d-flex justify-content-center">
-                <a href="/profile/reviews" th:text="'Edit Reviews'"></a>
-            </div>
+<!--            <div class="d-flex justify-content-center">-->
+<!--                <a href="/profile/reviews" th:text="'Edit Reviews'"></a>-->
+<!--            </div>-->
             <div class="pt-3 border-bottom">
                 <h6 th:text="${user.getProfile().getName()} + '\'s Badges' "></h6>
                 <div class="badges-section">
@@ -30,12 +30,15 @@
                     </div>
                     <div class="badge-container" th:each="badge : ${badges}">
     <span class="badge badge-pill"
-          th:classappend="${badge.badgeName == 'First Review' ? 'badge-success' : (badge.badgeName == 'Hater' ? 'badge-danger' : 'badge-dark')}"
-          data-toggle="tooltip"
+          th:classappend="${
+            badge.badgeName == 'First Review' ? 'badge-success' :
+            (badge.badgeName == 'Hater' ? 'badge-danger' :
+            (badge.badgeName == 'Horror Enthusiast' ? 'badge-dark' :
+            (badge.badgeName == 'Animation Admirer' ? 'badge-info' : 'badge-secondary')))}"          data-toggle="tooltip"
           data-placement="right"
           th:title="${badge.badgeName == 'First Review' ? 'Awarded for submitting your first review!'
                 : (badge.badgeName == 'Hater' ? 'Given for submitting 3 or more 1-star reviews.'
-                : 'Given for reviewing 3 or more horror movies.')}"
+                : (badge.badgeName == 'Horror Enthusiast' ? 'Given for reviewing 3 or more horror movies.' : 'Awarded for giving 10+ animated movies a star rating of 4 or higher'))}"
           th:text="${badge.badgeName}"></span>
                     </div>
 
@@ -54,6 +57,9 @@
                             <hr/>
                         </div>
                     </div>
+                </div>
+                <div class="d-flex justify-content-center">
+                    <a href="/profile/reviews" th:text="'Edit Reviews'"></a>
                 </div>
 
             </div>

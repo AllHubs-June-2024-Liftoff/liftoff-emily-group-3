@@ -15,6 +15,6 @@ public interface ReviewRepository extends CrudRepository<Review, Integer> {
     int countByProfileIdAndRating(int profileId, int rating);
     List<Review> findByProfileIdOrderByRatingDesc(int profileId);
     int countByProfileIdAndGenreContaining(int profileId, String genre);
-
+    int countByProfileIdAndGenreContainingAndRatingGreaterThanEqual(int profileId, String genre, int rating);
 
 }
