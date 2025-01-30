@@ -56,6 +56,9 @@ public class WatchPartyController {
             model.addAttribute("movies",movies);
             model.addAttribute("topRatedMovies",topRatedMovies);
             model.addAttribute("votes",voteService.getAllVotes(watchParty));
+            if(watchParty.getMovieChoice() != null){
+                model.addAttribute("movieChoice",tmDbService.getMovieDetails(String.valueOf(watchParty.getMovieChoice())));
+            }
             return "watchparty/details";
         }
         else{
@@ -134,6 +137,16 @@ public class WatchPartyController {
         else{
             return "redirect:/watchparty/"+watchPartyId;
         }
+    }
+
+    @PostMapping("/{watchPartyId}/vote-reset")
+    public String resetMovieChoice(@PathVariable Integer watchPartyId) {
+        WatchParty watchparty = watchPartyService.getWatchParty(watchPartyId);
+        watchparty.setMovieChoice(null);
+        watchPartyService.updateWatchParty(watchparty.getId(),watchparty);
+        return "redirect:/watchparty/"+watchPartyId; //Redirect back to watchparty
+
+
     }
 
     @GetMapping("/add/{movieId}")

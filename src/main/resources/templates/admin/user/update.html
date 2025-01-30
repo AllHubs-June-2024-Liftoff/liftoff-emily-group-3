@@ -9,34 +9,46 @@
 <body>
 <header th:replace="~{fragments :: page-nav}"></header>
 <main class="container">
-    <h1 th:text="'Update user: '+ ${user.username}">Update user</h1>
-    <form method="post" style="max-width:600px;">
-        <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
-        <div class="form-group">
-            <label th:for="name">Username</label>
-            <input class="form-control" th:field="${user.username}" />
-            <span th:errors="${user.username}" class="error"></span>
+
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <div class="card">
+                <div class="card-header">
+                    <h1 th:text="'Update user: '+ ${user.username}">Update user</h1>
+                </div>
+
+                <div class="card-body">
+                    <form method="post" style="max-width:600px;">
+                        <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
+                        <div class="form-group">
+                            <label th:for="name">Username</label>
+                            <input class="form-control" th:field="${user.username}" />
+                            <span th:errors="${user.username}" class="error"></span>
+                        </div>
+                        <div class="form-group">
+                            <label th:for="name">Email</label>
+                            <input class="form-control" th:field="${user.email}" />
+                            <span th:errors="${user.email}" class="error"></span>
+                        </div>
+                        <div class="form-group">
+                            <label th:for="name">Password</label>
+                            <input class="form-control" th:fiecld="${user.password}" />
+                            <span th:errors="${user.password}" class="error"></span>
+                        </div>
+                        <div class="form-group">
+                            <label th:for="roles">Roles</label>
+                            <th:block th:each="role : ${roles}">
+                                <input type="checkbox" name="roles" th:value="${role.id}" th:id="'role-' + ${role.id}" th:checked="${user.getRoles.contains(role)}" />
+                                <label th:for="'role-' + ${role.id}" th:text="${role.name}"></label>
+                            </th:block>
+                        </div>
+                        <input type="submit" value="Update User" />
+                    </form>
+                    <a href="/admin/users">Users List</a>
+                </div>
+            </div>
         </div>
-        <div class="form-group">
-            <label th:for="name">Email</label>
-            <input class="form-control" th:field="${user.email}" />
-            <span th:errors="${user.email}" class="error"></span>
-        </div>
-        <div class="form-group">
-            <label th:for="name">Password</label>
-            <input class="form-control" th:fiecld="${user.password}" />
-            <span th:errors="${user.password}" class="error"></span>
-        </div>
-        <div class="form-group">
-            <label th:for="roles">Roles</label>
-            <th:block th:each="role : ${roles}">
-                <input type="checkbox" name="roles" th:value="${role.id}" th:id="'role-' + ${role.id}" th:checked="${user.getRoles.contains(role)}" />
-                <label th:for="'role-' + ${role.id}" th:text="${role.name}"></label>
-            </th:block>
-        </div>
-        <input type="submit" value="Update User" />
-    </form>
-    <a href="/admin/users">Users List</a>
+    </div>
 </main>
 </body>
 </html>

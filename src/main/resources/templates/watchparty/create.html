@@ -47,7 +47,9 @@
                         <div class="form-group mb-3 d-none">
                             <label for="members">Edit Members</label>
                             <select id="members" name="members" class="form-control" multiple="multiple" th:field="*{watchparty.members}">
-
+                                <th:block th:each="member : ${watchparty.members}">
+                                    <option name="members" th:value="${member.id}" th:text="${member.name}" checked></option>
+                                </th:block>
                             </select>
                         </div>
 
