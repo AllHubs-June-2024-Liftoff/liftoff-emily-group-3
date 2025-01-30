@@ -3,6 +3,7 @@ package com.nat.CineBuddy.services;
 import com.nat.CineBuddy.dto.UserRegistrationDTO;
 import com.nat.CineBuddy.models.Role;
 import com.nat.CineBuddy.models.User;
+import com.nat.CineBuddy.models.WatchParty;
 import com.nat.CineBuddy.repositories.UserRepository;
 import com.nat.CineBuddy.security.CBUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,8 @@ public class UserServiceImpl implements UserService{
     private PasswordEncoder passwordEncoder;
     @Autowired
     private WatchPartyService watchPartyService;
+    @Autowired
+    private VoteService voteService;
 
 
     @Override
@@ -53,10 +56,12 @@ public class UserServiceImpl implements UserService{
             Set<Role> emptyRoles = new HashSet<>();
             User storedUser = optionalUser.get();
             storedUser.setRoles(emptyRoles);
-            watchPartyService.removeFromAll(storedUser.getProfile());
-            storedUser.getProfile().setHostedGroups(new ArrayList<>());
-            storedUser.getProfile().setJoinedGroups(new ArrayList<>());
-            userRepository.save(storedUser);
+            for(WatchParty watchParty : storedUser.getProfile().getHostedGroups()){
+                voteService.deleteAllVotes(watchParty);
+            }
+            for(WatchParty watchParty : storedUser.getProfile().getJoinedGroups()){
+                voteService.retractVote(watchParty, storedUser.getProfile());
+            }
             userRepository.delete(storedUser);
         }
     }

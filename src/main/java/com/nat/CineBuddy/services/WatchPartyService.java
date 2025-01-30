@@ -16,5 +16,4 @@ public interface WatchPartyService {
     public void removeMovie(Integer watchPartyId, Integer movieId);
     public void removeMember(Integer watchPartyId, Integer memberId, Profile leader);
     public List<MovieDTO> getTopRatedMovies(WatchParty watchParty);
-    public void removeFromAll(Profile profile);
 }

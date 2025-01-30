@@ -110,6 +110,12 @@ public class WatchPartyServiceImpl implements WatchPartyService{
         if(storedWatchParty.isPresent()){
             WatchParty watchParty = storedWatchParty.get();
             watchParty.getMovies().remove(movieId);
+            List<Vote> votes = voteService.getAllVotes(watchParty);
+            for (Vote vote : votes){
+                if(vote.getMovieId().equals(movieId)){
+                    voteService.retractVote(watchParty, vote.getProfile());
+                }
+            }
             watchPartyRepository.save(watchParty);
         }
     }
@@ -132,19 +138,6 @@ public class WatchPartyServiceImpl implements WatchPartyService{
             topRatedMovies.addAll(profileService.getTopRatedMovies(reviewRepository.findByProfileIdOrderByRatingDesc(member.getUser().getProfile().getId())));
         }
         return new ArrayList<>(topRatedMovies);
-    }
-
-    public void removeFromAll(Profile profile){
-        Iterator<WatchParty> joinedIterator = new ArrayList<>(profile.getJoinedGroups()).iterator();
-        while (joinedIterator.hasNext()) {
-            WatchParty watchParty = joinedIterator.next();
-            this.leaveWatchParty(watchParty.getId(), profile);
-        }
-        Iterator<WatchParty> hostedIterator = new ArrayList<>(profile.getHostedGroups()).iterator();
-        while (hostedIterator.hasNext()) {
-            WatchParty watchParty = hostedIterator.next();
-            this.deleteWatchParty(watchParty.getId(), profile);
-        }
     }
 
 }

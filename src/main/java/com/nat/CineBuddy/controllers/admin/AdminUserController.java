@@ -15,6 +15,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashSet;
 import java.util.Optional;
 
 @Controller
@@ -71,6 +72,9 @@ public class AdminUserController {
     @PostMapping("users/update/{id}")
     public String updateUser(@Valid @ModelAttribute("user") User submittedUser, BindingResult result, @PathVariable("id") Integer userId, Errors errors, Model model){
         if(!errors.hasErrors() && !result.hasErrors()){
+            if(submittedUser.getRoles() == null){
+                submittedUser.setRoles(new HashSet<>());
+            }
             boolean success = userService.updateUser(submittedUser, userId);
             if(success){
                 return "redirect:/admin/users";
