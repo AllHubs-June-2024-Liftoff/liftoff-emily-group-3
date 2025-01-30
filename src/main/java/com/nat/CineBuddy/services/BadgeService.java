@@ -35,6 +35,7 @@ public class BadgeService {
             Badge badge = new Badge();
             badge.setProfile(profile);
             badge.setBadgeName("First Review");
+            badge.setBadgeDescription("Awarded for submitting your first review!");
             badgeRepository.save(badge);
         }
 
@@ -46,6 +47,7 @@ public class BadgeService {
                 Badge newBadge = new Badge();
                 newBadge.setProfile(profile);
                 newBadge.setBadgeName("Hater");
+                newBadge.setBadgeDescription("Given for submitting 3 or more 1-star reviews.");
                 badgeRepository.save(newBadge);
             }
         }
@@ -57,6 +59,7 @@ public class BadgeService {
                 Badge badge = new Badge();
                 badge.setProfile(profile);
                 badge.setBadgeName("Horror Enthusiast");
+                badge.setBadgeDescription("Given for reviewing 3 or more horror movies.");
                 badgeRepository.save(badge);
             }
         }
@@ -69,7 +72,21 @@ public class BadgeService {
                 Badge badge = new Badge();
                 badge.setProfile(profile);
                 badge.setBadgeName("Animation Admirer");
+                badge.setBadgeDescription("Awarded for giving 10+ animated movies a star rating of 4 or higher");
                 badgeRepository.save(badge);
+            }
+        }
+
+        int romanceReviewsFourOrFiveStars = reviewRepository.countByProfileIdAndGenreContainingAndRatingGreaterThanEqual(id, "Romance", 4);
+
+        if (romanceReviewsFourOrFiveStars >= 10) {
+            boolean romanceBadgeExists = badgeRepository.existsByProfileIdAndBadgeName(id, "Hopeless Romantic");
+                if (!romanceBadgeExists) {
+                    Badge badge = new Badge();
+                    badge.setProfile(profile);
+                    badge.setBadgeName("Hopeless Romantic");
+                    badge.setBadgeDescription("Awarded for giving 10+ romance movies a star rating of 4 or higher");
+                    badgeRepository.save(badge);
             }
         }
     }

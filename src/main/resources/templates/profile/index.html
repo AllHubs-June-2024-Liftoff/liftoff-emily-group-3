@@ -19,9 +19,7 @@
             <div class="d-flex justify-content-center">
                 <img th:src="${user.getProfile().getImage()}" class="border rounded-circle overflow-hidden profile-thumb">
             </div>
-<!--            <div class="d-flex justify-content-center">-->
-<!--                <a href="/profile/reviews" th:text="'Edit Reviews'"></a>-->
-<!--            </div>-->
+
             <div class="pt-3 border-bottom">
                 <h6 th:text="${user.getProfile().getName()} + '\'s Badges' "></h6>
                 <div class="badges-section">
@@ -34,11 +32,9 @@
             badge.badgeName == 'First Review' ? 'badge-success' :
             (badge.badgeName == 'Hater' ? 'badge-danger' :
             (badge.badgeName == 'Horror Enthusiast' ? 'badge-dark' :
-            (badge.badgeName == 'Animation Admirer' ? 'badge-info' : 'badge-secondary')))}"          data-toggle="tooltip"
+            (badge.badgeName == 'Animation Admirer' ? 'badge-info' : 'badge-pink')))}"          data-toggle="tooltip"
           data-placement="right"
-          th:title="${badge.badgeName == 'First Review' ? 'Awarded for submitting your first review!'
-                : (badge.badgeName == 'Hater' ? 'Given for submitting 3 or more 1-star reviews.'
-                : (badge.badgeName == 'Horror Enthusiast' ? 'Given for reviewing 3 or more horror movies.' : 'Awarded for giving 10+ animated movies a star rating of 4 or higher'))}"
+          th:title="${badge.badgeDescription != null ? badge.badgeDescription : 'No description available'}"
           th:text="${badge.badgeName}"></span>
                     </div>
 
@@ -135,15 +131,21 @@
 </main>
 <!-- Flickity JavaScript -->
 <script src="https://unpkg.com/flickity@2/dist/flickity.pkgd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"></script>
+
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-      const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-toggle="tooltip"]'));
-      tooltipTriggerList.map(function (tooltipTriggerEl) {
-        return new bootstrap.Tooltip(tooltipTriggerEl, {
-          placement: 'right'
+
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-toggle="tooltip"]'));
+
+
+        tooltipTriggerList.map(function (tooltipTriggerEl) {
+            new bootstrap.Tooltip(tooltipTriggerEl); // Initialize for each tooltip element
         });
-      });
     });
 </script>
+
+
 </body>
 </html>
