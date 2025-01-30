@@ -1,8 +1,6 @@
 package com.nat.CineBuddy.repositories;
 
-import com.nat.CineBuddy.models.Profile;
 import com.nat.CineBuddy.models.Review;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

@@ -13,16 +13,15 @@
 <div class="container mt-4">
   <h2>Your Reviews</h2>
 
-  <!--todo: make this sorting menu work-->
-<!--  <div class="mb-4">-->
-<!--    <form th:action="@{/profile/reviews}" method="GET">-->
-<!--      <label for="sortBy">Sort By:</label>-->
-<!--      <select id="sortBy" name="sortBy" class="form-select" onchange="this.form.submit()">-->
-<!--        <option value="rating" th:selected="${sortBy == 'rating'}">Rating</option>-->
-<!--        <option value="date" th:selected="${sortBy == 'date'}">Date Created</option>-->
-<!--      </select>-->
-<!--    </form>-->
-<!--  </div>-->
+  <div class="mb-4">
+    <form th:action="@{/profile/reviews}" method="GET">
+      <label for="sortBy">Sort By:</label>
+      <select id="sortBy" name="sortBy" class="form-select" onchange="this.form.submit()">
+        <option value="rating" th:selected="${sortBy == 'rating'}">Rating - Highest to Lowest</option>
+        <option value="date" th:selected="${sortBy == 'date'}">Date Created - Newest to Oldest</option>
+      </select>
+    </form>
+  </div>
 
   <!-- Display a message if no reviews are found -->
   <div th:if="${reviews.isEmpty()}">

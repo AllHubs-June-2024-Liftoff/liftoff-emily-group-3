@@ -142,9 +142,30 @@
 
 <div class="movie-reviews" id="reviews-display">
     <h3>User Reviews</h3>
+    <div class="mb-4">
+        <form th:action="@{/movie-details/{id}(id=${movie.id})}" method="GET" onsubmit="scrollToReviews()" class="padded-form">
+            <input type="hidden" name="id" th:value="${movie.id}"/>
+            <label for="sortBy">Sort By:</label>
+            <select id="sortBy" name="sortBy" class="form-select" onchange="this.form.submit()">
+                <option value="rating" th:selected="${sortBy == 'rating'}">Rating - Highest to Lowest</option>
+                <option value="date" th:selected="${sortBy == 'date'}">Date Created - Newest to Oldest</option>
+            </select>
+        </form>
+    </div>
     <div th:if="${reviews.isEmpty()}">
         <p>No reviews have been left for this movie.</p>
     </div>
+<!--    <div class="mb-4">-->
+<!--        <form th:action="@{/movie-details/{movie.id}}" method="GET">-->
+<!--            <input type="hidden" name="movieId" th:value="${movie.id}"/>-->
+<!--            <label for="sortBy">Sort By:</label>-->
+<!--            <select id="sortBy" name="sortBy" class="form-select" onchange="this.form.submit()">-->
+<!--                <option value="rating" th:selected="${sortBy == 'rating'}">Rating - Highest to Lowest</option>-->
+<!--                <option value="date" th:selected="${sortBy == 'date'}">Date Created - Newest to Oldest</option>-->
+<!--            </select>-->
+<!--        </form>-->
+<!--    </div>-->
+
     <div th:each="review : ${reviews}">
         <div class="review">
             <p><strong th:text="${review.profile.name}"></strong> | Rating: <span th:each="star : ${#numbers.sequence(1, review.rating)}" class="star-filled">&#9733;</span></p>
@@ -170,6 +191,14 @@
             }
         });
     });
+</script>
+
+<script>
+    function scrollToReviews() {
+       window.location.hash = "reviews-display";
+       document.getElementById("reviews-display").scrollIntoView({behavior: "smooth"});
+   }
+
 </script>
 
 </body>
