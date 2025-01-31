@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CineBuddy | Watch Party</title>
     <th:block th:replace="~{fragments :: head}"></th:block>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
 </head>
 <body>
 
@@ -29,9 +30,9 @@
             </a>
         </li>
     </ul>
-    <div class="tab-content pt-5" id="tab-content">
+    <div class="tab-content p-2 bg-light" id="tab-content">
         <div class="tab-pane active" id="wp-organizer-panel" role="tabpanel" aria-labelledby="wp-organizer">
-            <ul th:if="${#lists.isEmpty(user.profile.hostedGroups)}">
+            <ul th:if="${#lists.isEmpty(user.profile.hostedGroups)}" class="list-group">
                 <li class="list-group-item d-flex justify-content-between align-items-center">No Groups</li>
             </ul>
             <ul th:unless="${#lists.isEmpty(user.profile.hostedGroups)}" class="list-group">
@@ -39,7 +40,6 @@
                 <li class="list-group-item d-flex justify-content-between align-items-center">
                     <div th:text="${hostedGroup.name}"></div>
                     <div>
-                        <!--Add fancy movie card. right now just says id-->
                         <div th:text="'members: ' + ${hostedGroup.members.size()}"></div>
                         <div><a th:href="'/watchparty/'+${hostedGroup.id}">View</a></div>
                     </div>
@@ -48,7 +48,7 @@
             </ul>
         </div>
         <div class="tab-pane" id="wp-member-panel" role="tabpanel" aria-labelledby="wp-member">
-            <ul th:if="${#lists.isEmpty(user.profile.joinedGroups)}">
+            <ul th:if="${#lists.isEmpty(user.profile.joinedGroups)}" class="list-group">
                 <li class="list-group-item d-flex justify-content-between align-items-center">No Groups</li>
             </ul>
             <ul th:unless="${#lists.isEmpty(user.profile.joinedGroups)}" class="list-group">

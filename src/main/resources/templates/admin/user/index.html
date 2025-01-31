@@ -8,6 +8,7 @@
 </head>
 <body>
 <header th:replace="~{fragments :: page-nav}"></header>
+<div class="container bg-light mt-1">
     <p th:unless="${users} and ${users.size()}" class="">No Users!</p>
     <div class="d-flex justify-content-end">
         <p th:text="|User Count: ${users.size()}|" class="px-2 my-0 align-self-center"></p>
@@ -53,6 +54,7 @@
             </tbody>
         </table>
     </div>
+</div>
 </body>
     <script src="https://cdn.datatables.net/2.0.0/js/dataTables.min.js" crossorigin="anonymous"></script>
     <link href="https://cdn.datatables.net/2.0.0/css/dataTables.dataTables.min.css" rel="stylesheet" crossorigin="anonymous">

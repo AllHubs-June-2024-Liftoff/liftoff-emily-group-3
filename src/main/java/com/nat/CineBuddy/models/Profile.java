@@ -19,25 +19,26 @@ public class Profile {
     @JoinColumn(name = "user_id")
     @JsonIgnore
     private User user;
-    @ManyToMany(mappedBy = "members", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToMany(mappedBy = "members", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
     @JsonIgnore
     private List<WatchParty> joinedGroups;
-    @OneToMany(mappedBy = "leader")
+    @OneToMany(mappedBy = "leader", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
     @JsonIgnore
     private List<WatchParty> hostedGroups;
 
-    @OneToMany(mappedBy = "profile", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @OneToMany(mappedBy = "profile", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
     @JsonIgnore
     private List<Vote> votes;
 
-    @OneToMany(mappedBy = "profile", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @OneToMany(mappedBy = "profile", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
+    @JsonIgnore
     private List<WatchList> watchLists;
 
-    @OneToMany(mappedBy = "profile", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @OneToMany(mappedBy = "profile", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
     @JsonIgnore
     private List<Review> reviews;
 
-    @OneToMany(mappedBy = "profile", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @OneToMany(mappedBy = "profile", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
     @JsonIgnore
     private List<Badge> badges;
 
@@ -148,7 +149,7 @@ public class Profile {
                 ", hidden=" + hidden +
                 ", joinedGroups=" + joinedGroups +
                 ", hostedGroups=" + hostedGroups +
-                ", votes=" + votes +
+                ", votes=" + votes.size() +
                 '}';
     }
 
