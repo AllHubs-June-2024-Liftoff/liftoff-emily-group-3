@@ -46,20 +46,6 @@ public class ReviewController {
     }
 
 
-//    @GetMapping("/profile/reviews")
-//    public String viewUserReviews(Principal principal, Model model, @RequestParam(value = "sort", required = false) String sort) {
-//
-//        List<Review> userReviews = reviewRepository.findByProfileId(userService.getCurrentUser().getProfile().getId());
-//
-//        for (Review review : userReviews) {
-//            MovieDTO movieDTO = tmDbService.getMovieDetails(review.getMovieId());
-//            review.setMovieTitle(movieDTO.getTitle());
-//        }
-//
-//        model.addAttribute("reviews", userReviews);
-//
-//        return "profile/reviews";
-//    }
 
     @GetMapping("/profile/reviews")
     public String viewReviews(@RequestParam(value = "sortBy", defaultValue = "date") String sortBy, Model model) {

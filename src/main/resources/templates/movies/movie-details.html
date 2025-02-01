@@ -147,24 +147,14 @@
             <input type="hidden" name="id" th:value="${movie.id}"/>
             <label for="sortBy">Sort By:</label>
             <select id="sortBy" name="sortBy" class="form-select" onchange="this.form.submit()">
-                <option value="rating" th:selected="${sortBy == 'rating'}">Rating - Highest to Lowest</option>
                 <option value="date" th:selected="${sortBy == 'date'}">Date Created - Newest to Oldest</option>
+                <option value="rating" th:selected="${sortBy == 'rating'}">Rating - Highest to Lowest</option>
             </select>
         </form>
     </div>
     <div th:if="${reviews.isEmpty()}">
         <p>No reviews have been left for this movie.</p>
     </div>
-<!--    <div class="mb-4">-->
-<!--        <form th:action="@{/movie-details/{movie.id}}" method="GET">-->
-<!--            <input type="hidden" name="movieId" th:value="${movie.id}"/>-->
-<!--            <label for="sortBy">Sort By:</label>-->
-<!--            <select id="sortBy" name="sortBy" class="form-select" onchange="this.form.submit()">-->
-<!--                <option value="rating" th:selected="${sortBy == 'rating'}">Rating - Highest to Lowest</option>-->
-<!--                <option value="date" th:selected="${sortBy == 'date'}">Date Created - Newest to Oldest</option>-->
-<!--            </select>-->
-<!--        </form>-->
-<!--    </div>-->
 
     <div th:each="review : ${reviews}">
         <div class="review">

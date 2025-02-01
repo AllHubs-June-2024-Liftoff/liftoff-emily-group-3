@@ -47,38 +47,6 @@ public class MovieController {
     @Autowired
     private MovieRepository movieRepository;
 
-//    @PostMapping("/submit-review")
-//    public String submitReview(@RequestParam String movieId, @RequestParam int rating,
-//                               @RequestParam String review, Principal principal, Model model) {
-//
-//        if (principal == null) {
-//            return "redirect:/login";
-//        }
-//        Review newReview = new Review();
-//        MovieDTO movieDTO = tmDbService.getMovieDetails(movieId);
-//        newReview.setMovieId(movieId);
-//        newReview.setProfile(userService.getCurrentUser().getProfile());
-//        newReview.setRating(rating);
-//        newReview.setContent(review);
-//        newReview.setDateCreated(LocalDateTime.now());
-//        newReview.setMovieTitle(movieDTO.getTitle());
-//        newReview.setGenre(movieDTO.getGenres());
-//
-//        reviewRepository.save(newReview);
-//        badgeService.awardBadge(userService.getCurrentUser().getProfile().getId());
-//
-//
-//        List<Review> reviews = reviewRepository.findByMovieId(movieId);
-//        List<MovieDTO> similarMovies = tmDbService.getSimilarMovieRecommendations(movieId);
-//        List<Actor> actors = tmDbService.getMovieActors(movieId);
-//
-//        model.addAttribute("reviews", reviews);
-//        model.addAttribute("movie", movieDTO);
-//        model.addAttribute("similarMovies", similarMovies);
-//        model.addAttribute("actors", actors);
-//
-//        return "movies/movie-details";
-//    }
 
     @PostMapping("/submit-review")
     public String submitReview(@RequestParam String movieId, @RequestParam int rating,

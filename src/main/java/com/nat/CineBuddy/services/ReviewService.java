@@ -18,8 +18,13 @@ public class ReviewService {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private BadgeService badgeService;
+
     public void deleteReview(Integer reviewId) {
+
         reviewRepository.deleteById(reviewId);
+
     }
 
     public Review createNewReview(String movieId, int rating, String reviewContent, MovieDTO movieDTO) {

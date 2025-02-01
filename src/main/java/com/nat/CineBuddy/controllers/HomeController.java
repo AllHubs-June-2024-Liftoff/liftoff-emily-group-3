@@ -19,7 +19,9 @@ public class HomeController {
     @GetMapping("/")
     public String trendingMovies(Model model) {
         List<MovieDTO> movies = tmDbService.getTrendingMovies();  // Use MovieDTO here
+        List<MovieDTO> upcomingMovies = tmDbService.getUpcomingMovies();
         model.addAttribute("movies", movies);
+        model.addAttribute("upcomingMovies", upcomingMovies);
         return "index";
     }
 }
