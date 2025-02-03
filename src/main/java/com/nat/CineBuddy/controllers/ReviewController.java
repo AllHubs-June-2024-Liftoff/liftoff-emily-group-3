@@ -2,7 +2,6 @@ package com.nat.CineBuddy.controllers;
 
 import com.nat.CineBuddy.dto.MovieDTO;
 import com.nat.CineBuddy.models.Review;
-import com.nat.CineBuddy.models.User;
 import com.nat.CineBuddy.repositories.ReviewRepository;
 import com.nat.CineBuddy.services.ReviewService;
 import com.nat.CineBuddy.services.TMDbService;
@@ -17,7 +16,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 public class ReviewController {
@@ -45,22 +46,26 @@ public class ReviewController {
     }
 
 
+
     @GetMapping("/profile/reviews")
-    public String viewUserReviews(Principal principal, Model model, @RequestParam(value = "sort", required = false) String sort) {
+    public String viewReviews(@RequestParam(value = "sortBy", defaultValue = "date") String sortBy, Model model) {
+        List<Review> reviews = reviewRepository.findByProfileIdOrderByRatingDesc(userService.getCurrentUser().getProfile().getId());
 
-        List<Review> userReviews = reviewRepository.findByProfileId(userService.getCurrentUser().getProfile().getId());
-
-        // Set movie titles using TMDB service
-        for (Review review : userReviews) {
-            MovieDTO movieDTO = tmDbService.getMovieDetails(review.getMovieId());  // Get movie details by ID
-            review.setMovieTitle(movieDTO.getTitle());  // Set movie title
+        // Sort reviews based on the selected sort option
+        if ("rating".equals(sortBy)) {
+            reviews = reviews.stream()
+                    .sorted(Comparator.comparingInt(Review::getRating).reversed()) // Sorting by rating (descending)
+                    .collect(Collectors.toList());
+        } else if ("date".equals(sortBy)) {
+            reviews = reviews.stream()
+                    .sorted(Comparator.comparing(Review::getDateCreated).reversed()) // Sorting by date (descending)
+                    .collect(Collectors.toList());
         }
 
-
-        // Add reviews to the model
-        model.addAttribute("reviews", userReviews);
-
+        model.addAttribute("reviews", reviews);
+        model.addAttribute("sortBy", sortBy);  // Pass the selected sort option to the view
         return "profile/reviews";
     }
+
 
 }

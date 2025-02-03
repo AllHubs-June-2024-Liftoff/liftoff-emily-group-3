@@ -1,8 +1,6 @@
 package com.nat.CineBuddy.repositories;
 
-import com.nat.CineBuddy.models.Profile;
 import com.nat.CineBuddy.models.Review;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
@@ -15,6 +13,6 @@ public interface ReviewRepository extends CrudRepository<Review, Integer> {
     int countByProfileIdAndRating(int profileId, int rating);
     List<Review> findByProfileIdOrderByRatingDesc(int profileId);
     int countByProfileIdAndGenreContaining(int profileId, String genre);
-
+    int countByProfileIdAndGenreContainingAndRatingGreaterThanEqual(int profileId, String genre, int rating);
 
 }

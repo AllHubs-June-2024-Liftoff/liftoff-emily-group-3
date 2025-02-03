@@ -2,7 +2,6 @@
 package com.nat.CineBuddy.repositories;
 
 import com.nat.CineBuddy.models.Badge;
-import com.nat.CineBuddy.models.Profile;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

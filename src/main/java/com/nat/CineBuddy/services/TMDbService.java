@@ -49,6 +49,17 @@ public class TMDbService {
         }
     }
 
+    public List<MovieDTO> getUpcomingMovies() {
+        try {
+            JsonNode response = fetchFromApi("/movie/upcoming");
+            return response != null && response.has("results") ? parseMovies(response.get("results")) : Collections.emptyList();
+        } catch (Exception e) {
+            System.err.println("Error fetching trending movies: " + e.getMessage());
+            return Collections.emptyList();
+        }
+    }
+
+
     // Fetch similar movie recommendations
     public List<MovieDTO> getSimilarMovieRecommendations(String movieId) {
         try {

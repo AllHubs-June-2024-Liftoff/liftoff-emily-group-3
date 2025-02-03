@@ -211,3 +211,15 @@
     color: #202020;
     margin: 0;
 }
+
+.movie-reviews {
+        max-height: 300px;
+        overflow-y: auto;
+        border: 1px solid #ccc;
+        padding: 10px;
+    }
+
+.badge-pink {
+    background-color: #FF69B4;
+    color: white;
+}

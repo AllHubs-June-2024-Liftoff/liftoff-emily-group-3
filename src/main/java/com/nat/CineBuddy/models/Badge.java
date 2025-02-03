@@ -19,10 +19,11 @@ public class Badge {
     public Badge() {
     }
 
-    public Badge(Integer id, Profile profile, String badgeName) {
+    public Badge(Integer id, Profile profile, String badgeName, String badgeDescription) {
         this.id = id;
         this.profile = profile;
         this.badgeName = badgeName;
+        this.badgeDescription = badgeDescription;
     }
 
     public Badge(String badgeName, String badgeDescription) {

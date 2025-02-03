@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <th:block th:replace="~{fragments :: head}"></th:block>
   <title>Your Reviews</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/flickity@2/dist/flickity.min.css">
@@ -13,17 +14,15 @@
 <div class="container mt-4">
   <h2>Your Reviews</h2>
 
-  <!--todo: make this sorting menu work-->
-<!--  <div class="mb-4">-->
-<!--    <form th:action="@{/profile/reviews}" method="GET">-->
-<!--      <label for="sortBy">Sort By:</label>-->
-<!--      <select id="sortBy" name="sortBy" class="form-select" onchange="this.form.submit()">-->
-<!--        <option value="rating" th:selected="${sortBy == 'rating'}">Rating</option>-->
-<!--        <option value="title" th:selected="${sortBy == 'title'}">Alphabetically by Title</option>-->
-<!--        <option value="date" th:selected="${sortBy == 'date'}">Date Created</option>-->
-<!--      </select>-->
-<!--    </form>-->
-<!--  </div>-->
+  <div class="mb-4">
+    <form th:action="@{/profile/reviews}" method="GET">
+      <label for="sortBy">Sort By:</label>
+      <select id="sortBy" name="sortBy" class="form-select" onchange="this.form.submit()">
+        <option value="rating" th:selected="${sortBy == 'rating'}">Rating - Highest to Lowest</option>
+        <option value="date" th:selected="${sortBy == 'date'}">Date Created - Newest to Oldest</option>
+      </select>
+    </form>
+  </div>
 
   <!-- Display a message if no reviews are found -->
   <div th:if="${reviews.isEmpty()}">
@@ -60,7 +59,7 @@
 
 
   <!-- Button to add a new review -->
-  <a href="/search">
+  <a href="/search-menu">
     <button class="btn btn-primary">Write a New Review</button>
   </a>
 </div>
