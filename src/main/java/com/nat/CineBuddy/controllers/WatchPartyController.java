@@ -69,7 +69,9 @@ public class WatchPartyController {
     @GetMapping("/host")
     public String newWatchPartyForm(Model model){
         model.addAttribute("user",userService.getCurrentUser());
-        model.addAttribute("watchparty", new WatchParty());
+        WatchParty watchParty = new WatchParty();
+        watchParty.setMembers(new ArrayList<>(List.of(userService.getCurrentUser().getProfile())));
+        model.addAttribute("watchparty", watchParty);
         return "watchparty/create";
     }
 
