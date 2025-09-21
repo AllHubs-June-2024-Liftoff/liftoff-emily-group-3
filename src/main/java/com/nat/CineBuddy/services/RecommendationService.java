@@ -11,10 +11,7 @@ import com.nat.CineBuddy.repositories.WatchListRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class RecommendationService {
@@ -64,6 +61,28 @@ public class RecommendationService {
         return userReviews.stream()
                 .map(Review::getMovieId)
                 .toList();
+    }
+
+    public List<MovieDTO> getRecommendationsFromWatchlist(Profile profile) {
+        List<String> watchlistMovies = getAllWatchlistMovies(profile);
+        Map<String, MovieDTO> dedup = new LinkedHashMap<>();
+        for (String movieId : watchlistMovies) {
+            for (MovieDTO rec : tmDbService.getSimilarMovieRecommendations(movieId)) {
+                dedup.putIfAbsent(rec.getId(), rec); // keeps first-seen order
+            }
+        }
+        return new ArrayList<>(dedup.values());
+    }
+
+    public List<MovieDTO> getRecommendationsFromReviews(Profile profile) {
+        List<String> reviewedMovies = getAllReviewedMovies(profile);
+        Map<String, MovieDTO> dedup = new LinkedHashMap<>();
+        for (String movieId : reviewedMovies) {
+            for (MovieDTO rec : tmDbService.getSimilarMovieRecommendations(movieId)) {
+                dedup.putIfAbsent(rec.getId(), rec);
+            }
+        }
+        return new ArrayList<>(dedup.values());
     }
 
 

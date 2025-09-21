@@ -16,20 +16,33 @@
 <div class="container">
     <h1>Your Recommended Movies</h1>
 
-    <!-- Show a message if no recommendations are available -->
-    <div th:if="${recommendedMovies.isEmpty()}">
+    <div th:if="${#lists.isEmpty(recommendedFromWatchlist) and #lists.isEmpty(recommendedFromReviews)}">
         <p>No recommended movies found. Start adding movies to your watchlist or reviewing movies to get recommendations!</p>
     </div>
 
-    <!-- Render recommended movies in a grid -->
-    <div class="grid" th:if="${!recommendedMovies.isEmpty()}">
-        <div class="grid-item" th:each="movie : ${recommendedMovies}">
-            <a th:href="@{/movie-details/{id}(id=${movie.id})}">
-                <img th:src="@{'https://image.tmdb.org/t/p/w500' + ${movie.posterPath}}" alt="Movie Poster">
-                <h5 th:text="${movie.title}"></h5>
-            </a>
+    <section th:if="${!#lists.isEmpty(recommendedFromWatchlist)}" class="mb-4">
+        <h2>Because you watched</h2>
+        <div class="grid">
+            <div class="grid-item" th:each="movie : ${recommendedFromWatchlist}">
+                <a th:href="@{/movie-details/{id}(id=${movie.id})}">
+                    <img th:src="@{'https://image.tmdb.org/t/p/w500' + ${movie.posterPath}}" th:alt="${movie.title}">
+                    <h5 th:text="${movie.title}"></h5>
+                </a>
+            </div>
         </div>
-    </div>
+    </section>
+
+    <section th:if="${!#lists.isEmpty(recommendedFromReviews)}">
+        <h2>Because you reviewed</h2>
+        <div class="grid">
+            <div class="grid-item" th:each="movie : ${recommendedFromReviews}">
+                <a th:href="@{/movie-details/{id}(id=${movie.id})}">
+                    <img th:src="@{'https://image.tmdb.org/t/p/w500' + ${movie.posterPath}}" th:alt="${movie.title}">
+                    <h5 th:text="${movie.title}"></h5>
+                </a>
+            </div>
+        </div>
+    </section>
 </div>
 <!-- Back to Top Button -->
 <button id="backToTopBtn" onclick="scrollToTop()">↑ Back to Top</button>

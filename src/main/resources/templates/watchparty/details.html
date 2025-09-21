@@ -20,6 +20,17 @@
 
 <div class="container mt-2">
 
+    <!-- Flash alerts (Bootstrap) -->
+    <div th:if="${info}" class="alert alert-info" role="status" th:text="${info}"></div>
+    <div th:if="${success}" class="alert alert-success" role="status" th:text="${success}"></div>
+    <div th:if="${error}" class="alert alert-danger" role="alert" th:text="${error}"></div>
+
+    <!-- Optional winner banner -->
+    <div th:if="${winnerMovieId}" class="alert alert-primary" role="status">
+        Winner movie ID: <span th:text="${winnerMovieId}"></span>
+    </div>
+
+
     <div class="d-flex justify-content-center">
         <h2 th:text="${watchparty.name}"></h2>
     </div>

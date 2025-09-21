@@ -7,15 +7,19 @@ import com.nat.CineBuddy.services.UserService;
 import com.nat.CineBuddy.services.WatchPartyService;
 import com.nat.CineBuddy.services.VoteService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/votes")
-public class VoteController {
+public class
+VoteController {
 
     @Autowired
     private VoteService voteService;
@@ -29,17 +33,22 @@ public class VoteController {
     /**
      * Cast a vote for a movie in a group.
      */
+    /** Added flash messages for UX clarity */
     @PostMapping("/{watchPartyId}/vote")
-    public String castVote(@PathVariable Integer watchPartyId, @RequestParam Integer movieId) {
-        WatchParty watchParty = watchPartyService.getWatchParty(watchPartyId); // Using existing method instead of findById.
-        boolean success = voteService.castVote(watchParty, movieId, userService.getCurrentUser().getProfile()); // Cast vote
-        return "redirect:/watchparty/"+watchPartyId; //Return back to the watchparty
+    public String castVote(@PathVariable Integer watchPartyId, @RequestParam Integer movieId,
+                           RedirectAttributes redirectAttributes) {
+        WatchParty watchParty = watchPartyService.getWatchParty(watchPartyId);
+        boolean success = voteService.castVote(watchParty, movieId, userService.getCurrentUser().getProfile());
+        redirectAttributes.addFlashAttribute(success ? "success" : "info",
+                success ? "Vote submitted." : "You have already voted.");
+        return "redirect:/watchparty/" + watchPartyId;
     }
 
     /**
      * Retrieve the current vote counts for all movies in a group.
      */
     @GetMapping("/{watchPartyId}/votes")
+    @ResponseBody
     public Map<Integer, Integer> getVoteCounts(@PathVariable Integer watchPartyId) {
         // Use viewWatchParty to fetch the WatchParty entity
         WatchParty watchParty = watchPartyService.getWatchParty(watchPartyId);
@@ -51,10 +60,18 @@ public class VoteController {
      * Get the most voted movie in a group.
      */
     @GetMapping("/{watchPartyId}/results")
-    public String getMostVotedMovie(@PathVariable Integer watchPartyId) {
+    public String getMostVotedMovie(@PathVariable Integer watchPartyId, RedirectAttributes redirectAttributes) {
         // Use viewWatchParty to fetch the WatchParty entity
         WatchParty watchParty = watchPartyService.getWatchParty(watchPartyId);
-        return "The most voted movie is: " + voteService.getMostVotedMovie(watchParty);
+        Optional<Integer> winnerMovieId = voteService.getMostVotedMovieId(watchParty);
+
+        if (winnerMovieId.isEmpty()) {
+            redirectAttributes.addFlashAttribute("info", "No votes yet for this watch party.");
+            return "redirect:/watchparty/" + watchPartyId;
+        }
+
+        redirectAttributes.addFlashAttribute("winnerMovieId", winnerMovieId.get());
+        return "redirect:/watchparty/" + watchPartyId;
     }
 
     /**
@@ -63,7 +80,8 @@ public class VoteController {
      * @return Returning all votes for that watchparty.
      */
 
-    @PostMapping("/{watchPartyId}/all")
+    @PostMapping(value = "/{watchPartyId}/all", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
     public List<Vote> getAllVotes(@PathVariable Integer watchPartyId) {
         WatchParty watchParty = watchPartyService.getWatchParty(watchPartyId);
         return voteService.getAllVotes(watchParty);

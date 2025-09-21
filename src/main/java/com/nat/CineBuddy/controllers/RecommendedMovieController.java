@@ -28,8 +28,17 @@ public class RecommendedMovieController {
     @GetMapping("/recommendations")
     public String getRecommendations(Model model) {
         Profile profile = userService.getCurrentUser().getProfile();
-        List<MovieDTO> recommendations = recommendationService.getRecommendationsBasedOnWatchlistAndReviews(profile);
-        model.addAttribute("recommendedMovies", recommendations);
+
+        List<MovieDTO> fromWatchlist = recommendationService.getRecommendationsFromWatchlist(profile);
+        List<MovieDTO> fromReviews   = recommendationService.getRecommendationsFromReviews(profile);
+
+        int cap = 12;
+        if (fromWatchlist.size() > cap) fromWatchlist = fromWatchlist.subList(0, cap);
+        if (fromReviews.size() > cap)   fromReviews   = fromReviews.subList(0, cap);
+
+        model.addAttribute("recommendedFromWatchlist", fromWatchlist);
+        model.addAttribute("recommendedFromReviews", fromReviews);
         return "profile/recommendations";
     }
+
 }

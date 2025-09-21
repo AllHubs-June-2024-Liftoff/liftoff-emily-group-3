@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class VoteService {
@@ -59,6 +60,16 @@ public class VoteService {
                 .max(Map.Entry.comparingByValue())
                 .orElseThrow(() -> new IllegalStateException("No votes yet"))
                 .getKey();
+    }
+
+    public Optional<Integer> getMostVotedMovieId(WatchParty watchParty) {
+        Map<Integer, Integer> voteCounts = getAllVoteCounts(watchParty);
+        if (voteCounts.isEmpty()) return Optional.empty();
+
+        // (Algorithms pass can add a deterministic tie-break later)
+        return voteCounts.entrySet().stream()
+                .max(Map.Entry.comparingByValue())
+                .map(Map.Entry::getKey);
     }
 
     /**
