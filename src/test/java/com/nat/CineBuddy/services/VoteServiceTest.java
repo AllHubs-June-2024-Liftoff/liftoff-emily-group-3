@@ -183,4 +183,32 @@ class VoteServiceTest {
         assertFalse(ok);
         verify(voteRepository, never()).deleteAll(anyList());
     }
+
+    @Test
+    void castVote_usesExistsCheckReturnsFalseWhenAlreadyVoted() {
+        WatchParty wp = new WatchParty();
+        Profile p = new Profile();
+        // Simulate already voted:
+        when(voteRepository.existsByWatchPartyAndProfile(wp, p)).thenReturn(true);
+
+        boolean ok = voteService.castVote(wp, 99, p);
+
+        assertFalse(ok);
+        verify(voteRepository, never()).save(any());
+    }
+
+    @Test
+    void getMostVotedMovieId_tiePicksLowerId() {
+        WatchParty wp = new WatchParty();
+        // 1 vote for 20, 1 vote for 10 → tie → lower id (10) should win
+        Vote a = new Vote(); a.setWatchParty(wp); a.setMovieId(20); a.setProfile(new Profile());
+        Vote b = new Vote(); b.setWatchParty(wp); b.setMovieId(10); b.setProfile(new Profile());
+        when(voteRepository.findByWatchParty(wp)).thenReturn(List.of(a, b));
+
+        var winner = voteService.getMostVotedMovieId(wp);
+
+        assertTrue(winner.isPresent());
+        assertEquals(10, winner.get());
+    }
+
 }

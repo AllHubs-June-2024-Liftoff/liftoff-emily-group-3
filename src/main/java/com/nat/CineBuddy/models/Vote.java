@@ -1,6 +1,8 @@
 package com.nat.CineBuddy.models;
 
 import jakarta.persistence.*;
+
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,16 +11,27 @@ public class Vote {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id; // Unique identifier for the vote session
+    private Integer id;
 
     @ManyToOne
-    private WatchParty watchParty;// Links the votes to a watchParty
+    @JoinColumn(name = "watch_party_id", nullable = false)
+    private WatchParty watchParty;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    private Profile profile; // The ID of the user who voted
+    @JoinColumn(name = "profile_id", nullable = false)
+    private Profile profile;
 
-    private Integer movieId; // The ID of the movie the user voted for
+    @Column(name = "movie_id", nullable = false)
+    private Integer movieId;
 
+    // MySQL 8 maps Instant -> TIMESTAMP; Hibernate will add this column
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private Instant createdAt;
+
+    @PrePersist
+    void onCreate() {
+        if (createdAt == null) createdAt = Instant.now();
+    }
 
 
     // Getters and setters

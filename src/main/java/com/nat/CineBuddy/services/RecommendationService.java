@@ -3,7 +3,6 @@ package com.nat.CineBuddy.services;
 import com.nat.CineBuddy.dto.MovieDTO;
 import com.nat.CineBuddy.models.Profile;
 import com.nat.CineBuddy.models.Review;
-//import com.nat.CineBuddy.models.WatchList;
 import com.nat.CineBuddy.models.WatchList;
 import com.nat.CineBuddy.repositories.RecommendedMovieRepository;
 import com.nat.CineBuddy.repositories.ReviewRepository;
@@ -29,35 +28,37 @@ public class RecommendationService {
     private ReviewRepository reviewRepository;
 
 
-
+    /**
+     * Stable de-dup by movie id (first-seen wins), preserves insertion order.
+     */
+    private List<MovieDTO> dedupeStableById(List<MovieDTO> input) {
+        Map<String, MovieDTO> seen = new LinkedHashMap<>();
+        for (MovieDTO rec : input) {
+            seen.putIfAbsent(rec.getId(), rec);
+        }
+        return new ArrayList<>(seen.values());
+    }
 
     /**
      * Get all movies in the user's watchlist.
      */
     public List<String> getAllWatchlistMovies(Profile profile) {
-        //Fetch watchlists by profile.
         List<WatchList> watchLists = watchListRepository.findByProfile(profile);
 
         List<String> allMovieIds = new ArrayList<>();
         for (WatchList watchList : watchLists) {
-            // Iterate through each movie in the watchlist
             for (Integer movieId : watchList.getMovies()) {
-                // Convert each Integer to String and add to allMovieIds
                 allMovieIds.add(movieId.toString());
             }
         }
         return allMovieIds;
-
     }
 
     /**
      * Get all movies reviewed by the user.
      */
     public List<String> getAllReviewedMovies(Profile profile) {
-        // Fetch reviews by the user's username.
         List<Review> userReviews = reviewRepository.findByProfileId(profile.getId());
-
-        // Extract movie IDs from the reviews.
         return userReviews.stream()
                 .map(Review::getMovieId)
                 .toList();
@@ -65,49 +66,38 @@ public class RecommendationService {
 
     public List<MovieDTO> getRecommendationsFromWatchlist(Profile profile) {
         List<String> watchlistMovies = getAllWatchlistMovies(profile);
-        Map<String, MovieDTO> dedup = new LinkedHashMap<>();
+        List<MovieDTO> recs = new ArrayList<>();
         for (String movieId : watchlistMovies) {
-            for (MovieDTO rec : tmDbService.getSimilarMovieRecommendations(movieId)) {
-                dedup.putIfAbsent(rec.getId(), rec); // keeps first-seen order
-            }
+            recs.addAll(tmDbService.getSimilarMovieRecommendations(movieId));
         }
-        return new ArrayList<>(dedup.values());
+        return dedupeStableById(recs); // stable dedup by id
     }
 
     public List<MovieDTO> getRecommendationsFromReviews(Profile profile) {
         List<String> reviewedMovies = getAllReviewedMovies(profile);
-        Map<String, MovieDTO> dedup = new LinkedHashMap<>();
+        List<MovieDTO> recs = new ArrayList<>();
         for (String movieId : reviewedMovies) {
-            for (MovieDTO rec : tmDbService.getSimilarMovieRecommendations(movieId)) {
-                dedup.putIfAbsent(rec.getId(), rec);
-            }
+            recs.addAll(tmDbService.getSimilarMovieRecommendations(movieId));
         }
-        return new ArrayList<>(dedup.values());
+        return dedupeStableById(recs); // stable dedup by id
     }
-
 
     /**
      * Get movie recommendations based on the user's watchlist and reviews.
      */
     public List<MovieDTO> getRecommendationsBasedOnWatchlistAndReviews(Profile profile) {
-        // Fetch all movies in the watchlist.
         List<String> watchlistMovies = getAllWatchlistMovies(profile);
+        List<String> reviewedMovies  = getAllReviewedMovies(profile);
 
-        // Fetch all movies the user has reviewed.
-        List<String> reviewedMovies = getAllReviewedMovies(profile);
-
-        // Combine movies from watchlist and reviews to remove duplicates.
-        Set<String> movieIds = new HashSet<>(watchlistMovies);
+        Set<String> movieIds = new LinkedHashSet<>(watchlistMovies);
         movieIds.addAll(reviewedMovies);
 
-        // Fetch recommendations for all movies.
         List<MovieDTO> recommendations = new ArrayList<>();
         for (String movieId : movieIds) {
             recommendations.addAll(tmDbService.getSimilarMovieRecommendations(movieId));
         }
 
-        // Return unique recommendations.
-        return recommendations.stream().distinct().toList();
+        // NEW: stable dedup (replace fragile .distinct())
+        return dedupeStableById(recommendations);
     }
 }
-
